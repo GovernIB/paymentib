@@ -1,0 +1,122 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="../layout/mainLayout.xhtml">
+
+
+
+	<f:metadata>
+		<f:viewAction action="#{viewPagos.init}" />
+	</f:metadata>
+
+	<ui:define name="content">
+		<p:importEnum type="es.caib.paymentib.core.api.model.types.TypeFiltroFecha" var="TypeFiltroFecha" />
+		<h:outputScript library="primefaces-custom" name="calendar_es.js" />
+		<h:outputScript library="primefaces-custom" name="calendar_ca.js" />
+
+		<h:form id="form" style="height: 100%">
+
+			<!-- Growl mensajes -->
+			<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
+
+			<!-- Toolbar -->
+			<p:toolbar id="toolbar">
+		        <f:facet name="left">
+		        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
+		        	<h:panelGrid id="panelFiltro" columns="6" cellspacing="5">
+			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewPagos.filtro}"/>
+						<p:spacer width="20px"/>
+						<p:calendar placeholder="#{msg['viewPagos.fechaDesde']}" id="fechaDesde" value="#{viewPagos.filtroFechaDesde}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
+						<p:calendar placeholder="#{msg['viewPagos.fechaHasta']}" id="fechaHasta" value="#{viewPagos.filtroFechaHasta}" size="15" locale="#{sessionBean.locale}"  pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
+
+				        <p:selectOneButton id="fechaBusqueda" value="#{viewPagos.filtroFecha}">
+				            <f:selectItem itemLabel="#{msg['viewPagos.headerFechaCreacion']}" itemValue="#{TypeFiltroFecha.CREACION}" />
+				            <f:selectItem itemLabel="#{msg['viewPagos.headerFechaPago']}" itemValue="#{TypeFiltroFecha.PAGO}" />
+				        </p:selectOneButton>
+
+	           			<p:commandButton icon="fa fa-search" actionListener="#{viewPagos.filtrar()}" process="panelFiltro" update="panelBotones dataTable growl" />
+	           		</h:panelGrid>
+		        </f:facet>
+
+		        <f:facet name="right">
+		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5">
+    					<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewPagos.consultar}" process="@this" update="growl" rendered="#{viewPagos.filaSeleccionada}" />
+    					<p:commandButton id="btnVerificar" value="#{msg['botones.verificar']}" icon="fa fa-check" actionListener="#{viewPagos.verificar}" process="@this" update="growl @form" rendered="#{viewPagos.filaSeleccionada and viewPagos.permiteVerificar}" />
+    					<p:commandButton id="btnConfirmar" value="#{msg['botones.confirmar']}" icon="fa fa-thumbs-o-up" actionListener="#{viewPagos.confirmar}" process="@this" update="growl" rendered="#{viewPagos.filaSeleccionada and viewPagos.permiteConfirmar}">
+    						<p:ajax event="dialogReturn" listener="#{viewPagos.returnDialogoConfirmar}" update="@form"  />
+    					</p:commandButton>
+
+			        </h:panelGrid>
+		        </f:facet>
+		    </p:toolbar>
+
+
+
+
+			<!-- Data table -->
+			<p:dataTable  id="dataTable" var="td" value="#{viewPagos.listaDatos}"
+						 rows="10" emptyMessage="#{msg['info.emptyRows']}"
+						 scrollable="true" scrollHeight="90%"
+                         paginator="true" paginatorPosition="bottom"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15,30"
+			        	 selectionMode="single" selection="#{viewPagos.datoSeleccionado}" rowKey="#{td.codigo}">
+
+
+				<!-- Necesario para actualizar en controlador la fila seleccionada -->
+				<p:ajax event="rowSelect" global="false" update="form:panelBotones"/>
+				<p:ajax event="rowDblselect" oncomplete="triggerDblClick();"/>
+
+				<!-- Columnas -->
+			    <p:column headerText="#{msg['viewPagos.headerIdentificador']}">
+			        <h:outputText value="#{td.datosPago.identificador}" />
+			    </p:column>
+			    <p:column headerText="#{msg['viewPagos.headerFechaCreacion']}">
+			        <h:outputText value="#{td.fechaCreacion}" >
+ 			        	<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" timeZone="CET"/>
+			        </h:outputText>
+			    </p:column>
+			    <p:column headerText="#{msg['viewPagos.headerPasarela']}">
+			        <h:outputText value="#{td.pasarelaId}" />
+			    </p:column>
+			    <p:column headerText="#{msg['viewPagos.headerEntidad']}">
+			        <h:outputText value="#{td.datosPago.entidadId}" />
+			    </p:column>
+			    <p:column headerText="#{msg['viewPagos.headerAplicacion']}">
+			        <h:outputText value="#{td.datosPago.aplicacionId}" />
+			    </p:column>
+			   	 <p:column headerText="#{msg['viewPagos.headerNif']}">
+			        <h:outputText value="#{td.datosPago.sujetoPasivoNif}" />
+			    </p:column>
+			   	 <p:column headerText="#{msg['viewPagos.headerNombre']}">
+			        <h:outputText value="#{td.datosPago.sujetoPasivoNombre}" />
+			    </p:column>
+			    <p:column headerText="#{msg['viewPagos.headerImporte']}" styleClass="grid-right">
+			        <h:outputText value="#{(td.datosPago.importe/100)}">
+			        	<f:convertNumber pattern="#####.00"/>
+			        </h:outputText>
+			    </p:column>
+			    <p:column headerText="#{msg['viewPagos.headerEstado']}">
+			        <h:outputText value="#{msg['typeEstadoPago.' += td.estado]}" />
+			    </p:column>
+			    <p:column headerText="#{msg['viewPagos.headerFechaPago']}">
+			        <h:outputText value="#{td.fechaPago}" >
+ 			        	<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" timeZone="CET"/>
+			        </h:outputText>
+			    </p:column>
+
+			</p:dataTable>
+
+		</h:form>
+
+		<h:outputScript >
+	      function triggerDblClick() {
+	        	$('#form\\:btnConsultar').click();
+	      }
+	    </h:outputScript>
+
+	</ui:define>
+
+</ui:composition>

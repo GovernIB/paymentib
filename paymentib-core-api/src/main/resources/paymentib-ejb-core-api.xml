@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans	xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:jee="http://www.springframework.org/schema/jee"
+		xsi:schemaLocation="
+				http://www.springframework.org/schema/beans
+				http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+				http://www.springframework.org/schema/jee
+				http://www.springframework.org/schema/jee/spring-jee-4.3.xsd">
+
+	<!-- JBoss 5
+	<jee:local-slsb
+			id="ejemploService"
+			jndi-name="paymentib/EjemploServiceBean/local"
+			business-interface="es.caib.paymentib.core.api.service.EjemploService"/>
+ 	-->
+
+	<!-- JBoss 7  -->
+	<jee:local-slsb
+			id="systemService"
+			jndi-name="java:app/paymentib-core/SystemServiceBean"
+			business-interface="es.caib.paymentib.core.api.service.SystemService"/>
+
+	<jee:local-slsb
+			id="pagoFrontService"
+			jndi-name="java:app/paymentib-core/PagoFrontServiceBean"
+			business-interface="es.caib.paymentib.core.api.service.PagoFrontService"/>
+
+	<jee:local-slsb
+			id="pagoBackService"
+			jndi-name="java:app/paymentib-core/PagoBackServiceBean"
+			business-interface="es.caib.paymentib.core.api.service.PagoBackService"/>
+
+
+</beans>

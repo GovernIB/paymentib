@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/jee
+		http://www.springframework.org/schema/jee/spring-jee-4.3.xsd
+		http://www.springframework.org/schema/aop
+	    http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+	    http://www.springframework.org/schema/tx
+	    http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+	    http://www.springframework.org/schema/cache
+		http://www.springframework.org/schema/cache/spring-cache.xsd">
+
+	<!-- Configuracion properties aplicacion -->
+	<context:property-placeholder location="file:#{systemProperties['es.caib.paymentib.properties.path']}"/>
+
+	<!-- Scans the classpath of this application for @Components to deploy as beans -->
+    <context:component-scan base-package="es.caib.paymentib.core" />
+
+    <!-- Anotaciones AOP -->
+    <context:annotation-config />
+    <aop:aspectj-autoproxy />
+
+    <!-- Anotaciones para tx -->
+    <tx:annotation-driven transaction-manager="transactionManager" order="2" />
+
+    <!-- Conexion a datasource -->
+    <jee:jndi-lookup id="dataSource" jndi-name="${jdbc.jndi}" resource-ref="true" />
+
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="jpaVendorAdapter" ref="hibernateJpaAdapter" />
+        <property name="persistenceUnitName" value="paymentIB-PU" />
+        <property name="packagesToScan">
+            <list>
+                <value>es.caib.paymentib.core.service.repository.model</value>
+            </list>
+        </property>
+
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+                <prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="hibernateJpaAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
+
+	<!-- Acceso a EJB para obtener contexto seguridad -->
+	<jee:local-slsb
+			id="contextService"
+			jndi-name="java:app/paymentib-core/ContextServiceBean"
+			business-interface="es.caib.paymentib.core.api.service.ContextService"/>
+
+
+</beans>

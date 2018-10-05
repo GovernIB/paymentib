@@ -1,0 +1,73 @@
+/* Document CSS */
+
+/* formateig */
+
+body, form, table, caption, tr, th, td, ul, ol, li, dl, dt, dd, img, p, header, h1, h2, h3, h4, h5, h6, object, iframe, legend, fieldset { font-size: 1em; list-style: none; margin: 0; padding: 0; outline: none; border: none; }
+article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section { display: block; }
+
+*, *::before, *::after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* generic */
+
+@font-face {
+	font-family: 'Bariol Regular';
+	src: url('../fonts/Bariol_Regular.ttf');
+}
+
+body { font: normal 100% 'Bariol Regular', Arial, Helvetica, sans-serif; color: #333; background-color: #eaeaea; }
+
+p { font-size: 1.1em; line-height: 1.2em; }
+
+a { text-decoration: none; padding: 0 .2em; box-shadow: 0 0 .5em #eaeaea;  will-change: color, background-color; }
+a:hover,
+a:focus { box-shadow: 0 0 .5em #bbb; }
+
+a,
+span {
+	-webkit-transition: color .2s ease-out, background-color .2s ease-out, box-shadow .2s ease-out;
+	-moz-transition: color .2s ease-out, background-color .2s ease-out, box-shadow .2s ease-out;
+	-ms-transition: color .2s ease-out, background-color .2s ease-out, box-shadow .2s ease-out;
+	-o-transition: color .2s ease-out, background-color .2s ease-out, box-shadow .2s ease-out;
+	transition: color .2s ease-out, background-color .2s ease-out, box-shadow .2s ease-out;
+}
+
+a span { color: #3b8e5d; }
+a:hover span,
+a:focus span { color: #fff; background-color: #3b8e5d; }
+
+
+/* continguts */
+
+.imc-contingut { display: block; position: fixed; z-index: 1; top: calc(50% - 10em); left: calc(50% - 15em); width: 30em; height: 20em; font-size: 1.3em; }
+
+.imc-contingut h1 { font-weight: normal; text-align: center; margin-bottom: 2em; }
+.imc-contingut h1 span { font-size: 1.5em; }
+
+.imc-contingut ul { display: flex; align-items: center; }
+.imc-contingut ul li { width: 50%; margin: 0 .3em; background-color: #fff; }
+
+.imc-contingut ul li a { display: block; position: relative; text-align: center; height: 10em; background-position-y: center !important; padding-top: 20px; background-size: auto; background-position-x: center !important;}
+
+.imc-contingut ul li a span { display: block; position: absolute; left: 0; bottom: 0; width: 100%; padding: .3em 0; }
+
+/* media */
+
+@media only screen and (max-width : 1024px) {
+
+	.imc-contingut { font-size: 1em; }
+
+}
+
+
+@media only screen and (max-width : 450px) {
+
+	.imc-contingut { left: 0; width: 100%; font-size: .9em; }
+
+	.imc-contingut ul li:first-child { margin-left: .6em; }
+	.imc-contingut ul li:last-child { margin-right: .6em; }
+
+}

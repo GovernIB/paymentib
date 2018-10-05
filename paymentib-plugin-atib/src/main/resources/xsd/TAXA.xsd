@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="TAXA">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="LOCALIZADOR"  type="xs:string"/>
+        <xs:element name="MODELO" type="xs:string"/>
+        <xs:element name="IDTAXA" type="CAMPO_CON_CODIGO"/>
+        <xs:choice>
+          <xs:element minOccurs="0" name="SUBCONCEPTE" type="CAMPO_CON_CODIGO"/>
+          <xs:sequence>
+            <xs:element name="IMPORT" type="CAMPO_CON_CODIGO"/>
+            <xs:element name="CONCEPTE" type="CAMPO_CON_CODIGO"/>
+          </xs:sequence>
+        </xs:choice>
+        <xs:element ref="DECLARANT"/>
+      </xs:sequence>
+      <xs:attribute name="versio" use="required"/>
+      <xs:attribute name="accio" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="imprimir"/>
+            <xs:enumeration value="pagar"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="DECLARANT">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="NIF" type="CAMPO_CON_CODIGO"/>
+        <xs:element name="NOM" type="CAMPO_CON_CODIGO"/>
+        <xs:element minOccurs="0" name="DOMICILI" type="CAMPO_CON_CODIGO"/>
+        <xs:element minOccurs="0" name="TELEFON" type="CAMPO_CON_CODIGO"/>
+        <xs:element minOccurs="0" name="FAX" type="CAMPO_CON_CODIGO"/>
+        <xs:element minOccurs="0" name="LOCALITAT" type="CAMPO_CON_CODIGO"/>
+        <xs:element minOccurs="0" name="PROVINCIA" type="CAMPO_CON_CODIGO"/>
+        <xs:element minOccurs="0" name="CODI_POSTAL" type="CAMPO_CON_CODIGO"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="DOMICILI">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="SIGLES" type="CAMPO_CON_CODIGO"/>
+        <xs:element minOccurs="0" name="NOM_VIA" type="CAMPO_CON_CODIGO"/>
+        <xs:element minOccurs="0" name="NUMERO" type="CAMPO_CON_CODIGO"/>
+        <xs:element minOccurs="0" name="LLETRA" type="CAMPO_CON_CODIGO"/>
+        <xs:element minOccurs="0" name="ESCALA" type="CAMPO_CON_CODIGO"/>
+        <xs:element minOccurs="0" name="PIS" type="CAMPO_CON_CODIGO"/>
+        <xs:element minOccurs="0" name="PORTA" type="CAMPO_CON_CODIGO"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+   <xs:complexType name="CAMPO_CON_CODIGO">
+	    <xs:simpleContent>
+	      <xs:extension base="xs:string">
+	        <xs:attribute name="codi" type="xs:string"/>
+	      </xs:extension>
+	    </xs:simpleContent>
+    </xs:complexType>
+
+</xs:schema>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition>
+
+		<p:panelGrid columns="2" layout="grid" columnClasses="grid-left grid-nobgcolor,grid-right grid-nobgcolor" styleClass="ui-noborder">
+			<p:outputPanel>
+				<h:outputText value="#{msg['aplicacion.titulo']}" styleClass="pie_celda1"/>
+				<h:graphicImage value="/resources/images/#{negocioModuleConfig.entorno}.png" height="20" styleClass="pie_celda1"/>
+			</p:outputPanel>
+			<h:graphicImage value="/resources/images/feddr.png" height="38"/>
+		</p:panelGrid>
+
+	</ui:composition>
+</h:body>
+</html>

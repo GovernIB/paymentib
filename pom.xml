@@ -1,0 +1,80 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>es.caib.paymentib</groupId>
+  <artifactId>paymentib</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+   <properties>
+		<paymentib.version>0.0.1-SNAPSHOT</paymentib.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>1.8</java.version>
+		<maven.compiler.version>3.7.0</maven.compiler.version>
+		<maven.jar.version>3.0.2</maven.jar.version>
+		<maven.war.version>3.2.0</maven.war.version>
+		<maven.ear.version>2.10.1</maven.ear.version>
+		<maven.ejb.version>3.0.0</maven.ejb.version>
+
+		<commons-io.version>2.6</commons-io.version>
+		<commons-lang.version>2.6</commons-lang.version>
+		<commons-lang3.version>3.7</commons-lang3.version>
+		<commons-codec.version>1.11</commons-codec.version>
+		<commons-beanutils.version>1.9.3</commons-beanutils.version>
+
+		<dom4j.version>1.6.1</dom4j.version>
+
+		<servlet-api.version>3.1.0</servlet-api.version>
+		<jstl.version>1.2</jstl.version>
+
+		<spring.version>4.3.13.RELEASE</spring.version>
+		<spring-security.version>4.2.3.RELEASE</spring-security.version>
+
+		<ejb-api.version>3.0</ejb-api.version>
+		<jsr250-api.version>1.0</jsr250-api.version>
+
+		<hibernate.version>4.3.11.Final</hibernate.version>
+		<hibernate-validator.version>5.4.2.Final</hibernate-validator.version>
+		<hibernate-jpa-2.1-api.version>1.0.0.Final</hibernate-jpa-2.1-api.version>
+
+		<slf4j.version>1.5.8</slf4j.version>
+
+		<jaxen.version>1.1.6</jaxen.version>
+
+		<jackson.version>2.9.5</jackson.version>
+		<swagger.version>2.7.0</swagger.version>
+
+		<plugins-ib.version>2.0.0</plugins-ib.version>
+		<cfx.version>3.1.4</cfx.version>
+
+		<javax.inject.version>1</javax.inject.version>
+		<jsf2.version>2.2.15</jsf2.version>
+		<primefaces.version>6.1</primefaces.version>
+		<primefacesExtensions.version>6.1.1</primefacesExtensions.version>
+		<primefaces.allThemes.version>1.0.8</primefaces.allThemes.version>
+
+		<xmlbeans.version>2.4.0</xmlbeans.version>
+
+	</properties>
+
+	<repositories>
+	    <repository>
+	      <id>governIB</id>
+	      <url>https://governIB.github.io/maven/maven/</url>
+	  		</repository>
+	</repositories>
+
+  <modules>
+    <module>paymentib-lib</module>
+  	<module>paymentib-plugin-api</module>
+  	<module>paymentib-plugin-mock</module>
+  	<module>paymentib-plugin-atib</module>
+    <module>paymentib-core-api</module>
+  	<module>paymentib-core</module>
+  	<module>paymentib-backend</module>
+  	<module>paymentib-frontend</module>
+	<module>paymentib-rest-api</module>
+	<module>paymentib-rest-ws</module>
+	<module>paymentib-ear</module>
+  </modules>
+
+</project>

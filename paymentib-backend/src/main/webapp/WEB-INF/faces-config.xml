@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<faces-config version="2.2"
+              xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+              http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
+
+
+    <!--  Configuracion aplicacion -->
+    <application>
+
+        <!-- Locales (default locale no es el que se visualiza por defecto, hay que establecerlo programaticamente)-->
+	    <locale-config>
+	      <default-locale>ca</default-locale>
+	      <supported-locale>ca</supported-locale>
+	      <supported-locale>es</supported-locale>
+	    </locale-config>
+
+	    <!-- Fichero literales -->
+	     <resource-bundle>
+	      <base-name>i18n.messages</base-name>
+	      <var>msg</var>
+	    </resource-bundle>
+
+	     <!-- Inyeccion spring beans  -->
+        <el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
+
+
+        <!-- Gestion excepciones -->
+  		<el-resolver>org.primefaces.application.exceptionhandler.PrimeExceptionHandlerELResolver</el-resolver>
+
+        <!-- Dialog framework -->
+        <action-listener>
+			org.primefaces.application.DialogActionListener
+		 </action-listener>
+		 <navigation-handler>
+			org.primefaces.application.DialogNavigationHandler
+		 </navigation-handler>
+		 <view-handler>
+			org.primefaces.application.DialogViewHandler
+		 </view-handler>
+
+    </application>
+
+    <!-- Gestion excepciones -->
+    <factory>
+	  <exception-handler-factory>org.primefaces.application.exceptionhandler.PrimeExceptionHandlerFactory</exception-handler-factory>
+	</factory>
+
+
+</faces-config>

@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<!-- TODO VER LAYOUT ERRORES (TEMPLATE UNICO?)
+		 OJO, EN LOS DIALOG SE GENERA DENTRO, ASI QUE MEJOR PAGINA NEUTRA SIN HEAD -->
+
+
+<h:head>
+
+</h:head>
+
+<body>
+  <f:facet name="last">
+    <h:outputStylesheet library="css" name="style.css" />
+  </f:facet>
+
+	<h:form>
+		<p:outputPanel styleClass="error_panel_container">
+			<p:outputPanel styleClass="error_panel">
+				<p:outputPanel styleClass="error_panel1">
+					<h:graphicImage value="/resources/images/error.png" height="55" />
+				</p:outputPanel>
+				<p:outputPanel styleClass="error_code_panel2">
+
+					<p:outputPanel styleClass="error_code_panel3">
+						<p:outputLabel value="#{msg['error.codigo']}: " styleClass="error_texto_titulo" />
+						<p:outputLabel value="#{param.errorCode}" />
+					</p:outputPanel>
+					<br/>
+					<p:outputPanel styleClass="error_panel3">
+						<p:outputLabel value="#{msg['error.mensaje']}: " styleClass="error_texto_titulo" />
+						<p:outputLabel value="#{msg['errorCode.'.concat(param.errorCode)]}" />
+					</p:outputPanel>
+
+				</p:outputPanel>
+				<p:outputPanel styleClass="error_button">
+					<p:commandButton value="#{msg['botones.volver']}"
+							styleClass="boton-azul"
+							icon="fa fa-undo"
+							onclick="window.top.location.href ='#{sessionBean.getDefaultUrl()}';return false;"
+							/>
+				</p:outputPanel>
+			</p:outputPanel>
+		</p:outputPanel>
+	</h:form>
+</body>
+
+
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogPagosConfirmar.titulo']}"/></title>
+</h:head>
+<h:body>
+  	<f:facet name="last">
+    	<h:outputStylesheet library="css" name="style.css" />
+  	</f:facet>
+
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogPagosConfirmar.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogPagosConfirmar.id}"/>
+		<f:viewAction action="#{dialogPagosConfirmar.init}" />
+	</f:metadata>
+	<h:form id="dialogPagosConfirmar" styleClass="margin-top-10">
+  			<p:outputPanel id="panel">
+
+				<!-- Contenido dialogo -->
+				<!-- Growl mensajes -->
+				<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
+
+				<div class="panel_container">
+					<div class="panel">
+						<p:outputLabel for="fechaPago" value="#{msg['dialogPagosConfirmar.fechaPago']}" />
+						<p:spacer width="8" height="1" />
+						<p:calendar mask="true" showOn="button" styleClass="calendario-sin-boton" id="fechaPago" value="#{dialogPagosConfirmar.data.fechaPago}" pattern="dd/MM/yyyy HH:mm:ss"  size="19" locale="#{sessionBean.locale}" />
+					</div>
+				</div>
+			</p:outputPanel>
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+						<p:commandButton value="#{msg['botones.guardar']}" styleClass="boton-azul" process="@form" update="@form growlDialog" actionListener="#{dialogPagosConfirmar.aceptar}">
+							<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.pago']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+						</p:commandButton>
+
+						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogPagosConfirmar.cerrar}" process="@this"/>
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+
+		    <!-- dialogo para confirmar -->
+		    <p:confirmDialog global="true" >
+				<p:outputPanel styleClass="confirmar_botonera">
+		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
+		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+				</p:outputPanel>
+		    </p:confirmDialog>
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

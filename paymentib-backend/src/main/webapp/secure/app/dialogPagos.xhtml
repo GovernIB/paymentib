@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogPagos.titulo']}"/></title>
+</h:head>
+<h:body>
+  	<f:facet name="last">
+    	<h:outputStylesheet library="css" name="style.css" />
+  	</f:facet>
+
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogPagos.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogPagos.id}"/>
+		<f:viewAction action="#{dialogPagos.init}" />
+	</f:metadata>
+	<h:form id="dialogPagos" styleClass="margin-top-10">
+  			<p:outputPanel>
+				<!-- Contenido dialogo -->
+				<!-- Growl mensajes -->
+				<p:growl id="growlDialog" widgetVar="growlDialog" life="2000" sticky="false" />
+
+
+					<div class="ui-g padding-left-18 padding-right-18 margin-top-20 margin-bottom-20">
+						<div class="ui-g-12 ui-md-6 ui-lg-4">
+							<p:outputLabel for="identificador" value="#{msg['dialogPagos.identificador']}" styleClass="label-size-fixed"/><p:inputText id="identificador" value="#{dialogPagos.data.datosPago.identificador}" size="26" disabled="true"/>
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel for="fechaCreacion" value="#{msg['dialogPagos.fechaCreacion']}" styleClass="padding-right-8"/><p:inputText id="fechaCreacion" value="#{dialogPagos.data.fechaCreacion}" size="14" disabled="true"> <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" timeZone="CET"/> </p:inputText>
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-2">
+							<p:outputLabel for="estado" value="#{msg['dialogPagos.estado']}" styleClass="padding-right-8"/><p:inputText id="estado" value="#{msg['typeEstadoPago.'+=dialogPagos.data.estado]}" size="10" disabled="true"/>
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel for="fechaPago" value="#{msg['dialogPagos.fechaPago']}" styleClass="padding-right-8"/><p:inputText id="fechaPago" value="#{dialogPagos.data.fechaPago}" size="14" disabled="true"><f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" timeZone="CET"/> </p:inputText>
+						</div>
+					</div>
+
+					<div class="ui-g ui-datatable-odd padding-left-18 padding-right-18 margin-top-20 margin-bottom-20">
+						<div class="ui-g-12 ui-md-6 ui-lg-4">
+							<p:outputLabel for="aplicacionId" value="#{msg['dialogPagos.aplicacionId']}" styleClass="label-size-fixed"/><p:inputText id="aplicacionId" value="#{dialogPagos.data.datosPago.aplicacionId}" size="10" disabled="true"/>
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-4">
+							<p:outputLabel for="entidadId" value="#{msg['dialogPagos.entidadId']}" styleClass="padding-right-8"/><p:inputText id="entidadId" value="#{dialogPagos.data.datosPago.entidadId}" size="15" disabled="true"/>
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-4">
+							<p:outputLabel for="organoId" value="#{msg['dialogPagos.organoId']}" styleClass="padding-right-8"/><p:inputText id="organoId" value="#{dialogPagos.data.datosPago.organismoId}" size="15" disabled="true"/>
+						</div>
+					</div>
+
+					<div class="ui-g padding-left-18 padding-right-18 margin-top-20 margin-bottom-20">
+						<div class="ui-g-12 ui-md-6 ui-lg-4">
+							<p:outputLabel for="pasarelaId" value="#{msg['dialogPagos.pasarelaId']}" styleClass="label-size-fixed"/><p:inputText id="pasarelaId" value="#{dialogPagos.data.pasarelaId}" size="10" disabled="true"/>
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-8">
+							<p:outputLabel for="localizador" value="#{msg['dialogPagos.localizador']}" styleClass="padding-right-8"/><p:inputText id="localizador" value="#{dialogPagos.data.localizador}" size="40" disabled="true"/>
+						</div>
+					</div>
+
+					<div class="ui-g ui-datatable-odd padding-left-18 padding-right-18 margin-top-20 margin-bottom-20">
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel for="modelo" value="#{msg['dialogPagos.modelo']}" styleClass="label-size-fixed"/><p:inputText id="modelo" value="#{dialogPagos.data.datosPago.modelo}" size="15" disabled="true"/>
+						</div>
+
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel for="concepto" value="#{msg['dialogPagos.concepto']}" styleClass="padding-right-8"/><p:inputText id="concepto" value="#{dialogPagos.data.datosPago.concepto}" size="15" disabled="true"/>
+						</div>
+
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel for="tasaId" value="#{msg['dialogPagos.tasaId']}" styleClass="padding-right-8"/><p:inputText id="tasaId" value="#{dialogPagos.data.datosPago.tasaId}" size="15" disabled="true"/>
+						</div>
+
+						<div class="ui-g-12 ui-md-6 ui-lg-3">
+							<p:outputLabel for="importe" value="#{msg['dialogPagos.importe']}" styleClass="padding-right-8"/><p:inputText id="importe" value="#{dialogPagos.data.datosPago.importe/100}" size="10" disabled="true" styleClass="grid-right"><f:convertNumber pattern="#####.00"/></p:inputText>
+						</div>
+					</div>
+
+					<div class="ui-g padding-left-18 padding-right-18 margin-top-20 margin-bottom-20">
+						<div class="ui-g-12 ui-md-6 ui-lg-12">
+							<p:outputLabel for="detallePago" value="#{msg['dialogPagos.detallePago']}" styleClass="label-size-fixed  va-middle"/><p:inputTextarea id="detallePago" value="#{dialogPagos.data.datosPago.detallePago}" disabled="true"  styleClass="va-middle w90" rows="2"/>
+						</div>
+					</div>
+
+					<div class="ui-g ui-datatable-odd padding-left-18 padding-right-18 margin-top-20 margin-bottom-20">
+						<div class="ui-g-12 ui-md-6 ui-lg-12">
+							<p:outputLabel for="urlCallbackOrigen" value="#{msg['dialogPagos.urlCallbackOrigen']}" styleClass="label-size-fixed"/><p:inputText id="urlCallbackOrigen" value="#{dialogPagos.data.urlCallbackOrigen}" disabled="true" styleClass="w90"/>
+						</div>
+					</div>
+
+					<div class="ui-g padding-left-18 padding-right-18 margin-top-20 margin-bottom-20">
+						<div class="ui-g-12 ui-md-6 ui-lg-4 grid-right">
+							<p:selectBooleanCheckbox value="#{dialogPagos.data.usuarioConfirmacion ne null}" disabled="true" itemLabel="#{msg['dialogPagos.confirmacionManual']}"/>
+						</div>
+						<div class="ui-g-12 ui-md-6 ui-lg-8">
+							<p:outputLabel for="usuarioConfirmacion" value="#{msg['dialogPagos.usuarioConfirmacion']}"  styleClass="padding-right-8"/><p:inputText id="usuarioConfirmacion" value="#{dialogPagos.data.usuarioConfirmacion}" size="40" disabled="true"/>
+						</div>
+
+					</div>
+
+			</p:outputPanel>
+		  	 <p:outputPanel styleClass="botonera">
+		     	<p:toolbar>
+					<f:facet name="right">
+						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogPagos.cerrar}" process="@this"/>
+					</f:facet>
+				</p:toolbar>
+		    </p:outputPanel>
+	</h:form>
+</h:body>
+
+</f:view>
+</html>

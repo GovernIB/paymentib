@@ -1,0 +1,148 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>es.caib.paymentib</groupId>
+    <artifactId>paymentib</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>paymentib-plugin-atib</artifactId>
+
+	<dependencies>
+
+  		<!-- PLUGIN PAYMENTIB API -->
+  		<dependency>
+			<groupId>es.caib.paymentib</groupId>
+			<artifactId>paymentib-plugin-api</artifactId>
+			<version>${paymentib.version}</version>
+		</dependency>
+
+		<!-- XML BEANS -->
+		<dependency>
+			<groupId>org.apache.xmlbeans</groupId>
+			<artifactId>xmlbeans</artifactId>
+			<version>${xmlbeans.version}</version>
+		</dependency>
+
+		<!-- LOG -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- COMMONS -->
+		<dependency>
+		    <groupId>commons-io</groupId>
+		    <artifactId>commons-io</artifactId>
+		    <version>${commons-io.version}</version>
+		    <scope>provided</scope>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
+		    <version>${commons-lang3.version}</version>
+		    <scope>provided</scope>
+		</dependency>
+
+  </dependencies>
+
+
+  	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven.compiler.version}</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<compilerVersion>${java.version}</compilerVersion>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>${maven.jar.version}</version>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.cxf</groupId>
+				<artifactId>cxf-codegen-plugin</artifactId>
+				<version>${cfx.version}</version>
+				<executions>
+					<execution>
+						<id>generate-sources</id>
+						<phase>generate-sources</phase>
+						<configuration>
+							<wsdlOptions>
+								<wsdlOption>
+									<wsdl>src\main\resources\wsdl\Service_Tasa.wsdl</wsdl>
+                                    <extendedSoapHeaders>true</extendedSoapHeaders>
+									<extraargs>
+										<extraarg>-client</extraarg>
+										<extraarg>-verbose</extraarg>
+										<extraarg>-p</extraarg>
+										<extraarg>es.caib.paymentib.plugins.atib.clientws.cxf</extraarg>
+									</extraargs>
+								</wsdlOption>
+							</wsdlOptions>
+						</configuration>
+						<goals>
+							<goal>wsdl2java</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+
+				<!--
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>xmlbeans-maven-plugin</artifactId>
+				<version>2.3.3</version>
+				<executions>
+					<execution>
+						<id>XMLB</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>xmlbeans</goal>
+						</goals>
+						<configuration>
+							<download>true</download>
+							<xmlConfigs>
+							 	<xmlConfig implementation="java.io.File">src/main/resources/xsd/TAXA.xsdconfig</xmlConfig>
+							</xmlConfigs>
+						</configuration>
+					</execution>
+				</executions>
+				-->
+
+
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>xmlbeans-maven-plugin</artifactId>
+				<version>2.3.3</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>xmlbeans</goal>
+						</goals>
+					</execution>
+				</executions>
+				<inherited>true</inherited>
+				<configuration>
+					<schemaDirectory>src/main/resources/xsd</schemaDirectory>
+					<!-- <classGenerationDirectory></classGenerationDirectory> -->
+					<!-- <sourceGenerationDirectory>target/generated-sources</sourceGenerationDirectory>  -->
+					<xmlConfigs>
+						<xmlConfig implementation="java.io.File">src/main/resources/xsd/TAXA.xsdconfig</xmlConfig>
+					</xmlConfigs>
+				</configuration>
+
+			</plugin>
+
+		</plugins>
+	</build>
+</project>

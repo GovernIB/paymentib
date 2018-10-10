@@ -9,5 +9,3 @@ drop table PIB_PAGOE cascade constraints;
 drop table PIB_PROCES cascade constraints;
 
 drop sequence PIB_PAGOE_SEQ;
-
-create sequence PIB_PAGOE_SEQ;

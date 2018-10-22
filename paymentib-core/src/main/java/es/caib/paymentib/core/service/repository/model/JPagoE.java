@@ -47,6 +47,12 @@ public class JPagoE implements IModelApi {
     @Column(name = "PAE_ESTADO", length = 1)
     private String estado;
 
+    @Column(name = "PAE_PASERC")
+    private String codigoErrorPasarela;
+
+    @Column(name = "PAE_PASERM")
+    private String mensajeErrorPasarela;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "PAE_FECHA", nullable = false)
     private Date fechaCreacion;
@@ -266,6 +272,44 @@ public class JPagoE implements IModelApi {
         this.usuarioConfirmacion = usuarioConfirmacion;
     }
 
+    /**
+     * Método de acceso a codigoErrorPasarela.
+     *
+     * @return codigoErrorPasarela
+     */
+    public String getCodigoErrorPasarela() {
+        return codigoErrorPasarela;
+    }
+
+    /**
+     * Método para establecer codigoErrorPasarela.
+     *
+     * @param codigoErrorPasarela
+     *            codigoErrorPasarela a establecer
+     */
+    public void setCodigoErrorPasarela(String codigoErrorPasarela) {
+        this.codigoErrorPasarela = codigoErrorPasarela;
+    }
+
+    /**
+     * Método de acceso a mensajeErrorPasarela.
+     *
+     * @return mensajeErrorPasarela
+     */
+    public String getMensajeErrorPasarela() {
+        return mensajeErrorPasarela;
+    }
+
+    /**
+     * Método para establecer mensajeErrorPasarela.
+     *
+     * @param mensajeErrorPasarela
+     *            mensajeErrorPasarela a establecer
+     */
+    public void setMensajeErrorPasarela(String mensajeErrorPasarela) {
+        this.mensajeErrorPasarela = mensajeErrorPasarela;
+    }
+
     public DatosSesionPago toModel() {
         final DatosSesionPago pago = new DatosSesionPago();
         final DatosPago datosPago = new DatosPago();
@@ -289,6 +333,8 @@ public class JPagoE implements IModelApi {
         pago.setPasarelaId(pasarelaId);
         pago.setLocalizador(localizador);
         pago.setEstado(TypeEstadoPago.fromString(estado));
+        pago.setCodigoErrorPasarela(codigoErrorPasarela);
+        pago.setMensajeErrorPasarela(mensajeErrorPasarela);
         pago.setFechaPago(fechaPago);
         pago.setUrlCallbackOrigen(urlCallbackOrigen);
         pago.setTokenAcceso(token);

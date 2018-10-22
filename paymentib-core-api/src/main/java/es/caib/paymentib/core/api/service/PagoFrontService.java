@@ -6,7 +6,7 @@ import java.util.Map;
 import es.caib.paymentib.core.api.model.pago.DatosSesionPago;
 import es.caib.paymentib.plugins.api.DatosPago;
 import es.caib.paymentib.plugins.api.EntidadPago;
-import es.caib.paymentib.plugins.api.TypeEstadoPago;
+import es.caib.paymentib.plugins.api.EstadoPago;
 import es.caib.paymentib.plugins.api.UrlRedireccionPasarelaPago;
 
 /**
@@ -19,7 +19,7 @@ public interface PagoFrontService {
 
     /**
      * Obtiene url frontal.
-     * 
+     *
      * @return obtiene url frontal
      */
     String obtenerUrlFrontal();
@@ -45,10 +45,10 @@ public interface PagoFrontService {
 
     List<EntidadPago> obtenerEntidadesPagoElectronico(String identificador);
 
-    TypeEstadoPago verificarRetornoPagoElectronico(String identificador,
+    EstadoPago verificarRetornoPagoElectronico(String identificador,
             Map<String, String[]> parametrosRetorno);
 
-    TypeEstadoPago verificarPagoElectronico(String identificador);
+    EstadoPago verificarPagoElectronico(String identificador);
 
     byte[] obtenerJustificantePagoElectronico(String identificador);
 

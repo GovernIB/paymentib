@@ -8,259 +8,257 @@ package es.caib.paymentib.plugins.api;
  */
 public class DatosPago {
 
-	/** Identificador pago en componente pago. */
-	private String identificador;
+    /** Identificador pago en componente pago. */
+    private String identificador;
 
-	/** Identicador aplicación desde la que se lanza el pago. */
-	private String aplicacionId;
+    /** Identicador aplicación desde la que se lanza el pago. */
+    private String aplicacionId;
 
-	/** Identicador entidad. */
-	private String entidadId;
+    /** Identicador entidad. */
+    private String entidadId;
 
-	/** Código organismo dentro de la entidad (opcional según pasarela pago). */
-	private String organismoId;
+    /** Código organismo dentro de la entidad (opcional según pasarela pago). */
+    private String organismoId;
 
-	/** Detalle pago (información acerca del pago, p.e. trámite, etc.). */
-	private String detallePago;
+    /** Detalle pago (información acerca del pago, p.e. trámite, etc.). */
+    private String detallePago;
 
-	/** Idioma. */
-	private TypeIdioma idioma;
+    /** Idioma. */
+    private TypeIdioma idioma;
 
-	/** Sujeto pasivo nif. */
-	private String sujetoPasivoNif;
+    /** Sujeto pasivo nif. */
+    private String sujetoPasivoNif;
 
-	/** Sujeto pasivo nombre. */
-	private String sujetoPasivoNombre;
+    /** Sujeto pasivo nombre. */
+    private String sujetoPasivoNombre;
 
-	/** Concepto pago. */
-	private String concepto;
+    /** Concepto pago. */
+    private String concepto;
 
-	/** Código tasa (opcional según pasarela pago). */
-	private String tasaId;
+    /** Código tasa (opcional según pasarela pago). */
+    private String tasaId;
 
-	/** Importe (en cents). */
-	private int importe;
+    /** Importe (en cents). */
+    private int importe;
 
-	/**
-	 * modelo.
-	 */
-	private String modelo;
+    /** Modelo. */
+    private String modelo;
 
-	/**
-	 * Método de acceso a identificador.
-	 *
-	 * @return identificador
-	 */
-	public String getIdentificador() {
-		return identificador;
-	}
+    /**
+     * Método de acceso a identificador.
+     *
+     * @return identificador
+     */
+    public String getIdentificador() {
+        return identificador;
+    }
 
-	/**
-	 * Método para establecer identificador.
-	 *
-	 * @param identificador
-	 *            identificador a establecer
-	 */
-	public void setIdentificador(final String identificador) {
-		this.identificador = identificador;
-	}
+    /**
+     * Método para establecer identificador.
+     *
+     * @param identificador
+     *            identificador a establecer
+     */
+    public void setIdentificador(final String identificador) {
+        this.identificador = identificador;
+    }
 
-	/**
-	 * Método de acceso a idioma.
-	 *
-	 * @return idioma
-	 */
-	public TypeIdioma getIdioma() {
-		return idioma;
-	}
+    /**
+     * Método de acceso a idioma.
+     *
+     * @return idioma
+     */
+    public TypeIdioma getIdioma() {
+        return idioma;
+    }
 
-	/**
-	 * Método para establecer idioma.
-	 *
-	 * @param idioma
-	 *            idioma a establecer
-	 */
-	public void setIdioma(final TypeIdioma idioma) {
-		this.idioma = idioma;
-	}
+    /**
+     * Método para establecer idioma.
+     *
+     * @param idioma
+     *            idioma a establecer
+     */
+    public void setIdioma(final TypeIdioma idioma) {
+        this.idioma = idioma;
+    }
 
-	/**
-	 * Método de acceso a sujetoPasivoNif.
-	 *
-	 * @return sujetoPasivoNif
-	 */
-	public String getSujetoPasivoNif() {
-		return sujetoPasivoNif;
-	}
+    /**
+     * Método de acceso a sujetoPasivoNif.
+     *
+     * @return sujetoPasivoNif
+     */
+    public String getSujetoPasivoNif() {
+        return sujetoPasivoNif;
+    }
 
-	/**
-	 * Método para establecer sujetoPasivoNif.
-	 *
-	 * @param sujetoPasivoNif
-	 *            sujetoPasivoNif a establecer
-	 */
-	public void setSujetoPasivoNif(final String sujetoPasivoNif) {
-		this.sujetoPasivoNif = sujetoPasivoNif;
-	}
+    /**
+     * Método para establecer sujetoPasivoNif.
+     *
+     * @param sujetoPasivoNif
+     *            sujetoPasivoNif a establecer
+     */
+    public void setSujetoPasivoNif(final String sujetoPasivoNif) {
+        this.sujetoPasivoNif = sujetoPasivoNif;
+    }
 
-	/**
-	 * Método de acceso a sujetoPasivoNombre.
-	 *
-	 * @return sujetoPasivoNombre
-	 */
-	public String getSujetoPasivoNombre() {
-		return sujetoPasivoNombre;
-	}
+    /**
+     * Método de acceso a sujetoPasivoNombre.
+     *
+     * @return sujetoPasivoNombre
+     */
+    public String getSujetoPasivoNombre() {
+        return sujetoPasivoNombre;
+    }
 
-	/**
-	 * Método para establecer sujetoPasivoNombre.
-	 *
-	 * @param sujetoPasivoNombre
-	 *            sujetoPasivoNombre a establecer
-	 */
-	public void setSujetoPasivoNombre(final String sujetoPasivoNombre) {
-		this.sujetoPasivoNombre = sujetoPasivoNombre;
-	}
+    /**
+     * Método para establecer sujetoPasivoNombre.
+     *
+     * @param sujetoPasivoNombre
+     *            sujetoPasivoNombre a establecer
+     */
+    public void setSujetoPasivoNombre(final String sujetoPasivoNombre) {
+        this.sujetoPasivoNombre = sujetoPasivoNombre;
+    }
 
-	/**
-	 * Método de acceso a concepto.
-	 *
-	 * @return concepto
-	 */
-	public String getConcepto() {
-		return concepto;
-	}
+    /**
+     * Método de acceso a concepto.
+     *
+     * @return concepto
+     */
+    public String getConcepto() {
+        return concepto;
+    }
 
-	/**
-	 * Método para establecer concepto.
-	 *
-	 * @param concepto
-	 *            concepto a establecer
-	 */
-	public void setConcepto(final String concepto) {
-		this.concepto = concepto;
-	}
+    /**
+     * Método para establecer concepto.
+     *
+     * @param concepto
+     *            concepto a establecer
+     */
+    public void setConcepto(final String concepto) {
+        this.concepto = concepto;
+    }
 
-	/**
-	 * Método de acceso a tasaId.
-	 *
-	 * @return tasaId
-	 */
-	public String getTasaId() {
-		return tasaId;
-	}
+    /**
+     * Método de acceso a tasaId.
+     *
+     * @return tasaId
+     */
+    public String getTasaId() {
+        return tasaId;
+    }
 
-	/**
-	 * Método para establecer tasaId.
-	 *
-	 * @param tasaId
-	 *            tasaId a establecer
-	 */
-	public void setTasaId(final String tasaId) {
-		this.tasaId = tasaId;
-	}
+    /**
+     * Método para establecer tasaId.
+     *
+     * @param tasaId
+     *            tasaId a establecer
+     */
+    public void setTasaId(final String tasaId) {
+        this.tasaId = tasaId;
+    }
 
-	/**
-	 * Método de acceso a importe.
-	 *
-	 * @return importe
-	 */
-	public int getImporte() {
-		return importe;
-	}
+    /**
+     * Método de acceso a importe.
+     *
+     * @return importe
+     */
+    public int getImporte() {
+        return importe;
+    }
 
-	/**
-	 * Método para establecer importe.
-	 *
-	 * @param importe
-	 *            importe a establecer
-	 */
-	public void setImporte(final int importe) {
-		this.importe = importe;
-	}
+    /**
+     * Método para establecer importe.
+     *
+     * @param importe
+     *            importe a establecer
+     */
+    public void setImporte(final int importe) {
+        this.importe = importe;
+    }
 
-	/**
-	 * Método de acceso a organismoId.
-	 *
-	 * @return organismoId
-	 */
-	public String getOrganismoId() {
-		return organismoId;
-	}
+    /**
+     * Método de acceso a organismoId.
+     *
+     * @return organismoId
+     */
+    public String getOrganismoId() {
+        return organismoId;
+    }
 
-	/**
-	 * Método para establecer organismoId.
-	 *
-	 * @param organismoId
-	 *            organismoId a establecer
-	 */
-	public void setOrganismoId(final String organismoId) {
-		this.organismoId = organismoId;
-	}
+    /**
+     * Método para establecer organismoId.
+     *
+     * @param organismoId
+     *            organismoId a establecer
+     */
+    public void setOrganismoId(final String organismoId) {
+        this.organismoId = organismoId;
+    }
 
-	/**
-	 * Método de acceso a entidadId.
-	 *
-	 * @return entidadId
-	 */
-	public String getEntidadId() {
-		return entidadId;
-	}
+    /**
+     * Método de acceso a entidadId.
+     *
+     * @return entidadId
+     */
+    public String getEntidadId() {
+        return entidadId;
+    }
 
-	/**
-	 * Método para establecer entidadId.
-	 *
-	 * @param entidadId
-	 *            entidadId a establecer
-	 */
-	public void setEntidadId(final String entidadId) {
-		this.entidadId = entidadId;
-	}
+    /**
+     * Método para establecer entidadId.
+     *
+     * @param entidadId
+     *            entidadId a establecer
+     */
+    public void setEntidadId(final String entidadId) {
+        this.entidadId = entidadId;
+    }
 
-	/**
-	 * Método de acceso a aplicacionId.
-	 *
-	 * @return aplicacionId
-	 */
-	public String getAplicacionId() {
-		return aplicacionId;
-	}
+    /**
+     * Método de acceso a aplicacionId.
+     *
+     * @return aplicacionId
+     */
+    public String getAplicacionId() {
+        return aplicacionId;
+    }
 
-	/**
-	 * Método para establecer aplicacionId.
-	 *
-	 * @param aplicacionId
-	 *            aplicacionId a establecer
-	 */
-	public void setAplicacionId(final String aplicacionId) {
-		this.aplicacionId = aplicacionId;
-	}
+    /**
+     * Método para establecer aplicacionId.
+     *
+     * @param aplicacionId
+     *            aplicacionId a establecer
+     */
+    public void setAplicacionId(final String aplicacionId) {
+        this.aplicacionId = aplicacionId;
+    }
 
-	/**
-	 * Método de acceso a detallePago.
-	 *
-	 * @return detallePago
-	 */
-	public String getDetallePago() {
-		return detallePago;
-	}
+    /**
+     * Método de acceso a detallePago.
+     *
+     * @return detallePago
+     */
+    public String getDetallePago() {
+        return detallePago;
+    }
 
-	/**
-	 * Método para establecer detallePago.
-	 *
-	 * @param detallePago
-	 *            detallePago a establecer
-	 */
-	public void setDetallePago(final String detallePago) {
-		this.detallePago = detallePago;
-	}
+    /**
+     * Método para establecer detallePago.
+     *
+     * @param detallePago
+     *            detallePago a establecer
+     */
+    public void setDetallePago(final String detallePago) {
+        this.detallePago = detallePago;
+    }
 
-	public String getModelo() {
-		return modelo;
-	}
+    public String getModelo() {
+        return modelo;
+    }
 
-	public void setModelo(final String modelo) {
-		this.modelo = modelo;
-	}
+    public void setModelo(final String modelo) {
+        this.modelo = modelo;
+    }
 
 }

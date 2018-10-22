@@ -41,6 +41,26 @@
   <servlet-mapping>
 	 <servlet-name>paymentib-rest</servlet-name>
 	 <url-pattern>/rest/*</url-pattern>
- </servlet-mapping>  
+ </servlet-mapping>
+ 
+  <!-- Securizacion --> 
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>sistramit-restint-ws</web-resource-name>
+      <url-pattern>/rest/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>PIB_API</role-name>
+    </auth-constraint>
+  </security-constraint>
+  
+  <login-config>
+    <auth-method>BASIC</auth-method>
+    <realm-name>Autenticacion</realm-name>
+  </login-config>
+  
+  <security-role>
+    <role-name>PIB_API</role-name>
+  </security-role> 
   
 </web-app>

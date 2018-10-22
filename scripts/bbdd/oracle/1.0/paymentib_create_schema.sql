@@ -23,6 +23,8 @@ create table PIB_PAGOE
    PAE_URLCBK           VARCHAR2(500 CHAR)   not null,
    PAE_LOCALI           VARCHAR2(100 CHAR),
    PAE_ESTADO           VARCHAR2(1)          not null,
+   PAE_PASERC           VARCHAR2(100 CHAR),
+   PAE_PASERM           VARCHAR2(500 CHAR),
    PAE_FECPAG           DATE,
    PAE_TOKEN            VARCHAR2(100 CHAR),
    PAE_USUCFM           VARCHAR2(100 CHAR),
@@ -85,6 +87,12 @@ comment on column PIB_PAGOE.PAE_LOCALI is
 
 comment on column PIB_PAGOE.PAE_ESTADO is
 'ESTADO PAGO: NO INICIADO (V) /DESCONOCIDO (X) / PAGADO (P) / NO PAGADO (N)';
+
+comment on column PIB_PAGOE.PAE_PASERC is
+'CODIGO ERROR PASARELA';
+
+comment on column PIB_PAGOE.PAE_PASERM is
+'MENSAJE ERROR PASARELA';
 
 comment on column PIB_PAGOE.PAE_FECPAG is
 'FECHA REALIZACION PAGO';

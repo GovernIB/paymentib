@@ -23,6 +23,18 @@
 			<version>${xmlbeans.version}</version>
 		</dependency>
 
+		<!-- CXF -->
+		 <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-frontend-jaxws</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-transports-http</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+
 		<!-- LOG -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -43,6 +55,13 @@
 		    <artifactId>commons-lang3</artifactId>
 		    <version>${commons-lang3.version}</version>
 		    <scope>provided</scope>
+		</dependency>
+
+		<!--  ITEXT   -->
+		<dependency>
+		    <groupId>com.lowagie</groupId>
+		    <artifactId>itext</artifactId>
+		    <version>${itext.version}</version>
 		</dependency>
 
   </dependencies>
@@ -70,7 +89,7 @@
 			<plugin>
 				<groupId>org.apache.cxf</groupId>
 				<artifactId>cxf-codegen-plugin</artifactId>
-				<version>${cfx.version}</version>
+				<version>${cxf.version}</version>
 				<executions>
 					<execution>
 						<id>generate-sources</id>
@@ -79,6 +98,7 @@
 							<wsdlOptions>
 								<wsdlOption>
 									<wsdl>src\main\resources\wsdl\Service_Tasa.wsdl</wsdl>
+									<wsdlLocation>classpath:wsdl/Service_Tasa.wsdl</wsdlLocation>
                                     <extendedSoapHeaders>true</extendedSoapHeaders>
 									<extraargs>
 										<extraarg>-client</extraarg>

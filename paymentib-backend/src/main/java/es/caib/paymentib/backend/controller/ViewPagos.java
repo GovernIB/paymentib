@@ -25,6 +25,7 @@ import es.caib.paymentib.core.api.model.types.TypeModoAcceso;
 import es.caib.paymentib.core.api.model.types.TypeNivelGravedad;
 import es.caib.paymentib.core.api.service.PagoBackService;
 import es.caib.paymentib.core.api.service.PagoFrontService;
+import es.caib.paymentib.plugins.api.EstadoPago;
 import es.caib.paymentib.plugins.api.TypeEstadoPago;
 
 /**
@@ -37,256 +38,275 @@ import es.caib.paymentib.plugins.api.TypeEstadoPago;
 @ViewScoped
 public class ViewPagos extends ViewControllerBase {
 
-	/**
-	 * Enlace servicio.
-	 */
-	/**
-	 * Enlace servicio.
-	 */
-	@Inject
-	private PagoBackService pagoBackService;
+    /**
+     * Enlace servicio.
+     */
+    /**
+     * Enlace servicio.
+     */
+    @Inject
+    private PagoBackService pagoBackService;
 
-	@Inject
-	private PagoFrontService pagoFrontService;
+    @Inject
+    private PagoFrontService pagoFrontService;
 
-	/**
-	 * Filtro (puede venir por parametro).
-	 */
-	private String filtro;
-	private Date filtroFechaDesde;
-	private Date filtroFechaHasta;
-	private TypeFiltroFecha filtroFecha;
+    /**
+     * Filtro (puede venir por parametro).
+     */
+    private String filtro;
+    private Date filtroFechaDesde;
+    private Date filtroFechaHasta;
+    private TypeFiltroFecha filtroFecha;
 
-	/**
-	 * Lista de datos.
-	 */
-	private List<DatosSesionPago> listaDatos;
+    /**
+     * Lista de datos.
+     */
+    private List<DatosSesionPago> listaDatos;
 
-	/**
-	 * Dato seleccionado en la lista.
-	 */
-	private DatosSesionPago datoSeleccionado;
+    /**
+     * Dato seleccionado en la lista.
+     */
+    private DatosSesionPago datoSeleccionado;
 
-	/**
-	 * Inicializacion.
-	 */
-	public void init() {
-		// Control acceso
-		UtilJSF.verificarAccesoSuperAdministrador();
-		// Titulo pantalla
-		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
+    /**
+     * Inicializacion.
+     */
+    public void init() {
+        // Control acceso
+        UtilJSF.verificarAccesoSuperAdministrador();
+        // Titulo pantalla
+        setLiteralTituloPantalla(
+                UtilJSF.getTitleViewNameFromClass(this.getClass()));
 
-		final DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        final DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
-		try {
-			filtroFechaDesde = formatter.parse(formatter.format(new Date()));
-		} catch (final ParseException e) {
-		}
+        try {
+            filtroFechaDesde = formatter.parse(formatter.format(new Date()));
+        } catch (final ParseException e) {
+        }
 
-		filtroFecha = TypeFiltroFecha.CREACION;
-	}
+        filtroFecha = TypeFiltroFecha.CREACION;
+    }
 
-	public boolean getFilaSeleccionada() {
-		return datoSeleccionado != null;
-	}
+    public boolean getFilaSeleccionada() {
+        return datoSeleccionado != null;
+    }
 
-	public boolean getPermiteVerificar() {
-		return (TypeEstadoPago.DESCONOCIDO.equals(datoSeleccionado.getEstado())
-				|| TypeEstadoPago.NO_PAGADO.equals(datoSeleccionado.getEstado()));
-	}
+    public boolean getPermiteVerificar() {
+        return (TypeEstadoPago.DESCONOCIDO.equals(datoSeleccionado.getEstado())
+                || TypeEstadoPago.NO_PAGADO
+                        .equals(datoSeleccionado.getEstado()));
+    }
 
-	public boolean getPermiteConfirmar() {
-		return (TypeEstadoPago.DESCONOCIDO.equals(datoSeleccionado.getEstado())
-				|| TypeEstadoPago.NO_PAGADO.equals(datoSeleccionado.getEstado()));
-	}
+    public boolean getPermiteConfirmar() {
+        return (TypeEstadoPago.DESCONOCIDO.equals(datoSeleccionado.getEstado())
+                || TypeEstadoPago.NO_PAGADO
+                        .equals(datoSeleccionado.getEstado()));
+    }
 
-	/**
-	 * Abre dialogo para consultar dato.
-	 */
-	public void consultar() {
-		// Verifica si no hay fila seleccionada
-		if (!verificarFilaSeleccionada())
-			return;
+    /**
+     * Abre dialogo para consultar dato.
+     */
+    public void consultar() {
+        // Verifica si no hay fila seleccionada
+        if (!verificarFilaSeleccionada())
+            return;
 
-		// Muestra dialogo
-		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
-		UtilJSF.openDialog(DialogPagos.class, TypeModoAcceso.CONSULTA, params, true, 1100, 500);
-	}
+        // Muestra dialogo
+        final Map<String, String> params = new HashMap<>();
+        params.put(TypeParametroVentana.ID.toString(),
+                String.valueOf(this.datoSeleccionado.getCodigo()));
+        UtilJSF.openDialog(DialogPagos.class, TypeModoAcceso.CONSULTA, params,
+                true, 1100, 500);
+    }
 
-	/**
-	 * Abre dialogo para consultar dato.
-	 */
-	public void confirmar() {
-		// Verifica si no hay fila seleccionada
-		if (!verificarFilaSeleccionada()) {
-			return;
-		}
+    /**
+     * Abre dialogo para consultar dato.
+     */
+    public void confirmar() {
+        // Verifica si no hay fila seleccionada
+        if (!verificarFilaSeleccionada()) {
+            return;
+        }
 
-		// Muestra dialogo
-		final Map<String, String> params = new HashMap<>();
-		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
-		UtilJSF.openDialog(DialogPagosConfirmar.class, TypeModoAcceso.EDICION, params, true, 400, 200);
-	}
+        // Muestra dialogo
+        final Map<String, String> params = new HashMap<>();
+        params.put(TypeParametroVentana.ID.toString(),
+                String.valueOf(this.datoSeleccionado.getCodigo()));
+        UtilJSF.openDialog(DialogPagosConfirmar.class, TypeModoAcceso.EDICION,
+                params, true, 400, 200);
+    }
 
-	/**
-	 * Retorno dialogo confirmar
-	 *
-	 * @param event
-	 *            respuesta dialogo
-	 ***/
-	public void returnDialogoConfirmar(final SelectEvent event) {
-		final DialogResult respuesta = (DialogResult) event.getObject();
-		if (!respuesta.isCanceled()) {
-			final DatosSesionPago pagado = (DatosSesionPago) respuesta.getResult();
-			final int indice = listaDatos.indexOf(datoSeleccionado);
-			listaDatos.set(indice, pagado);
-			datoSeleccionado = pagado;
-		}
-	}
+    /**
+     * Retorno dialogo confirmar
+     *
+     * @param event
+     *            respuesta dialogo
+     ***/
+    public void returnDialogoConfirmar(final SelectEvent event) {
+        final DialogResult respuesta = (DialogResult) event.getObject();
+        if (!respuesta.isCanceled()) {
+            final DatosSesionPago pagado = (DatosSesionPago) respuesta
+                    .getResult();
+            final int indice = listaDatos.indexOf(datoSeleccionado);
+            listaDatos.set(indice, pagado);
+            datoSeleccionado = pagado;
+        }
+    }
 
-	public void verificar() {
-		// Verifica si no hay fila seleccionada
-		if (!verificarFilaSeleccionada()) {
-			return;
-		}
+    public void verificar() {
+        // Verifica si no hay fila seleccionada
+        if (!verificarFilaSeleccionada()) {
+            return;
+        }
 
-		final TypeEstadoPago nuevoEstado = pagoFrontService
-				.verificarPagoElectronico(getDatoSeleccionado().getDatosPago().getIdentificador());
+        final EstadoPago nuevoEstado = pagoFrontService
+                .verificarPagoElectronico(getDatoSeleccionado().getDatosPago()
+                        .getIdentificador());
 
-		if (!nuevoEstado.equals(getDatoSeleccionado().getEstado())) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("info.estado.cambio"));
+        if (!nuevoEstado.getEstado()
+                .equals(getDatoSeleccionado().getEstado())) {
+            UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+                    UtilJSF.getLiteral("info.estado.cambio"));
 
-			final int indice = listaDatos.indexOf(datoSeleccionado);
-			final DatosSesionPago cambiado = pagoBackService.getPagoByCodigo(datoSeleccionado.getCodigo());
-			listaDatos.set(indice, cambiado);
-			datoSeleccionado = cambiado;
-		}
-	}
+            final int indice = listaDatos.indexOf(datoSeleccionado);
+            final DatosSesionPago cambiado = pagoBackService
+                    .getPagoByCodigo(datoSeleccionado.getCodigo());
+            listaDatos.set(indice, cambiado);
+            datoSeleccionado = cambiado;
+        }
+    }
 
-	/**
-	 * Recuperacion de datos.
-	 */
-	public void filtrar() {
+    /**
+     * Recuperacion de datos.
+     */
+    public void filtrar() {
 
-		if (filtroFechaDesde == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.fecha.inicio.falta"));
-			return;
-		}
+        if (filtroFechaDesde == null) {
+            UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+                    UtilJSF.getLiteral("warning.fecha.inicio.falta"));
+            return;
+        }
 
-		if (filtroFechaDesde != null && filtroFechaHasta != null && filtroFechaDesde.after(filtroFechaHasta)) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.fecha.fin.anterior"));
-			return;
-		}
-		if (filtroFecha == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.fecha.tipo"));
-			return;
-		}
+        if (filtroFechaDesde != null && filtroFechaHasta != null
+                && filtroFechaDesde.after(filtroFechaHasta)) {
+            UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+                    UtilJSF.getLiteral("warning.fecha.fin.anterior"));
+            return;
+        }
+        if (filtroFecha == null) {
+            UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+                    UtilJSF.getLiteral("warning.fecha.tipo"));
+            return;
+        }
 
-		// Normaliza filtro
-		filtro = normalizarFiltro(filtro);
-		// Buscar
-		this.buscar();
-	}
+        // Normaliza filtro
+        filtro = normalizarFiltro(filtro);
+        // Buscar
+        this.buscar();
+    }
 
-	/**
-	 * Método final que se encarga de realizar la búsqueda
-	 */
-	private void buscar() {
-		// Filtra
+    /**
+     * Método final que se encarga de realizar la búsqueda
+     */
+    private void buscar() {
+        // Filtra
 
-		try {
-			listaDatos = pagoBackService.listaPagos(filtro, filtroFechaDesde, filtroFechaHasta, filtroFecha);
-		} catch (final EJBException e) {
-			if (e.getCause() instanceof MaxNumFilasException) {
-				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.maxnumfilas"));
-				return;
-			} else {
-				throw e;
-			}
+        try {
+            listaDatos = pagoBackService.listaPagos(filtro, filtroFechaDesde,
+                    filtroFechaHasta, filtroFecha);
+        } catch (final EJBException e) {
+            if (e.getCause() instanceof MaxNumFilasException) {
+                UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+                        UtilJSF.getLiteral("warning.maxnumfilas"));
+                return;
+            } else {
+                throw e;
+            }
 
-		}
+        }
 
-		// Quitamos seleccion de dato
-		datoSeleccionado = null;
-	}
+        // Quitamos seleccion de dato
+        datoSeleccionado = null;
+    }
 
-	private boolean verificarFilaSeleccionada() {
-		boolean filaSeleccionada = true;
-		if (this.datoSeleccionado == null) {
-			UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.noseleccionadofila"));
-			filaSeleccionada = false;
-		}
-		return filaSeleccionada;
-	}
+    private boolean verificarFilaSeleccionada() {
+        boolean filaSeleccionada = true;
+        if (this.datoSeleccionado == null) {
+            UtilJSF.addMessageContext(TypeNivelGravedad.WARNING,
+                    UtilJSF.getLiteral("warning.noseleccionadofila"));
+            filaSeleccionada = false;
+        }
+        return filaSeleccionada;
+    }
 
-	/**
-	 * @return the filtro
-	 */
-	public String getFiltro() {
-		return filtro;
-	}
+    /**
+     * @return the filtro
+     */
+    public String getFiltro() {
+        return filtro;
+    }
 
-	/**
-	 * @param filtro
-	 *            the filtro to set
-	 */
-	public void setFiltro(final String filtro) {
-		this.filtro = filtro;
-	}
+    /**
+     * @param filtro
+     *            the filtro to set
+     */
+    public void setFiltro(final String filtro) {
+        this.filtro = filtro;
+    }
 
-	/**
-	 * @return the listaDatos
-	 */
-	public List<DatosSesionPago> getListaDatos() {
-		return listaDatos;
-	}
+    /**
+     * @return the listaDatos
+     */
+    public List<DatosSesionPago> getListaDatos() {
+        return listaDatos;
+    }
 
-	/**
-	 * @param listaDatos
-	 *            the listaDatos to set
-	 */
-	public void setListaDatos(final List<DatosSesionPago> listaDatos) {
-		this.listaDatos = listaDatos;
-	}
+    /**
+     * @param listaDatos
+     *            the listaDatos to set
+     */
+    public void setListaDatos(final List<DatosSesionPago> listaDatos) {
+        this.listaDatos = listaDatos;
+    }
 
-	/**
-	 * @return the datoSeleccionado
-	 */
-	public DatosSesionPago getDatoSeleccionado() {
-		return datoSeleccionado;
-	}
+    /**
+     * @return the datoSeleccionado
+     */
+    public DatosSesionPago getDatoSeleccionado() {
+        return datoSeleccionado;
+    }
 
-	/**
-	 * @param datoSeleccionado
-	 *            the datoSeleccionado to set
-	 */
-	public void setDatoSeleccionado(final DatosSesionPago datoSeleccionado) {
-		this.datoSeleccionado = datoSeleccionado;
-	}
+    /**
+     * @param datoSeleccionado
+     *            the datoSeleccionado to set
+     */
+    public void setDatoSeleccionado(final DatosSesionPago datoSeleccionado) {
+        this.datoSeleccionado = datoSeleccionado;
+    }
 
-	public TypeFiltroFecha getFiltroFecha() {
-		return filtroFecha;
-	}
+    public TypeFiltroFecha getFiltroFecha() {
+        return filtroFecha;
+    }
 
-	public void setFiltroFecha(final TypeFiltroFecha filtroFecha) {
-		this.filtroFecha = filtroFecha;
-	}
+    public void setFiltroFecha(final TypeFiltroFecha filtroFecha) {
+        this.filtroFecha = filtroFecha;
+    }
 
-	public Date getFiltroFechaDesde() {
-		return filtroFechaDesde;
-	}
+    public Date getFiltroFechaDesde() {
+        return filtroFechaDesde;
+    }
 
-	public void setFiltroFechaDesde(final Date filtroFechaDesde) {
-		this.filtroFechaDesde = filtroFechaDesde;
-	}
+    public void setFiltroFechaDesde(final Date filtroFechaDesde) {
+        this.filtroFechaDesde = filtroFechaDesde;
+    }
 
-	public Date getFiltroFechaHasta() {
-		return filtroFechaHasta;
-	}
+    public Date getFiltroFechaHasta() {
+        return filtroFechaHasta;
+    }
 
-	public void setFiltroFechaHasta(final Date filtroFechaFin) {
-		this.filtroFechaHasta = filtroFechaFin;
-	}
+    public void setFiltroFechaHasta(final Date filtroFechaFin) {
+        this.filtroFechaHasta = filtroFechaFin;
+    }
 
 }

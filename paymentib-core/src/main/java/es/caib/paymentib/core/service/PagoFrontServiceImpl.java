@@ -142,71 +142,17 @@ public final class PagoFrontServiceImpl implements PagoFrontService {
     }
 
     @Override
-    public TypeEstadoPago verificarRetornoPagoElectronico(String identificador,
+    public EstadoPago verificarRetornoPagoElectronico(String identificador,
             Map<String, String[]> parametrosRetorno) {
-
-        log.debug("Verificar retorno pago: " + identificador);
-
-        // Recuperamos sesion pago
-        final DatosSesionPago dp = recuperarSesionPagoByIdentificador(
-                identificador);
-
-        // Estado actual
-        TypeEstadoPago res = dp.getEstado();
-
-        // Verificamos estado excepto si todavía no se ha iniciado o no se ha
-        // pagado
-        if (res != TypeEstadoPago.NO_INICIADO && res != TypeEstadoPago.PAGADO) {
-            // Crea plugin pago
-            final IPasarelaPagoPlugin plgPago = crearPlugin(dp.getPasarelaId());
-            try {
-                // Verifica pago
-                final EstadoPago ep = plgPago.verificarRetornoPagoElectronico(
-                        dp.getDatosPago(), dp.getLocalizador(),
-                        parametrosRetorno);
-                // Si cambia estado, actualizamos
-                if (res != ep.getEstado()) {
-                    dao.actualizarEstado(identificador, ep);
-                    res = ep.getEstado();
-                }
-            } catch (final PasarelaPagoException e) {
-                throw new VerificacionPagoException(identificador, e);
-            }
-        }
-
+        final EstadoPago res = verificarPagoImpl(identificador, true,
+                parametrosRetorno);
         return res;
     }
 
     @Override
-    public TypeEstadoPago verificarPagoElectronico(String identificador) {
-
-        // Recuperamos sesion pago
-        final DatosSesionPago dp = recuperarSesionPagoByIdentificador(
-                identificador);
-
-        TypeEstadoPago res = dp.getEstado();
-
-        // Verificamos estado excepto si todavía no se ha iniciado o no se ha
-        // pagado
-        if (res != TypeEstadoPago.NO_INICIADO && res != TypeEstadoPago.PAGADO) {
-            // Crea plugin pago
-            final IPasarelaPagoPlugin plgPago = crearPlugin(dp.getPasarelaId());
-            try {
-                // Verifica estado pago
-                final EstadoPago ep = plgPago.verificarPagoElectronico(
-                        dp.getDatosPago(), dp.getLocalizador());
-                // Si cambia estado, actualizamos
-                if (res != ep.getEstado()) {
-                    dao.actualizarEstado(identificador, ep);
-                    res = ep.getEstado();
-                }
-            } catch (final PasarelaPagoException e) {
-                throw new VerificacionPagoException(identificador, e);
-            }
-        }
-
+    public EstadoPago verificarPagoElectronico(String identificador) {
+        final EstadoPago res = verificarPagoImpl(identificador, false, null);
         return res;
-
     }
 
     @Override
@@ -308,6 +254,48 @@ public final class PagoFrontServiceImpl implements PagoFrontService {
             throw new NoExisteSesionPagoException(identificador);
         }
         return dp;
+    }
+
+    private EstadoPago verificarPagoImpl(String identificador,
+            boolean retornoPago, Map<String, String[]> parametrosRetorno) {
+        EstadoPago res = null;
+        // Recuperamos sesion pago
+        final DatosSesionPago dp = recuperarSesionPagoByIdentificador(
+                identificador);
+        // Si no esta iniciado o si ya esta pagado, establecemos estado de
+        // persistencia
+        if (dp.getEstado() == TypeEstadoPago.NO_INICIADO
+                || dp.getEstado() == TypeEstadoPago.PAGADO) {
+            res = new EstadoPago();
+            res.setEstado(dp.getEstado());
+            res.setLocalizador(dp.getLocalizador());
+            res.setFechaPago(dp.getFechaPago());
+            res.setCodigoErrorPasarela(dp.getCodigoErrorPasarela());
+            res.setMensajeErrorPasarela(dp.getMensajeErrorPasarela());
+        } else {
+            // Verificamos estado contra la pasarela
+            // Crea plugin pago
+            final IPasarelaPagoPlugin plgPago = crearPlugin(dp.getPasarelaId());
+            try {
+                // Verifica estado pago según si es retorno o una verifación
+                // normal
+                EstadoPago ep = null;
+                if (retornoPago) {
+                    ep = plgPago.verificarRetornoPagoElectronico(
+                            dp.getDatosPago(), dp.getLocalizador(),
+                            parametrosRetorno);
+                } else {
+                    ep = plgPago.verificarPagoElectronico(dp.getDatosPago(),
+                            dp.getLocalizador());
+                }
+                // Actualizamos estado
+                dao.actualizarEstado(identificador, ep);
+                res = ep;
+            } catch (final PasarelaPagoException e) {
+                throw new VerificacionPagoException(identificador, e);
+            }
+        }
+        return res;
     }
 
 }

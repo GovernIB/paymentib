@@ -3,6 +3,13 @@ package es.caib.paymentib.plugins.atib.clientws;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.xml.ws.BindingProvider;
+
+import org.apache.cxf.endpoint.Client;
+import org.apache.cxf.frontend.ClientProxy;
+import org.apache.cxf.transport.http.HTTPConduit;
+import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
+
 import es.caib.paymentib.plugins.atib.clientws.cxf.ArrayOfGuid;
 import es.caib.paymentib.plugins.atib.clientws.cxf.DatosRespuesta046;
 import es.caib.paymentib.plugins.atib.clientws.cxf.DatosRespuestaGetUrlPago;
@@ -42,12 +49,38 @@ public class ClienteAtib {
      *
      * @param url
      * @return
-     * @throws MalformedURLException
+     * @throws Exception
+     * @throws NumberFormatException
      */
     private ServiceTasaSoap getCliente(String url)
-            throws MalformedURLException {
-        final ServiceTasa servicio = new ServiceTasa(new URL(url));
-        return servicio.getServiceTasaSoap();
+            throws NumberFormatException, Exception {
+        final ServiceTasa servicio = new ServiceTasa();
+        final ServiceTasaSoap serviceTasaSoap = servicio.getServiceTasaSoap();
+        final BindingProvider provider = (BindingProvider) serviceTasaSoap;
+        provider.getRequestContext()
+                .put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, url);
+
+        final Client client = ClientProxy.getClient(serviceTasaSoap);
+        final HTTPConduit conduit = (HTTPConduit) client.getConduit();
+
+        // Vemos si hay que pasar por proxy
+        final String proxyHost = System.getProperty("http.proxyHost");
+        if (proxyHost != null && !"".equals(proxyHost)) {
+            if (!validateNonProxyHosts(url)) {
+                final HTTPClientPolicy policy = conduit.getClient();
+                policy.setProxyServer(proxyHost);
+                policy.setProxyServerPort(
+                        Integer.parseInt(System.getProperty("http.proxyPort")));
+
+                conduit.getProxyAuthorization()
+                        .setUserName(System.getProperty("http.proxyUser"));
+                conduit.getProxyAuthorization()
+                        .setPassword(System.getProperty("http.proxyPassword"));
+            }
+        }
+
+        return serviceTasaSoap;
+
     }
 
     /**
@@ -136,6 +169,39 @@ public class ClienteAtib {
         usuario.setIdentificador(user);
         usuario.setPassword(password);
         return usuario;
+    }
+
+    /**
+     * Busca els host de la url indicada dentro de la propiedad
+     * http.nonProxyHosts de la JVM
+     *
+     * @param url
+     *            Endpoint del ws
+     * @return true si el host esta dentro de la propiedad, fals en caso
+     *         contrario
+     */
+    private static boolean validateNonProxyHosts(String url) throws Exception {
+        final String nonProxyHosts = System.getProperty("http.nonProxyHosts");
+        boolean existe = false;
+        URL urlURL;
+        try {
+            if (nonProxyHosts != null && !"".equals(nonProxyHosts)) {
+                urlURL = new URL(url);
+                final String[] nonProxyHostsArray = nonProxyHosts.split("\\|");
+                for (int i = 0; i < nonProxyHostsArray.length; i++) {
+                    final String a = nonProxyHostsArray[i]
+                            .replaceAll("\\.", "\\\\.").replaceAll("\\*", ".*");
+                    ;
+                    if (urlURL.getHost().matches(a)) {
+                        existe = true;
+                        break;
+                    }
+                }
+            }
+        } catch (final MalformedURLException e) {
+            throw new Exception("Error validando nonProxyHosts", e);
+        }
+        return existe;
     }
 
 }

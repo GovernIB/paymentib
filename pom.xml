@@ -44,7 +44,7 @@
 		<swagger.version>2.7.0</swagger.version>
 
 		<plugins-ib.version>2.0.0</plugins-ib.version>
-		<cfx.version>3.1.4</cfx.version>
+		<cxf.version>3.1.4</cxf.version>
 
 		<javax.inject.version>1</javax.inject.version>
 		<jsf2.version>2.2.15</jsf2.version>
@@ -54,6 +54,7 @@
 
 		<xmlbeans.version>2.4.0</xmlbeans.version>
 
+		<itext.version>2.1.7</itext.version>
 	</properties>
 
 	<repositories>

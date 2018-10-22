@@ -11,6 +11,7 @@ public class TestCliente {
 
             final ClienteAtib c = new ClienteAtib(
                     "http://www.atib.es/servicios/Service_Tasa.asmx?wsdl",
+                    // "http://www.atib.es/servicios/Service_Tasa.asmx",
                     "indrauser", "INDRA");
 
             final DatosRespuesta046 res = c.ping046("");

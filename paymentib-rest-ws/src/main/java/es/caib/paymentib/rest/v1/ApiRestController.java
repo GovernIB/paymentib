@@ -1,5 +1,8 @@
 package es.caib.paymentib.rest.v1;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,12 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 import es.caib.paymentib.core.api.model.pago.DatosSesionPago;
 import es.caib.paymentib.core.api.service.PagoFrontService;
 import es.caib.paymentib.plugins.api.DatosPago;
-import es.caib.paymentib.plugins.api.TypeEstadoPago;
+import es.caib.paymentib.plugins.api.EstadoPago;
 import es.caib.paymentib.plugins.api.TypeIdioma;
 import es.caib.paymentib.rest.api.v1.RDatosInicioPago;
 import es.caib.paymentib.rest.api.v1.RDatosPago;
+import es.caib.paymentib.rest.api.v1.REstadoPago;
 import es.caib.paymentib.rest.api.v1.RRedireccionPago;
-import es.caib.paymentib.rest.api.v1.RTypeEstadoPago;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -69,26 +72,17 @@ public class ApiRestController {
      *            identificador pago
      * @return estado pago
      */
-    @ApiOperation(value = "verificarPagoElectronico", notes = "Verifica estado pago contra pasarela de pago.", response = RTypeEstadoPago.class)
+    @ApiOperation(value = "verificarPagoElectronico", notes = "Verifica estado pago contra pasarela de pago.", response = REstadoPago.class)
     @RequestMapping(value = "/verificarPagoElectronico/{identificador}", method = RequestMethod.POST)
-    public RTypeEstadoPago verificarPagoElectronico(
+    public REstadoPago verificarPagoElectronico(
             @PathVariable("identificador") final String identificador) {
-
-        final TypeEstadoPago estado = service
+        final EstadoPago estado = service
                 .verificarPagoElectronico(identificador);
-
-        RTypeEstadoPago res = null;
-        switch (estado) {
-        case PAGADO:
-            res = RTypeEstadoPago.PAGADO;
-            break;
-        case NO_PAGADO:
-            res = RTypeEstadoPago.NO_PAGADO;
-            break;
-        default:
-            res = RTypeEstadoPago.DESCONOCIDO;
-        }
-
+        final REstadoPago res = new REstadoPago();
+        res.setEstado(estado.getEstado().toString());
+        res.setFechaPago(formateaFecha(estado.getFechaPago()));
+        res.setCodigoErrorPasarela(estado.getCodigoErrorPasarela());
+        res.setMensajeErrorPasarela(estado.getMensajeErrorPasarela());
         return res;
     }
 
@@ -162,5 +156,16 @@ public class ApiRestController {
         datosPago.setTasaId(rDatosPago.getTasaId());
         datosPago.setImporte(rDatosPago.getImporte());
         return datosPago;
+    }
+
+    private String formateaFecha(final Date pFecha) {
+        String res = null;
+        if (pFecha != null) {
+            final SimpleDateFormat df = new SimpleDateFormat(
+                    "dd/MM/yyyy HH:mm:ss");
+            df.setLenient(false);
+            res = df.format(pFecha);
+        }
+        return res;
     }
 }

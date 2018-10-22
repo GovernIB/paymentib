@@ -1,28 +1,38 @@
-package es.caib.paymentib.plugins.api;
+package es.caib.paymentib.rest.api.v1;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Estado pago.
  *
  * @author Indra
  *
  */
+@ApiModel(value = "Estado pago", description = "Estado pago")
+public class REstadoPago {
 
-import java.util.Date;
+    /**
+     * Estado: No iniciado("v") / No pagado ("n") / Pagado ("p") / Desconocido
+     * ("x")
+     */
+    @ApiModelProperty(value = "estado")
+    private String estado;
 
-public class EstadoPago {
-
-    /** Estado. */
-    private TypeEstadoPago estado;
-
-    /** Fecha pago. */
-    private Date fechaPago;
+    /** Fecha pago en caso de estar pagado (dd/mm/yyyy hh:mi:ss). */
+    @ApiModelProperty(value = "fechaPago")
+    private String fechaPago;
 
     /** Identificador pago pasarela en caso de estar pagado. */
+    @ApiModelProperty(value = "localizador")
     private String localizador;
 
-    /** Codigo error pasarela. */
+    /** Código error pasarela, opcional en caso de estado desconocido. */
+    @ApiModelProperty(value = "codigoErrorPasarela")
     private String codigoErrorPasarela;
 
-    /** Mensaje error pasarela. */
+    /** Mensaje error pasarela, opcional en caso de estado desconocido. */
+    @ApiModelProperty(value = "mensajeErrorPasarela")
     private String mensajeErrorPasarela;
 
     /**
@@ -30,7 +40,7 @@ public class EstadoPago {
      *
      * @return estado
      */
-    public TypeEstadoPago getEstado() {
+    public String getEstado() {
         return estado;
     }
 
@@ -40,7 +50,7 @@ public class EstadoPago {
      * @param estado
      *            estado a establecer
      */
-    public void setEstado(TypeEstadoPago estado) {
+    public void setEstado(String estado) {
         this.estado = estado;
     }
 
@@ -49,7 +59,7 @@ public class EstadoPago {
      *
      * @return fechaPago
      */
-    public Date getFechaPago() {
+    public String getFechaPago() {
         return fechaPago;
     }
 
@@ -59,7 +69,7 @@ public class EstadoPago {
      * @param fechaPago
      *            fechaPago a establecer
      */
-    public void setFechaPago(Date fechaPago) {
+    public void setFechaPago(String fechaPago) {
         this.fechaPago = fechaPago;
     }
 
@@ -103,7 +113,7 @@ public class EstadoPago {
 
     /**
      * Método de acceso a identificadorPagoPasarela.
-     * 
+     *
      * @return identificadorPagoPasarela
      */
     public String getLocalizador() {
@@ -112,7 +122,7 @@ public class EstadoPago {
 
     /**
      * Método para establecer identificadorPagoPasarela.
-     * 
+     *
      * @param identificadorPagoPasarela
      *            identificadorPagoPasarela a establecer
      */

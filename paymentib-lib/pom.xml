@@ -112,13 +112,13 @@
 		    <version>${commons-lang3.version}</version>
 		</dependency>
 
-<!--
+		<!--  ITEXT   -->
 		<dependency>
-		    <groupId>commons-lang</groupId>
-		    <artifactId>commons-lang</artifactId>
-		    <version>${commons-lang.version}</version>
+		    <groupId>com.lowagie</groupId>
+		    <artifactId>itext</artifactId>
+		    <version>${itext.version}</version>
 		</dependency>
- -->
+
 
   </dependencies>
 </project>

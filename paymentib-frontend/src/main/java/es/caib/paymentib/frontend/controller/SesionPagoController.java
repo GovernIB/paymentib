@@ -20,7 +20,7 @@ import es.caib.paymentib.core.api.service.PagoFrontService;
 import es.caib.paymentib.frontend.SesionHttp;
 import es.caib.paymentib.frontend.model.ErrorCodes;
 import es.caib.paymentib.plugins.api.EntidadPago;
-import es.caib.paymentib.plugins.api.TypeEstadoPago;
+import es.caib.paymentib.plugins.api.EstadoPago;
 import es.caib.paymentib.plugins.api.UrlRedireccionPasarelaPago;
 
 /**
@@ -155,10 +155,10 @@ public final class SesionPagoController {
 
         // Verifica pago electrónico
         try {
-            final TypeEstadoPago res = service.verificarRetornoPagoElectronico(
+            final EstadoPago res = service.verificarRetornoPagoElectronico(
                     dp.getDatosPago().getIdentificador(),
                     request.getParameterMap());
-            log.debug("Resultado pago:" + res);
+            log.debug("Resultado pago:" + res.getEstado());
         } catch (final Exception ex) {
             // Blindamos para que siempre retorne a aplicación origen
             log.debug(

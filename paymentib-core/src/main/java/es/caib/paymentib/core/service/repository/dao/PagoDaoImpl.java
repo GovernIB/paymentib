@@ -103,7 +103,8 @@ public class PagoDaoImpl implements PagoDao {
         final JPagoE jp = getJPagoByIdentificador(identificador);
         jp.setEstado(ep.getEstado().toString());
         jp.setCodigoErrorPasarela(ep.getCodigoErrorPasarela());
-        jp.setMensajeErrorPasarela(ep.getMensajeErrorPasarela());
+        jp.setMensajeErrorPasarela(
+                StringUtils.substring(ep.getMensajeErrorPasarela(), 0, 500));
         jp.setFechaPago(ep.getFechaPago());
         entityManager.persist(jp);
     }

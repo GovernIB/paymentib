@@ -73,7 +73,7 @@ public class ApiRestController {
      * @return estado pago
      */
     @ApiOperation(value = "verificarPagoElectronico", notes = "Verifica estado pago contra pasarela de pago.", response = REstadoPago.class)
-    @RequestMapping(value = "/verificarPagoElectronico/{identificador}", method = RequestMethod.POST)
+    @RequestMapping(value = "/verificarPagoElectronico/{identificador}", method = RequestMethod.GET)
     public REstadoPago verificarPagoElectronico(
             @PathVariable("identificador") final String identificador) {
         final EstadoPago estado = service
@@ -95,7 +95,7 @@ public class ApiRestController {
      *         justificante).
      */
     @ApiOperation(value = "obtenerJustificantePagoElectronico", notes = "btiene justificante de pago")
-    @RequestMapping(value = "/obtenerJustificantePagoElectronico/{identificador}", method = RequestMethod.POST)
+    @RequestMapping(value = "/obtenerJustificantePagoElectronico/{identificador}", method = RequestMethod.GET)
     @ResponseBody
     public byte[] obtenerJustificantePagoElectronico(
             @PathVariable("identificador") final String identificador) {
@@ -113,7 +113,7 @@ public class ApiRestController {
      * @throws RPagoPluginException
      */
     @ApiOperation(value = "consultaTasa", notes = "Obtiene importe tasa.")
-    @RequestMapping(value = "/consultaTasa/{idPasarela}/{idTasa}", method = RequestMethod.POST)
+    @RequestMapping(value = "/consultaTasa/{idPasarela}/{idTasa}", method = RequestMethod.GET)
     public int consultaTasa(@PathVariable("idPasarela") final String idPasarela,
             @PathVariable("idTasa") final String idTasa) {
         return service.consultaTasa(idPasarela, idTasa);

@@ -55,6 +55,14 @@
 	      <scope>compile</scope>
 	    </dependency>
 
+	    <!-- COMMONS -->
+	    <dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
+		    <version>${commons-lang3.version}</version>
+		    <scope>provided</scope>
+		</dependency>
+
   	</dependencies>
 
   	<build>

@@ -181,7 +181,8 @@ public final class PagoFrontServiceImpl implements PagoFrontService {
             // Si la pasarela no provee justificante, proveemos justificante
             // genérico
             if (justif == null) {
-                justif = GeneradorJustificantePago.generarJustificantePago(dp);
+                justif = GeneradorJustificantePago.generarJustificantePago(
+                        config.obtenerDirectorioConfiguracion(), dp);
             }
 
         } catch (final PasarelaPagoException e) {

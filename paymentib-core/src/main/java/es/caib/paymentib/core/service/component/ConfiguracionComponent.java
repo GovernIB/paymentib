@@ -29,4 +29,11 @@ public interface ConfiguracionComponent {
      */
     IPasarelaPagoPlugin obtenerPluginPasarelaPago(String idPasarelaPago);
 
+    /**
+     * Obtiene directorio de configuración.
+     * 
+     * @return directorio de configuración
+     */
+    String obtenerDirectorioConfiguracion();
+
 }

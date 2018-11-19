@@ -22,6 +22,9 @@ public class DatosSesionPago {
     /** Fecha creación. */
     private Date fechaCreacion;
 
+    /** Id entidad. */
+    private String entidadId;
+
     /** Id pasarela pagos. */
     private String pasarelaId;
 
@@ -221,7 +224,7 @@ public class DatosSesionPago {
 
     /**
      * Método de acceso a codigoErrorPasarela.
-     * 
+     *
      * @return codigoErrorPasarela
      */
     public String getCodigoErrorPasarela() {
@@ -230,7 +233,7 @@ public class DatosSesionPago {
 
     /**
      * Método para establecer codigoErrorPasarela.
-     * 
+     *
      * @param codigoErrorPasarela
      *            codigoErrorPasarela a establecer
      */
@@ -240,7 +243,7 @@ public class DatosSesionPago {
 
     /**
      * Método de acceso a mensajeErrorPasarela.
-     * 
+     *
      * @return mensajeErrorPasarela
      */
     public String getMensajeErrorPasarela() {
@@ -249,12 +252,31 @@ public class DatosSesionPago {
 
     /**
      * Método para establecer mensajeErrorPasarela.
-     * 
+     *
      * @param mensajeErrorPasarela
      *            mensajeErrorPasarela a establecer
      */
     public void setMensajeErrorPasarela(String mensajeErrorPasarela) {
         this.mensajeErrorPasarela = mensajeErrorPasarela;
+    }
+
+    /**
+     * Método de acceso a entidadId.
+     * 
+     * @return entidadId
+     */
+    public String getEntidadId() {
+        return entidadId;
+    }
+
+    /**
+     * Método para establecer entidadId.
+     * 
+     * @param entidadId
+     *            entidadId a establecer
+     */
+    public void setEntidadId(String entidadId) {
+        this.entidadId = entidadId;
     }
 
 }

@@ -330,6 +330,7 @@ public class JPagoE implements IModelApi {
 
         pago.setDatosPago(datosPago);
         pago.setFechaCreacion(fechaCreacion);
+        pago.setEntidadId(entidadId);
         pago.setPasarelaId(pasarelaId);
         pago.setLocalizador(localizador);
         pago.setEstado(TypeEstadoPago.fromString(estado));

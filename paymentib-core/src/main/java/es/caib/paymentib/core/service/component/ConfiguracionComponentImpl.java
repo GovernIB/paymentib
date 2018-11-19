@@ -1,5 +1,6 @@
 package es.caib.paymentib.core.service.component;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -22,16 +23,29 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
     /** Propiedades configuración especificadas en properties. */
     private Properties propiedadesLocales;
 
+    /** Directorio configuración. */
+    private String directorioConf;
+
     @PostConstruct
     public void init() {
         final String pathProperties = System
                 .getProperty("es.caib.paymentib.properties.path");
+        // Carga fichero de propiedades
         try (FileInputStream fis = new FileInputStream(pathProperties);) {
             propiedadesLocales = new Properties();
             propiedadesLocales.load(fis);
         } catch (final IOException e) {
             throw new ConfiguracionException(e);
         }
+        // Obtiene directorio configuracion
+        final File f = new File(
+                System.getProperty("es.caib.paymentib.properties.path"));
+        directorioConf = f.getParentFile().getAbsolutePath();
+    }
+
+    @Override
+    public String obtenerDirectorioConfiguracion() {
+        return directorioConf;
     }
 
     @Override

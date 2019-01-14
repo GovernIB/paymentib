@@ -14,7 +14,6 @@ import springfox.documentation.annotations.ApiIgnore;
  *
  */
 @Controller
-@RequestMapping("/")
 @ApiIgnore
 public class IndexController {
 

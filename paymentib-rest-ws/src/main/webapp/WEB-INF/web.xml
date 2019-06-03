@@ -31,7 +31,7 @@
     <filter-name>CharacterEncoding</filter-name>
     <url-pattern>*</url-pattern>
   </filter-mapping>
-  
+
   <!-- Spring servlet -->
   <servlet>
     <servlet-name>paymentib-rest</servlet-name>
@@ -42,8 +42,8 @@
 	 <servlet-name>paymentib-rest</servlet-name>
 	 <url-pattern>/rest/*</url-pattern>
  </servlet-mapping>
- 
-  <!-- Securizacion --> 
+
+  <!-- Securizacion -->
   <security-constraint>
     <web-resource-collection>
       <web-resource-name>sistramit-restint-ws</web-resource-name>
@@ -53,14 +53,14 @@
       <role-name>PIB_API</role-name>
     </auth-constraint>
   </security-constraint>
-  
+
   <login-config>
-    <auth-method>BASIC</auth-method>
+    <auth-method>${loginConfig.authMethod}</auth-method>
     <realm-name>Autenticacion</realm-name>
   </login-config>
-  
+
   <security-role>
     <role-name>PIB_API</role-name>
-  </security-role> 
-  
+  </security-role>
+
 </web-app>

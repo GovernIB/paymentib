@@ -14,6 +14,7 @@
 		<maven.war.version>3.2.0</maven.war.version>
 		<maven.ear.version>2.10.1</maven.ear.version>
 		<maven.ejb.version>3.0.0</maven.ejb.version>
+		<maven.properties.version>1.0.0</maven.properties.version>
 
 		<commons-io.version>2.6</commons-io.version>
 		<commons-lang.version>2.6</commons-lang.version>

@@ -26,76 +26,75 @@ import es.caib.paymentib.plugins.api.UrlRedireccionPasarelaPago;
 @TransactionAttribute(value = TransactionAttributeType.NOT_SUPPORTED)
 public class PagoFrontServiceBean implements PagoFrontService {
 
-    @Autowired
-    private PagoFrontService service;
+	@Autowired
+	private PagoFrontService service;
 
-    @Override
-    @PermitAll
-    public String obtenerUrlFrontal() {
-        return service.obtenerUrlFrontal();
-    }
+	@Override
+	@PermitAll
+	public String obtenerUrlFrontal() {
+		return service.obtenerUrlFrontal();
+	}
 
-    @Override
-    @RolesAllowed({ConstantesRolesAcceso.API})
-    public DatosSesionPago crearPagoElectronico(String pasarelaId,
-            DatosPago datosPago, String urlCallbackAppOrigen) {
-        return service.crearPagoElectronico(pasarelaId, datosPago,
-                urlCallbackAppOrigen);
-    }
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.API })
+	public DatosSesionPago crearPagoElectronico(final String pasarelaId, final DatosPago datosPago,
+			final String urlCallbackAppOrigen) {
+		return service.crearPagoElectronico(pasarelaId, datosPago, urlCallbackAppOrigen);
+	}
 
-    @Override
-    @PermitAll
-    public DatosSesionPago recuperarPagoElectronico(String tokenSesion) {
-        return service.recuperarPagoElectronico(tokenSesion);
-    }
+	@Override
+	@PermitAll
+	public DatosSesionPago recuperarPagoElectronico(final String tokenSesion) {
+		return service.recuperarPagoElectronico(tokenSesion);
+	}
 
-    @Override
-    @PermitAll
-    public UrlRedireccionPasarelaPago iniciarPagoElectronico(
-            String identificador, String entidadPagoId,
-            String urlCallbackCompPagos) {
-        return service.iniciarPagoElectronico(identificador, entidadPagoId,
-                urlCallbackCompPagos);
-    }
+	@Override
+	@PermitAll
+	public UrlRedireccionPasarelaPago iniciarPagoElectronico(final String identificador, final String entidadPagoId,
+			final String urlCallbackCompPagos) {
+		return service.iniciarPagoElectronico(identificador, entidadPagoId, urlCallbackCompPagos);
+	}
 
-    @Override
-    @PermitAll
-    public List<EntidadPago> obtenerEntidadesPagoElectronico(
-            String identificador) {
-        return service.obtenerEntidadesPagoElectronico(identificador);
-    }
+	@Override
+	@PermitAll
+	public List<EntidadPago> obtenerEntidadesPagoElectronico(final String identificador) {
+		return service.obtenerEntidadesPagoElectronico(identificador);
+	}
 
-    @Override
-    @PermitAll
-    public EstadoPago verificarRetornoPagoElectronico(String identificador,
-            Map<String, String[]> parametrosRetorno) {
-        return service.verificarRetornoPagoElectronico(identificador,
-                parametrosRetorno);
-    }
+	@Override
+	@PermitAll
+	public EstadoPago verificarRetornoPagoElectronico(final String identificador,
+			final Map<String, String[]> parametrosRetorno) {
+		return service.verificarRetornoPagoElectronico(identificador, parametrosRetorno);
+	}
 
-    @Override
-    @PermitAll
-    public EstadoPago verificarPagoElectronico(String identificador) {
-        return service.verificarPagoElectronico(identificador);
-    }
+	@Override
+	@PermitAll
+	public EstadoPago verificarPagoElectronico(final String identificador) {
+		return service.verificarPagoElectronico(identificador);
+	}
 
-    @Override
-    @RolesAllowed({ConstantesRolesAcceso.API})
-    public byte[] obtenerJustificantePagoElectronico(String identificador) {
-        return service.obtenerJustificantePagoElectronico(identificador);
-    }
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.API })
+	public byte[] obtenerJustificantePagoElectronico(final String identificador) {
+		return service.obtenerJustificantePagoElectronico(identificador);
+	}
 
-    @Override
-    @RolesAllowed({ConstantesRolesAcceso.API})
-    public int consultaTasa(String pasarelaId, String idTasa) {
-        return service.consultaTasa(pasarelaId, idTasa);
-    }
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.API })
+	public int consultaTasa(final String pasarelaId, final String idTasa) {
+		return service.consultaTasa(pasarelaId, idTasa);
+	}
 
-    @Override
-    @RolesAllowed({ConstantesRolesAcceso.API})
-    public byte[] obtenerCartaPagoPresencial(String pasarelaId,
-            DatosPago datosPago) {
-        return service.obtenerCartaPagoPresencial(pasarelaId, datosPago);
-    }
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.API })
+	public byte[] obtenerCartaPagoPresencial(final String pasarelaId, final DatosPago datosPago) {
+		return service.obtenerCartaPagoPresencial(pasarelaId, datosPago);
+	}
+
+	@Override
+	public boolean permitePagoPresencial(final String pasarelaId) {
+		return service.permitePagoPresencial(pasarelaId);
+	}
 
 }

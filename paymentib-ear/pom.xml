@@ -58,19 +58,19 @@
 							<groupId>es.caib.paymentib</groupId>
 							<artifactId>paymentib-frontend</artifactId>
 							<contextRoot>/paymentibfront</contextRoot>
-							<bundleFileName>paymentib-frontend.war</bundleFileName>
+							<bundleFileName>paymentibfront.war</bundleFileName>
 						</webModule>
 						<webModule>
 							<groupId>es.caib.paymentib</groupId>
 							<artifactId>paymentib-backend</artifactId>
 							<contextRoot>/paymentibback</contextRoot>
-							<bundleFileName>paymentib-backend.war</bundleFileName>
+							<bundleFileName>paymentibback.war</bundleFileName>
 						</webModule>
 						<webModule>
 							<groupId>es.caib.paymentib</groupId>
 							<artifactId>paymentib-rest-ws</artifactId>
-							<contextRoot>/paymentib/api</contextRoot>
-							<bundleFileName>paymentib-rest.war</bundleFileName>
+							<contextRoot>/paymentibws</contextRoot>
+							<bundleFileName>paymentibws.war</bundleFileName>
 						</webModule>
 					</modules>
 					<defaultLibBundleDir>lib/</defaultLibBundleDir>

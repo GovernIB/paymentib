@@ -33,139 +33,143 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "v1", produces = "application/json")
 public class ApiRestController {
 
-    /** Service. */
-    @Autowired
-    private PagoFrontService service;
+	/** Service. */
+	@Autowired
+	private PagoFrontService service;
 
-    /**
-     * Inicia pago electrónico.
-     *
-     * @param rPago
-     *            Datos inicio pago
-     * @return Redirección al pago (identificador pago + url)
-     * @throws RPagoPluginException
-     */
-    @ApiOperation(value = "iniciarPagoElectronico", notes = "Inicia pago electrónico.", response = RRedireccionPago.class)
-    @RequestMapping(value = "/iniciarPagoElectronico", method = RequestMethod.POST)
-    public RRedireccionPago iniciarPagoElectronico(
-            @RequestBody RDatosInicioPago rPago) {
+	/**
+	 * Inicia pago electrónico.
+	 *
+	 * @param rPago
+	 *            Datos inicio pago
+	 * @return Redirección al pago (identificador pago + url)
+	 * @throws RPagoPluginException
+	 */
+	@ApiOperation(value = "iniciarPagoElectronico", notes = "Inicia pago electrónico.", response = RRedireccionPago.class)
+	@RequestMapping(value = "/iniciarPagoElectronico", method = RequestMethod.POST)
+	public RRedireccionPago iniciarPagoElectronico(@RequestBody final RDatosInicioPago rPago) {
 
-        // Crea pago electrónico
-        final DatosPago datosPago = convertDatosPago(rPago.getDatosPago());
+		// Crea pago electrónico
+		final DatosPago datosPago = convertDatosPago(rPago.getDatosPago());
 
-        final DatosSesionPago datosSesionPago = service.crearPagoElectronico(
-                rPago.getDatosPago().getPasarelaId(), datosPago,
-                rPago.getUrlCallback());
+		final DatosSesionPago datosSesionPago = service.crearPagoElectronico(rPago.getDatosPago().getPasarelaId(),
+				datosPago, rPago.getUrlCallback());
 
-        // Devolvemos url redirección pago
-        final RRedireccionPago res = new RRedireccionPago();
-        res.setIdentificador(datosSesionPago.getDatosPago().getIdentificador());
-        res.setUrlPago(service.obtenerUrlFrontal() + "/inicioPago/"
-                + datosSesionPago.getTokenAcceso() + ".html");
-        return res;
-    }
+		// Devolvemos url redirección pago
+		final RRedireccionPago res = new RRedireccionPago();
+		res.setIdentificador(datosSesionPago.getDatosPago().getIdentificador());
+		res.setUrlPago(service.obtenerUrlFrontal() + "/inicioPago/" + datosSesionPago.getTokenAcceso() + ".html");
+		return res;
+	}
 
-    /**
-     * Verifica estado pago contra pasarela de pago.
-     *
-     * @param identificador
-     *            identificador pago
-     * @return estado pago
-     */
-    @ApiOperation(value = "verificarPagoElectronico", notes = "Verifica estado pago contra pasarela de pago.", response = REstadoPago.class)
-    @RequestMapping(value = "/verificarPagoElectronico/{identificador}", method = RequestMethod.GET)
-    public REstadoPago verificarPagoElectronico(
-            @PathVariable("identificador") final String identificador) {
-        final EstadoPago estado = service
-                .verificarPagoElectronico(identificador);
-        final REstadoPago res = new REstadoPago();
-        res.setEstado(estado.getEstado().toString());
-        res.setFechaPago(formateaFecha(estado.getFechaPago()));
-        res.setCodigoErrorPasarela(estado.getCodigoErrorPasarela());
-        res.setMensajeErrorPasarela(estado.getMensajeErrorPasarela());
-        return res;
-    }
+	/**
+	 * Verifica estado pago contra pasarela de pago.
+	 *
+	 * @param identificador
+	 *            identificador pago
+	 * @return estado pago
+	 */
+	@ApiOperation(value = "verificarPagoElectronico", notes = "Verifica estado pago contra pasarela de pago.", response = REstadoPago.class)
+	@RequestMapping(value = "/verificarPagoElectronico/{identificador}", method = RequestMethod.GET)
+	public REstadoPago verificarPagoElectronico(@PathVariable("identificador") final String identificador) {
+		final EstadoPago estado = service.verificarPagoElectronico(identificador);
+		final REstadoPago res = new REstadoPago();
+		res.setEstado(estado.getEstado().toString());
+		res.setFechaPago(formateaFecha(estado.getFechaPago()));
+		res.setCodigoErrorPasarela(estado.getCodigoErrorPasarela());
+		res.setMensajeErrorPasarela(estado.getMensajeErrorPasarela());
+		return res;
+	}
 
-    /**
-     * Obtiene justificante de pago
-     *
-     * @param identificador
-     *            identificador pago
-     * @return Justificante de pago (nulo si la pasarela no genera
-     *         justificante).
-     */
-    @ApiOperation(value = "obtenerJustificantePagoElectronico", notes = "btiene justificante de pago")
-    @RequestMapping(value = "/obtenerJustificantePagoElectronico/{identificador}", method = RequestMethod.GET)
-    @ResponseBody
-    public byte[] obtenerJustificantePagoElectronico(
-            @PathVariable("identificador") final String identificador) {
-        return service.obtenerJustificantePagoElectronico(identificador);
-    }
+	/**
+	 * Obtiene justificante de pago
+	 *
+	 * @param identificador
+	 *            identificador pago
+	 * @return Justificante de pago (nulo si la pasarela no genera justificante).
+	 */
+	@ApiOperation(value = "obtenerJustificantePagoElectronico", notes = "Obtiene justificante de pago electrónico")
+	@RequestMapping(value = "/obtenerJustificantePagoElectronico/{identificador}", method = RequestMethod.GET)
+	@ResponseBody
+	public byte[] obtenerJustificantePagoElectronico(@PathVariable("identificador") final String identificador) {
+		return service.obtenerJustificantePagoElectronico(identificador);
+	}
 
-    /**
-     * Obtiene importe tasa.
-     *
-     * * @param idPasarela id pasarela
-     *
-     * @param idTasa
-     *            id tasa
-     * @return importe (en cents)
-     * @throws RPagoPluginException
-     */
-    @ApiOperation(value = "consultaTasa", notes = "Obtiene importe tasa.")
-    @RequestMapping(value = "/consultaTasa/{idPasarela}/{idTasa}", method = RequestMethod.GET)
-    public int consultaTasa(@PathVariable("idPasarela") final String idPasarela,
-            @PathVariable("idTasa") final String idTasa) {
-        return service.consultaTasa(idPasarela, idTasa);
-    }
+	/**
+	 * Obtiene importe tasa.
+	 *
+	 * * @param idPasarela id pasarela
+	 *
+	 * @param idTasa
+	 *            id tasa
+	 * @return importe (en cents)
+	 * @throws RPagoPluginException
+	 */
+	@ApiOperation(value = "consultaTasa", notes = "Obtiene importe tasa.")
+	@RequestMapping(value = "/consultaTasa/{idPasarela}/{idTasa}", method = RequestMethod.GET)
+	public int consultaTasa(@PathVariable("idPasarela") final String idPasarela,
+			@PathVariable("idTasa") final String idTasa) {
+		return service.consultaTasa(idPasarela, idTasa);
+	}
 
-    /**
-     * Obtiene carta de pago presencial (PDF).
-     *
-     * @param datosPago
-     *            Datos pago
-     * @return carta de pago presencial
-     */
-    @ApiOperation(value = "obtenerCartaPagoPresencial", notes = "Logout")
-    @RequestMapping(value = "/obtenerCartaPagoPresencial", method = RequestMethod.POST)
-    @ResponseBody
-    public byte[] obtenerCartaPagoPresencial(
-            @RequestBody RDatosPago datosPago) {
-        final DatosPago dp = convertDatosPago(datosPago);
-        return service.obtenerCartaPagoPresencial(datosPago.getPasarelaId(),
-                dp);
-    }
+	/**
+	 * Indica si pasarela permite pago presencial.
+	 *
+	 * @param datosPago
+	 *            Datos pago
+	 * @return carta de pago presencial
+	 */
+	@ApiOperation(value = "permitePagoPresencial", notes = "Indica si pasarela permite pago presencial")
+	@RequestMapping(value = "/permitePagoPresencial/{pasarelaId}", method = RequestMethod.GET)
+	@ResponseBody
+	public boolean permitePagoPresencial(@PathVariable("pasarelaId") final String pasarelaId) {
+		return service.permitePagoPresencial(pasarelaId);
+	}
 
-    /**
-     * Obtiene datos pago a partif datos inicio pago
-     *
-     * @param rDatosPago
-     * @return
-     */
-    private DatosPago convertDatosPago(RDatosPago rDatosPago) {
-        final DatosPago datosPago = new DatosPago();
-        datosPago.setAplicacionId(rDatosPago.getAplicacionId());
-        datosPago.setEntidadId(rDatosPago.getEntidadId());
-        datosPago.setOrganismoId(rDatosPago.getOrganismoId());
-        datosPago.setDetallePago(rDatosPago.getDetallePago());
-        datosPago.setIdioma(TypeIdioma.fromString(rDatosPago.getIdioma()));
-        datosPago.setSujetoPasivoNif(rDatosPago.getSujetoPasivoNif());
-        datosPago.setSujetoPasivoNombre(rDatosPago.getSujetoPasivoNombre());
-        datosPago.setModelo(rDatosPago.getModelo());
-        datosPago.setConcepto(rDatosPago.getConcepto());
-        datosPago.setTasaId(rDatosPago.getTasaId());
-        datosPago.setImporte(rDatosPago.getImporte());
-        return datosPago;
-    }
+	/**
+	 * Obtiene carta de pago presencial (PDF).
+	 *
+	 * @param datosPago
+	 *            Datos pago
+	 * @return carta de pago presencial
+	 */
+	@ApiOperation(value = "obtenerCartaPagoPresencial", notes = "Obtiene carta de pago presencial")
+	@RequestMapping(value = "/obtenerCartaPagoPresencial", method = RequestMethod.POST)
+	@ResponseBody
+	public byte[] obtenerCartaPagoPresencial(@RequestBody final RDatosPago datosPago) {
+		final DatosPago dp = convertDatosPago(datosPago);
+		return service.obtenerCartaPagoPresencial(datosPago.getPasarelaId(), dp);
+	}
 
-    private String formateaFecha(final Date pFecha) {
-        String res = null;
-        if (pFecha != null) {
-            final SimpleDateFormat df = new SimpleDateFormat(
-                    "dd/MM/yyyy HH:mm:ss");
-            df.setLenient(false);
-            res = df.format(pFecha);
-        }
-        return res;
-    }
+	/**
+	 * Obtiene datos pago a partif datos inicio pago
+	 *
+	 * @param rDatosPago
+	 * @return
+	 */
+	private DatosPago convertDatosPago(final RDatosPago rDatosPago) {
+		final DatosPago datosPago = new DatosPago();
+		datosPago.setAplicacionId(rDatosPago.getAplicacionId());
+		datosPago.setEntidadId(rDatosPago.getEntidadId());
+		datosPago.setOrganismoId(rDatosPago.getOrganismoId());
+		datosPago.setDetallePago(rDatosPago.getDetallePago());
+		datosPago.setIdioma(TypeIdioma.fromString(rDatosPago.getIdioma()));
+		datosPago.setSujetoPasivoNif(rDatosPago.getSujetoPasivoNif());
+		datosPago.setSujetoPasivoNombre(rDatosPago.getSujetoPasivoNombre());
+		datosPago.setModelo(rDatosPago.getModelo());
+		datosPago.setConcepto(rDatosPago.getConcepto());
+		datosPago.setTasaId(rDatosPago.getTasaId());
+		datosPago.setImporte(rDatosPago.getImporte());
+		return datosPago;
+	}
+
+	private String formateaFecha(final Date pFecha) {
+		String res = null;
+		if (pFecha != null) {
+			final SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+			df.setLenient(false);
+			res = df.format(pFecha);
+		}
+		return res;
+	}
 }

@@ -4,7 +4,7 @@
     <parent>
         <groupId>es.caib.paymentib</groupId>
         <artifactId>paymentib</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
     <artifactId>paymentib-rest-ws</artifactId>
     <packaging>war</packaging>
@@ -108,6 +108,26 @@
 
     <build>
         <plugins>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>properties-maven-plugin</artifactId>
+				<version>${maven.properties.version}</version>
+				<executions>
+					<execution>
+						<phase>initialize</phase>
+						<goals>
+							<goal>read-project-properties</goal>
+						</goals>
+						<configuration>
+							<files>
+								<file>${project.basedir}/../paymentib.properties</file>
+							</files>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -125,6 +145,16 @@
                 <version>${maven.war.version}</version>
                 <configuration>
                     <warName>paymentib-rest</warName>
+					<webResources>
+						<webResource>
+							<directory>${basedir}/src/main/webapp/WEB-INF</directory>
+							<includes>
+								<include>web.xml</include>
+							</includes>
+							<targetPath>WEB-INF</targetPath>
+							<filtering>true</filtering>
+						</webResource>
+					</webResources>
                 </configuration>
             </plugin>
         </plugins>

@@ -65,7 +65,7 @@
     </auth-constraint>
   </security-constraint>
   <login-config>
-    <auth-method>BASIC</auth-method>
+    <auth-method>${loginConfig.authMethod}</auth-method>
     <realm-name>Autenticacion</realm-name>
   </login-config>
   <security-role>

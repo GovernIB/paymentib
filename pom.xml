@@ -2,11 +2,11 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>es.caib.paymentib</groupId>
   <artifactId>paymentib</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.0</version>
   <packaging>pom</packaging>
 
    <properties>
-		<paymentib.version>0.0.1-SNAPSHOT</paymentib.version>
+		<paymentib.version>1.0.0</paymentib.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
 		<maven.compiler.version>3.7.0</maven.compiler.version>
@@ -14,6 +14,7 @@
 		<maven.war.version>3.2.0</maven.war.version>
 		<maven.ear.version>2.10.1</maven.ear.version>
 		<maven.ejb.version>3.0.0</maven.ejb.version>
+		<maven.properties.version>1.0.0</maven.properties.version>
 
 		<commons-io.version>2.6</commons-io.version>
 		<commons-lang.version>2.6</commons-lang.version>

@@ -3,7 +3,7 @@
   <parent>
     <groupId>es.caib.paymentib</groupId>
     <artifactId>paymentib</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>paymentib-rest-api</artifactId>
 
@@ -40,6 +40,7 @@
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>${maven.jar.version}</version>
 			</plugin>
-		</plugins>
-	</build>
+    </plugins>
+  </build>
+
 </project>

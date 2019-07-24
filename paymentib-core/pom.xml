@@ -68,6 +68,65 @@
   	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>properties-maven-plugin</artifactId>
+				<version>${maven.properties.version}</version>
+				<executions>
+					<execution>
+						<phase>initialize</phase>
+						<goals>
+							<goal>read-project-properties</goal>
+						</goals>
+						<configuration>
+							<files>
+								<file>${project.basedir}/../paymentib.properties</file>
+							</files>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+            	<groupId>org.apache.maven.plugins</groupId>
+            	<artifactId>maven-antrun-plugin</artifactId>
+            	<version>1.8</version>
+            	<executions>
+                	<execution>
+                    	<id>idJboss</id>
+                    	<phase>test</phase>
+                    	<goals>
+                        	<goal>run</goal>
+                    	</goals>
+                    	<configuration>
+	                        <target>
+	                            <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath"/>
+	                            <if>
+	                            	<equals arg1="${loginConfig.authMethod}" arg2="BASIC" />
+	                                <then>
+			    						<echo>Autenticacion tipo BASIC, copiamos el jboss-ejb3.xml</echo>
+			    						<copy file="${basedir}/src/main/jboss/jboss-ejb3.xml" tofile="${project.build.directory}/classes/META-INF/jboss-ejb3.xml"/>
+									</then>
+	                            </if>
+	                        </target>
+                    	</configuration>
+                	</execution>
+            	</executions>
+            	 <dependencies>
+                <dependency>
+                    <groupId>ant-contrib</groupId>
+                    <artifactId>ant-contrib</artifactId>
+                    <version>1.0b3</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>ant</groupId>
+                            <artifactId>ant</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+                </dependencies>
+            </plugin>
+
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${maven.compiler.version}</version>

@@ -155,47 +155,6 @@
 			</plugin>
 
 			<plugin>
-            	<groupId>org.apache.maven.plugins</groupId>
-            	<artifactId>maven-antrun-plugin</artifactId>
-            	<version>1.8</version>
-            	<executions>
-                	<execution>
-                    	<id>idJboss</id>
-                    	<phase>test</phase>
-                    	<goals>
-                        	<goal>run</goal>
-                    	</goals>
-                    	<configuration>
-	                        <target>
-	                            <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath"/>
-	                            <if>
-	                            	<equals arg1="${loginConfig.authMethod}" arg2="BASIC" />
-	                                <then>
-			    						<echo>Autenticacion tipo BASIC, copiamos el jboss-web.xml</echo>
-
-			    						<copy file="${basedir}/src/main/jboss/jboss-web.xml" tofile="${project.build.directory}/paymentib-backend-${paymentib.version}/WEB-INF/jboss-web.xml"/>
-									</then>
-	                            </if>
-	                        </target>
-                    	</configuration>
-                	</execution>
-            	</executions>
-            	 <dependencies>
-                <dependency>
-                    <groupId>ant-contrib</groupId>
-                    <artifactId>ant-contrib</artifactId>
-                    <version>1.0b3</version>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>ant</groupId>
-                            <artifactId>ant</artifactId>
-                        </exclusion>
-                    </exclusions>
-                </dependency>
-                </dependencies>
-            </plugin>
-
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>${maven.war.version}</version>
@@ -230,6 +189,29 @@
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>${maven.jar.version}</version>
 			</plugin>
+
+			<plugin>
+        		<artifactId>maven-resources-plugin</artifactId>
+        		<version>3.0.2</version>
+	        	<executions>
+			          <execution>
+			            <id>copy-resources</id>
+			            <phase>process-classes</phase>
+			            <goals>
+			              <goal>copy-resources</goal>
+			            </goals>
+			            <configuration>
+			              <outputDirectory>${project.build.outputDirectory}/WEB-INF</outputDirectory>
+			              <resources>
+			                <resource>
+			                  <directory>src\main\jboss\${loginConfig.authMethod}</directory>
+			                  <filtering>false</filtering>
+			                </resource>
+			              </resources>
+			            </configuration>
+			          </execution>
+		        </executions>
+        	</plugin>
 		</plugins>
 	</build>
 </project>

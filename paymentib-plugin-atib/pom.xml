@@ -3,7 +3,7 @@
   <parent>
     <groupId>es.caib.paymentib</groupId>
     <artifactId>paymentib</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
   </parent>
   <artifactId>paymentib-plugin-atib</artifactId>
 

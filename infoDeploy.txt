@@ -1,0 +1,5 @@
+Para deployar el proyecto, se debe comentar todos los módulos y dejar sólo el restapi:
+
+ <modules>
+  	<module>paymentib-rest-api</module>
+  </modules>

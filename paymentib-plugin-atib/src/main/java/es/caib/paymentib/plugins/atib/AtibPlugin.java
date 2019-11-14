@@ -45,9 +45,9 @@ public class AtibPlugin extends AbstractPluginProperties implements IPasarelaPag
 	 * Constructor.
 	 *
 	 * @param prefijoPropiedades
-	 *            prefijo
+	 *                               prefijo
 	 * @param properties
-	 *            propiedades
+	 *                               propiedades
 	 */
 	public AtibPlugin(final String prefijoPropiedades, final Properties properties) {
 		super(prefijoPropiedades, properties);
@@ -83,6 +83,8 @@ public class AtibPlugin extends AbstractPluginProperties implements IPasarelaPag
 			// Genera XML de pago
 			final String xmlPago = TaxaXml.generarXml("pagar", datosPago);
 			final String xmlPagoB64 = Base64.getEncoder().encodeToString(xmlPago.getBytes("UTF-8"));
+
+			log.debug("XML Pago: \n" + xmlPago);
 
 			// Generamos cliente
 			final ClienteAtib cliente = this.crearClienteAtib();
@@ -222,7 +224,7 @@ public class AtibPlugin extends AbstractPluginProperties implements IPasarelaPag
 	 * Convierte de cents a euros.
 	 *
 	 * @param importe
-	 *            importe en cents
+	 *                    importe en cents
 	 * @return importe en euros
 	 */
 	private String centsToEur(final String importe) {

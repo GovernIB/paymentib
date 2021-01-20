@@ -66,7 +66,7 @@ public final class PagoFrontServiceImpl implements PagoFrontService {
 	}
 
 	@Override
-	public DatosSesionPago recuperarPagoElectronico(final String tokenSesion) {
+	public DatosSesionPago recuperarPagoElectronicoByToken(final String tokenSesion) {
 		log.debug("Recuperando pago con token: " + tokenSesion);
 		// Recuperamos sesion pago
 		final DatosSesionPago dp = recuperarSesionPagoByToken(tokenSesion);
@@ -75,9 +75,18 @@ public final class PagoFrontServiceImpl implements PagoFrontService {
 		return dp;
 	}
 
-	// TODO Renombrar a RedirigirPasarelaPago
 	@Override
-	public UrlRedireccionPasarelaPago iniciarPagoElectronico(final String identificador, final String entidadPagoId,
+	public DatosSesionPago recuperarPagoElectronico(final String identificador) {
+		log.debug("Recuperando pago con identificador: " + identificador);
+		// Recuperamos sesion pago
+		final DatosSesionPago dp = recuperarSesionPagoByIdentificador(identificador);
+		log.debug("Recuperado pago  " + dp.getDatosPago().getIdentificador());
+		// Retornamos datos sesión pago
+		return dp;
+	}
+
+	@Override
+	public UrlRedireccionPasarelaPago redirigirPasarelaPago(final String identificador, final String entidadPagoId,
 			final String urlCallbackCompPagos) {
 
 		// Recuperamos sesion pago
@@ -102,7 +111,6 @@ public final class PagoFrontServiceImpl implements PagoFrontService {
 		}
 
 		// Almacena pago en persistencia cambiando estado
-		// TODO Almacenar entidadPagoId??
 		dao.iniciar(dp.getDatosPago().getIdentificador(), url.getLocalizador(), token);
 
 		return url;
@@ -222,7 +230,7 @@ public final class PagoFrontServiceImpl implements PagoFrontService {
 	 * Crea plugin pasarela pago.
 	 *
 	 * @param pasarelaId
-	 *            id pasarela
+	 *                       id pasarela
 	 * @return plugin pago
 	 */
 	private IPasarelaPagoPlugin crearPlugin(final String pasarelaId) {

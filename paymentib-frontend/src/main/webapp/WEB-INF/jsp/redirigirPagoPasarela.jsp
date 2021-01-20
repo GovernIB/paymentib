@@ -25,7 +25,7 @@
 <body onload="redirigirPasarela();">
 	<form id="redirigirPasarela" action="<c:out value="${urlPasarela.url}"/>" method="post">
 		<c:forEach items="${urlPasarela.parametersPost}" var="parameter">
-	        <input type="hidden" id="<c:out value="${parameter.key}"/>" name="RelayState" value="<c:out value="${parameter.value}"/>"/>
+	        <input type="hidden" id="<c:out value="${parameter.key}"/>" name="<c:out value="${parameter.key}"/>" value="<c:out value="${parameter.value}"/>"/>
 	    </c:forEach>
 	</form>
 </body>

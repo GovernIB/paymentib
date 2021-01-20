@@ -44,15 +44,21 @@ public class PagoFrontServiceBean implements PagoFrontService {
 
 	@Override
 	@PermitAll
-	public DatosSesionPago recuperarPagoElectronico(final String tokenSesion) {
-		return service.recuperarPagoElectronico(tokenSesion);
+	public DatosSesionPago recuperarPagoElectronicoByToken(final String tokenSesion) {
+		return service.recuperarPagoElectronicoByToken(tokenSesion);
 	}
 
 	@Override
 	@PermitAll
-	public UrlRedireccionPasarelaPago iniciarPagoElectronico(final String identificador, final String entidadPagoId,
+	public DatosSesionPago recuperarPagoElectronico(final String identificador) {
+		return service.recuperarPagoElectronico(identificador);
+	}
+
+	@Override
+	@PermitAll
+	public UrlRedireccionPasarelaPago redirigirPasarelaPago(final String identificador, final String entidadPagoId,
 			final String urlCallbackCompPagos) {
-		return service.iniciarPagoElectronico(identificador, entidadPagoId, urlCallbackCompPagos);
+		return service.redirigirPasarelaPago(identificador, entidadPagoId, urlCallbackCompPagos);
 	}
 
 	@Override

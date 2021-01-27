@@ -124,7 +124,13 @@ public class TpvUtil {
 				// Fecha confirmacion pago
 				final String dsDate = api.getParameter("Ds_Date");
 				final String dsHour = api.getParameter("Ds_Hour");
-				res.setFecha(new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(dsDate + " " + dsHour));
+
+				// TODO TPV VER PQ TPV DEVUELVE FECHA CON FORMATO NO CORRECTO
+				String fecha = dsDate + " " + dsHour;
+				fecha = StringUtils.replaceAll(fecha, "%2F", "/");
+				fecha = StringUtils.replaceAll(fecha, "%3A", ":");
+
+				res.setFecha(new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(fecha));
 
 				// TODO TPV NECESARIO AUDITAR MAS DATOS?
 				// api.getParameter("Ds_AuthorisationCode")

@@ -229,8 +229,7 @@ public final class PagoFrontServiceImpl implements PagoFrontService {
 	/**
 	 * Crea plugin pasarela pago.
 	 *
-	 * @param pasarelaId
-	 *                       id pasarela
+	 * @param pasarelaId id pasarela
 	 * @return plugin pago
 	 */
 	private IPasarelaPagoPlugin crearPlugin(final String pasarelaId) {

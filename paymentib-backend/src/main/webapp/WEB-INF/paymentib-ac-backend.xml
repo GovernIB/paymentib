@@ -21,6 +21,9 @@
 
 	<bean id="negocioModuleConfig" class="es.caib.paymentib.backend.model.comun.ModuleConfig">
 		<property name="entorno" value="${entorno}" />
+		<property name="version" value="${paymentib.version}" />
+		<property name="commitSvn" value="${commitSvn}" />
+		<property name="commitGit" value="${commitGit}" />
 	</bean>
 
 	<!-- Scope view para spring beans usados como backbeans de JSF: @Scope(view) -->

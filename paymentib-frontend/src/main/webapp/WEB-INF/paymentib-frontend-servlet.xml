@@ -18,6 +18,13 @@
         http://www.springframework.org/schema/tx
 	    http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
 
+	<bean id="negocioModuleConfig" class="es.caib.paymentib.frontend.model.ModuleConfig">
+		<property name="entorno" value="${entorno}" />
+		<property name="version" value="${paymentib.version}" />
+		<property name="commitSvn" value="${commitSvn}" />
+		<property name="commitGit" value="${commitGit}" />
+	</bean>
+
 	<!-- Scans the classpath of this application for @Components to deploy as beans -->
 	<context:component-scan base-package="es.caib.paymentib.frontend" scoped-proxy="interfaces"/>
 

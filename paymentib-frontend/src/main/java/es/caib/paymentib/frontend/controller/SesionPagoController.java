@@ -20,7 +20,9 @@ import es.caib.paymentib.core.api.exception.ServiceException;
 import es.caib.paymentib.core.api.model.pago.DatosSesionPago;
 import es.caib.paymentib.core.api.service.PagoFrontService;
 import es.caib.paymentib.frontend.SesionHttp;
+import es.caib.paymentib.frontend.model.DatosSession;
 import es.caib.paymentib.frontend.model.ErrorCodes;
+import es.caib.paymentib.frontend.model.ModuleConfig;
 import es.caib.paymentib.plugins.api.EntidadPago;
 import es.caib.paymentib.plugins.api.EstadoPago;
 import es.caib.paymentib.plugins.api.TypeEstadoPago;
@@ -41,6 +43,10 @@ public final class SesionPagoController {
 	/** Info sesión web. */
 	@Autowired
 	private SesionHttp sesionHttp;
+
+	/** Configuracion. */
+	@Autowired
+	private ModuleConfig config;
 
 	/** Service. */
 	@Autowired
@@ -109,7 +115,16 @@ public final class SesionPagoController {
 					"redirect:/" + URL_REDIRIGIR_PASARELA + ".html?entidadPagoId=" + entidadesPago.get(0).getCodigo());
 		} else {
 			// Si hay más de una entidad, mostramos pantalla de seleccion
-			res = new ModelAndView(URL_SELECCION_ENTIDAD_PAGO, "entidadesPago", entidadesPago);
+			final DatosSession datos = new DatosSession();
+			datos.setEntidadesPago(entidadesPago);
+			if (config.getCommitGit() != null && !config.getCommitGit().isEmpty()) {
+				datos.setCommit(config.getCommitGit());
+			} else {
+				datos.setCommit(config.getCommitSvn());
+			}
+			datos.setEntorno(config.getEntorno());
+			datos.setVersion(config.getVersion());
+			res = new ModelAndView(URL_SELECCION_ENTIDAD_PAGO, "datos", datos);
 		}
 		return res;
 	}

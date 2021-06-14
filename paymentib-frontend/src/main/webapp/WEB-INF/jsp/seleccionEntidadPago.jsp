@@ -30,13 +30,13 @@
 
 					<p style="margin-bottom: 20px;"><spring:message code="seleccionEntidadPago.titulo" /></p>
 					<ul>
-					<c:forEach items="${entidadesPago}" var="e">
+					<c:forEach items="${datos.entidadesPago}" var="e">
 				        <li><span><a href="redirigirPagoPasarela.html?entidadPagoId=${e.codigo}" style="background:transparent url('${e.logo}') no-repeat 50% 2em / 4em auto;">${e.descripcion}</a></span></li>
 				    </c:forEach>
 					</ul>
 			</div>
 		</div>
-		
+
 		<div style="display:none">
 			<p>E:${datos.entorno}</p>
 			<p>V:${datos.version}</p>

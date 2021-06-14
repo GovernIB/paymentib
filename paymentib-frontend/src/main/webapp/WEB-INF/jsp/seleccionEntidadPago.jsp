@@ -36,6 +36,12 @@
 					</ul>
 			</div>
 		</div>
+		
+		<div style="display:none">
+			<p>E:${datos.entorno}</p>
+			<p>V:${datos.version}</p>
+			<p>C:${datos.commit}</p>
+		</div>
 
 	</div>
 </body>

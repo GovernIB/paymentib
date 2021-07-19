@@ -12,7 +12,7 @@
 			<p:outputPanel>
 				<h:outputText value="#{msg['aplicacion.titulo']}" styleClass="pie_celda1"/>
 				<h:outputLink value = "https://github.com/GovernIB/paymentib/commit/#{negocioModuleConfig.commitGit}" title="#{negocioModuleConfig.commitGit==''?negocioModuleConfig.commitSvn:negocioModuleConfig.commitGit}" styleClass="pie_celda1" target="_blank">(<h:outputText value="#{negocioModuleConfig.commitGit==''?negocioModuleConfig.commitSvn:negocioModuleConfig.commitGit}" />)</h:outputLink>
-				<h:graphicImage value="/resources/images/#{negocioModuleConfig.entorno}.png" height="20" styleClass="pie_celda1"/>
+				<h:graphicImage value="/resources/images/#{negocioModuleConfig.entorno}_#{sessionBean.lang}.png" height="20" styleClass="pie_celda1"/>
 			</p:outputPanel>
 			<h:graphicImage value="/resources/images/feddr.png" height="38"/>
 		</p:panelGrid>

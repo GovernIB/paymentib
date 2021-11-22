@@ -1,9 +1,12 @@
 package es.caib.paymentib.backend.controller;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -18,6 +21,7 @@ import org.primefaces.model.menu.DefaultSubMenu;
 import org.primefaces.model.menu.MenuModel;
 
 import es.caib.paymentib.backend.util.UtilJSF;
+import es.caib.paymentib.core.api.exception.ConfiguracionException;
 import es.caib.paymentib.core.api.exception.ErrorBackException;
 import es.caib.paymentib.core.api.model.types.TypeRoleAcceso;
 import es.caib.paymentib.core.api.service.SecurityService;
@@ -64,6 +68,12 @@ public class SessionBean {
 
 	private Map<String, Object> mochilaDatos;
 
+	private Properties propiedadesLocales;
+
+	private String logo;
+
+	private boolean hayLogo;
+
 	/**
 	 * Servicio seguridad.
 	 */
@@ -74,10 +84,28 @@ public class SessionBean {
 	@PostConstruct
 	public void init() {
 		// Recupera info usuario
+
 		userName = getSecurityService().getUsername();
 		lang = FacesContext.getCurrentInstance().getViewRoot().getLocale().getLanguage();
 		locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 		rolesList = securityService.getRoles();
+		final String pathProperties = System
+	                .getProperty("es.caib.paymentib.properties.path");
+	        // Carga fichero de propiedades
+	    try (FileInputStream fis = new FileInputStream(pathProperties);) {
+	    	propiedadesLocales = new Properties();
+	        propiedadesLocales.load(fis);
+	    } catch (final IOException e) {
+	        throw new ConfiguracionException(e);
+	    }
+
+
+	    logo = propiedadesLocales.getProperty("back.logo");
+	    if(logo.equals(null)) {
+	    	this.setHayLogo(false);
+	    } else {
+	    	this.setHayLogo(true);
+	    }
 
 		// Establece role activo por defecto
 		activeRole = null;
@@ -243,6 +271,28 @@ public class SessionBean {
 
 	public void setSecurityService(final SecurityService securityService) {
 		this.securityService = securityService;
+	}
+
+	public String getLogo() {
+		return logo;
+	}
+
+	public void setLogo(String logo) {
+		this.logo = logo;
+	}
+
+	/**
+	 * @return the hayLogo
+	 */
+	public boolean isHayLogo() {
+		return hayLogo;
+	}
+
+	/**
+	 * @param hayLogo the hayLogo to set
+	 */
+	public void setHayLogo(boolean hayLogo) {
+		this.hayLogo = hayLogo;
 	}
 
 }

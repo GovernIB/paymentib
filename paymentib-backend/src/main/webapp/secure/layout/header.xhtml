@@ -4,17 +4,26 @@
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-  	xmlns:p="http://primefaces.org/ui">
+  	xmlns:p="http://primefaces.org/ui"
+  	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
 <h:body>
   <ui:composition>
   	<h:form>
-  		<p:panelGrid columns="3" styleClass="ui-noborder w100 h100"
+  		<p:panelGrid columns="4" styleClass="ui-noborder w100 h100"
   		columnClasses="header-color grid-center noPadding-bottom noPadding-top h100 wpx120 ,
+  					   header-color grid-left wpx200,
   					   header-color wpx270,
   					   header-color">
 
-			<h:graphicImage value="/resources/images/paymentIB.png" height="65" styleClass="va-middle"/>
+			<c:if test="#{sessionBean.hayLogo}">
+				<h:graphicImage value="#{sessionBean.logo}" height="65" styleClass="va-middle" />
+			</c:if>
+
+			<p:outputPanel styleClass="h100">
+				<span class="center-vertical"></span>
+				<h:graphicImage value="/resources/images/paymentIB.png" height="45" styleClass="va-middle"/>
+			</p:outputPanel>
 
 			<p:outputPanel styleClass="h100">
 				<span class="center-vertical"></span>

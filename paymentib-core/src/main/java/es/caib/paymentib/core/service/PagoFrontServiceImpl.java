@@ -1,5 +1,7 @@
 package es.caib.paymentib.core.service;
 
+import java.security.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -7,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import es.caib.paymentib.core.api.exception.CartaPagoException;
 import es.caib.paymentib.core.api.exception.ConsultarTasaException;
 import es.caib.paymentib.core.api.exception.EstadoSesionPagoException;
@@ -18,6 +19,7 @@ import es.caib.paymentib.core.api.exception.ObtenerEntidadesException;
 import es.caib.paymentib.core.api.exception.TokenSesionPagoException;
 import es.caib.paymentib.core.api.exception.VerificacionPagoException;
 import es.caib.paymentib.core.api.model.pago.DatosSesionPago;
+import es.caib.paymentib.core.api.model.pago.FiltroPago;
 import es.caib.paymentib.core.api.service.PagoFrontService;
 import es.caib.paymentib.core.api.util.GeneradorId;
 import es.caib.paymentib.core.service.component.ConfiguracionComponent;
@@ -289,6 +291,12 @@ public final class PagoFrontServiceImpl implements PagoFrontService {
 			}
 		}
 		return res;
+	}
+
+	@Override
+	public List<DatosSesionPago> obtenerPagos(FiltroPago filtro, Date fechaDesde, Date fechaHasta, Long numPag,
+			Long maxNumElem) {
+		return dao.getAllByFiltro(filtro, fechaDesde, fechaHasta, numPag, maxNumElem);
 	}
 
 }

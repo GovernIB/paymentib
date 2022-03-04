@@ -1,5 +1,7 @@
 package es.caib.paymentib.core.ejb;
 
+import java.security.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +17,8 @@ import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import es.caib.paymentib.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.paymentib.core.api.model.pago.DatosSesionPago;
+import es.caib.paymentib.core.api.model.pago.FiltroPago;
+import es.caib.paymentib.core.api.model.types.TypeFiltroFecha;
 import es.caib.paymentib.core.api.service.PagoFrontService;
 import es.caib.paymentib.plugins.api.DatosPago;
 import es.caib.paymentib.plugins.api.EntidadPago;
@@ -101,6 +105,13 @@ public class PagoFrontServiceBean implements PagoFrontService {
 	@Override
 	public boolean permitePagoPresencial(final String pasarelaId) {
 		return service.permitePagoPresencial(pasarelaId);
+	}
+
+	@Override
+	@PermitAll
+	public List<DatosSesionPago> obtenerPagos(FiltroPago filtro, Date fechaDesde, Date fechaHasta, Long numPag,
+			Long maxNumElem) {
+		return service.obtenerPagos(filtro, fechaDesde, fechaHasta, numPag, maxNumElem);
 	}
 
 }

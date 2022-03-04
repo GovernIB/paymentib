@@ -2,6 +2,7 @@ package es.caib.paymentib.rest.v1;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,13 +14,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.caib.paymentib.core.api.model.pago.DatosSesionPago;
 import es.caib.paymentib.core.api.service.PagoFrontService;
+
 import es.caib.paymentib.plugins.api.DatosPago;
 import es.caib.paymentib.plugins.api.EstadoPago;
 import es.caib.paymentib.plugins.api.TypeIdioma;
 import es.caib.paymentib.rest.api.v1.RDatosInicioPago;
 import es.caib.paymentib.rest.api.v1.RDatosPago;
 import es.caib.paymentib.rest.api.v1.REstadoPago;
+import es.caib.paymentib.rest.api.v1.RFiltroPago;
+import es.caib.paymentib.rest.api.v1.RParametrosConsulta;
 import es.caib.paymentib.rest.api.v1.RRedireccionPago;
+import es.caib.paymentib.core.api.model.pago.FiltroPago;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -28,6 +33,7 @@ import io.swagger.annotations.ApiOperation;
  *
  * @author Indra
  */
+
 @RestController
 @RequestMapping("/v1")
 @Api(value = "v1", produces = "application/json")
@@ -40,8 +46,7 @@ public class ApiRestController {
 	/**
 	 * Inicia pago electrónico.
 	 *
-	 * @param rPago
-	 *            Datos inicio pago
+	 * @param rPago Datos inicio pago
 	 * @return Redirección al pago (identificador pago + url)
 	 * @throws RPagoPluginException
 	 */
@@ -65,8 +70,7 @@ public class ApiRestController {
 	/**
 	 * Verifica estado pago contra pasarela de pago.
 	 *
-	 * @param identificador
-	 *            identificador pago
+	 * @param identificador identificador pago
 	 * @return estado pago
 	 */
 	@ApiOperation(value = "verificarPagoElectronico", notes = "Verifica estado pago contra pasarela de pago.", response = REstadoPago.class)
@@ -84,8 +88,7 @@ public class ApiRestController {
 	/**
 	 * Obtiene justificante de pago
 	 *
-	 * @param identificador
-	 *            identificador pago
+	 * @param identificador identificador pago
 	 * @return Justificante de pago (nulo si la pasarela no genera justificante).
 	 */
 	@ApiOperation(value = "obtenerJustificantePagoElectronico", notes = "Obtiene justificante de pago electrónico")
@@ -100,8 +103,7 @@ public class ApiRestController {
 	 *
 	 * * @param idPasarela id pasarela
 	 *
-	 * @param idTasa
-	 *            id tasa
+	 * @param idTasa id tasa
 	 * @return importe (en cents)
 	 * @throws RPagoPluginException
 	 */
@@ -115,8 +117,7 @@ public class ApiRestController {
 	/**
 	 * Indica si pasarela permite pago presencial.
 	 *
-	 * @param datosPago
-	 *            Datos pago
+	 * @param datosPago Datos pago
 	 * @return carta de pago presencial
 	 */
 	@ApiOperation(value = "permitePagoPresencial", notes = "Indica si pasarela permite pago presencial")
@@ -129,8 +130,7 @@ public class ApiRestController {
 	/**
 	 * Obtiene carta de pago presencial (PDF).
 	 *
-	 * @param datosPago
-	 *            Datos pago
+	 * @param datosPago Datos pago
 	 * @return carta de pago presencial
 	 */
 	@ApiOperation(value = "obtenerCartaPagoPresencial", notes = "Obtiene carta de pago presencial")
@@ -171,5 +171,31 @@ public class ApiRestController {
 			res = df.format(pFecha);
 		}
 		return res;
+	}
+
+	@ApiOperation(value = "datosPago", notes = "Devuelve datos de pago según parámetros")
+	@RequestMapping(value = "/datosPago", method = RequestMethod.POST)
+	@ResponseBody
+	public List<DatosSesionPago> datosPago(@RequestBody(required = false) final RParametrosConsulta parametros) {
+		final FiltroPago filtro = convertFiltroPago(parametros.getFiltro());
+		return service.obtenerPagos(filtro, parametros.getFechaDesde(), parametros.getFechaHasta(),
+				parametros.getNumPag(), parametros.getMaxNumElem());
+	}
+
+	private FiltroPago convertFiltroPago(final RFiltroPago rf) {
+		FiltroPago f = new FiltroPago();
+		if (rf != null) {
+			f.setAplicacion(rf.getAplicacion());
+			f.setEntidad(rf.getEntidad());
+			f.setEstado(rf.getEstado());
+			f.setId(rf.getId());
+			f.setImporte(rf.getImporte());
+			f.setNif(rf.getNif());
+			f.setNombre(rf.getNombre());
+			f.setPasarela(rf.getPasarela());
+			f.setFechaCre(rf.getFechaCre());
+			f.setFechaPago(rf.getFechaPago());
+		}
+		return f;
 	}
 }

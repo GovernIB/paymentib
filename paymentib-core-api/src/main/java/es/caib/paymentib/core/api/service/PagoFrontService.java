@@ -1,9 +1,13 @@
 package es.caib.paymentib.core.api.service;
 
+import java.security.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import es.caib.paymentib.core.api.model.pago.DatosSesionPago;
+import es.caib.paymentib.core.api.model.pago.FiltroPago;
+import es.caib.paymentib.core.api.model.types.TypeFiltroFecha;
 import es.caib.paymentib.plugins.api.DatosPago;
 import es.caib.paymentib.plugins.api.EntidadPago;
 import es.caib.paymentib.plugins.api.EstadoPago;
@@ -27,12 +31,9 @@ public interface PagoFrontService {
 	/**
 	 * Crea pago electrónico.
 	 *
-	 * @param pasarelaId
-	 *                                 Pasarela de pago a utilizar
-	 * @param datosPago
-	 *                                 Datos del pago
-	 * @param urlCallbackAppOrigen
-	 *                                 Url callback aplicación origen
+	 * @param pasarelaId           Pasarela de pago a utilizar
+	 * @param datosPago            Datos del pago
+	 * @param urlCallbackAppOrigen Url callback aplicación origen
 	 * @return Datos sesión pago
 	 */
 	DatosSesionPago crearPagoElectronico(String pasarelaId, DatosPago datosPago, String urlCallbackAppOrigen);
@@ -40,8 +41,7 @@ public interface PagoFrontService {
 	/**
 	 * Recupera pago electrónico por token.
 	 *
-	 * @param tokenSesion
-	 *                        Token
+	 * @param tokenSesion Token
 	 * @return pago electrónico
 	 */
 	DatosSesionPago recuperarPagoElectronicoByToken(String tokenSesion);
@@ -49,8 +49,7 @@ public interface PagoFrontService {
 	/**
 	 * Recupera pago electrónico por identificador.
 	 *
-	 * @param identificador
-	 *                          identificador
+	 * @param identificador identificador
 	 * @return pago electrónico
 	 */
 	DatosSesionPago recuperarPagoElectronico(String identificador);
@@ -58,12 +57,9 @@ public interface PagoFrontService {
 	/**
 	 * Inicia pago electrónico contra pasarela.
 	 *
-	 * @param identificador
-	 *                                 identificador
-	 * @param entidadPagoId
-	 *                                 entidad
-	 * @param urlCallbackCompPagos
-	 *                                 url callback
+	 * @param identificador        identificador
+	 * @param entidadPagoId        entidad
+	 * @param urlCallbackCompPagos url callback
 	 * @return url redirección pasarela
 	 */
 	UrlRedireccionPasarelaPago redirigirPasarelaPago(String identificador, String entidadPagoId,
@@ -72,8 +68,7 @@ public interface PagoFrontService {
 	/**
 	 * Obtiene entidades pago electrónico.
 	 *
-	 * @param identificador
-	 *                          identificador pago
+	 * @param identificador identificador pago
 	 * @return entidades pago electrónico
 	 */
 	List<EntidadPago> obtenerEntidadesPagoElectronico(String identificador);
@@ -81,10 +76,8 @@ public interface PagoFrontService {
 	/**
 	 * Verifica pago electrónico a partir info retornada por pasarela.
 	 *
-	 * @param identificador
-	 *                              identificdor pago
-	 * @param parametrosRetorno
-	 *                              info suministrada por pasarela
+	 * @param identificador     identificdor pago
+	 * @param parametrosRetorno info suministrada por pasarela
 	 * @return Estado pago
 	 */
 	EstadoPago verificarRetornoPagoElectronico(String identificador, Map<String, String[]> parametrosRetorno);
@@ -92,8 +85,7 @@ public interface PagoFrontService {
 	/**
 	 * Verifica estado pago electrónico.
 	 *
-	 * @param identificador
-	 *                          identificador pago
+	 * @param identificador identificador pago
 	 * @return Estado pago
 	 */
 	EstadoPago verificarPagoElectronico(String identificador);
@@ -101,8 +93,7 @@ public interface PagoFrontService {
 	/**
 	 * Obtiene justificante pago electrónico.
 	 *
-	 * @param identificador
-	 *                          identificador
+	 * @param identificador identificador
 	 * @return justificante
 	 */
 	byte[] obtenerJustificantePagoElectronico(String identificador);
@@ -110,10 +101,8 @@ public interface PagoFrontService {
 	/**
 	 * Consulta tasa a pasarela.
 	 *
-	 * @param pasarelaId
-	 *                       id pasarela
-	 * @param idTasa
-	 *                       id tasa
+	 * @param pasarelaId id pasarela
+	 * @param idTasa     id tasa
 	 * @return importe tasa (cents)
 	 */
 	int consultaTasa(String pasarelaId, String idTasa);
@@ -121,10 +110,8 @@ public interface PagoFrontService {
 	/**
 	 * Obtiene carta de pago presencial.
 	 *
-	 * @param pasarelaId
-	 *                       id pasarela
-	 * @param datosPago
-	 *                       datos pago
+	 * @param pasarelaId id pasarela
+	 * @param datosPago  datos pago
 	 * @return carta de pago presencial
 	 */
 	byte[] obtenerCartaPagoPresencial(String pasarelaId, DatosPago datosPago);
@@ -132,9 +119,11 @@ public interface PagoFrontService {
 	/**
 	 * Indica si pasarela permite pago presencial.
 	 *
-	 * @param pasarelaId
-	 *                       id pasarela
+	 * @param pasarelaId id pasarela
 	 * @return true si permite
 	 */
 	boolean permitePagoPresencial(String pasarelaId);
+
+	List<DatosSesionPago> obtenerPagos(final FiltroPago filtro, final Date fechaDesde, final Date fechaHasta,
+			final Long numPag, final Long maxNumElem);
 }

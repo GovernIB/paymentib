@@ -119,6 +119,38 @@
 		          </altDeploymentRepository>
 		        </configuration>
 		    </plugin>
+		    <plugin>
+				<groupId>com.github.github</groupId>
+				<artifactId>site-maven-plugin</artifactId>
+				<version>0.12</version>
+				<configuration>
+					<!-- git commit message -->
+					<message>Maven artifacts for ${project.version}</message>
+					<outputDirectory>${project.build.directory}/mvn-repo</outputDirectory>
+					<noJekyll>true</noJekyll>
+					<!-- remote branch name -->
+					<branch>refs/heads/gh-pages</branch>
+					<includes>
+						<include>**/*</include>
+					</includes>
+					<path>maven</path>
+					<!-- github repo name -->
+					<repositoryName>maven</repositoryName>
+					<!-- github username or organization -->
+					<repositoryOwner>GovernIB</repositoryOwner>
+					<server>github_governib_maven</server>
+					<merge>true</merge>
+					<dryRun>false</dryRun>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>site</goal>
+						</goals>
+						<phase>deploy</phase>
+					</execution>
+				</executions>
+			</plugin>
     </plugins>
 
   </build>

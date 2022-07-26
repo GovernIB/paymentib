@@ -100,6 +100,9 @@ public class JPagoE implements IModelApi {
     @Column(name = "PAE_USUCFM", length = 100)
     private String usuarioConfirmacion;
 
+    @Column(name = "PAE_METPAG", nullable = true, length = 20)
+    private String metodosPago;
+
     public JPagoE() {
         super();
     }
@@ -310,6 +313,26 @@ public class JPagoE implements IModelApi {
         this.mensajeErrorPasarela = mensajeErrorPasarela;
     }
 
+    /**
+     * Método de acceso a metodosPago.
+     *
+     * @return metodosPago
+     */
+    public String getMetodosPago() {
+        return metodosPago;
+    }
+
+    /**
+     * Método para establecer metodosPago.
+     *
+     * @param metodosPago
+     *            metodosPago a establecer
+     */
+    public void setMetodosPago(final String metodosPago) {
+        this.metodosPago = metodosPago;
+    }
+
+
     public DatosSesionPago toModel() {
         final DatosSesionPago pago = new DatosSesionPago();
         final DatosPago datosPago = new DatosPago();
@@ -327,6 +350,7 @@ public class JPagoE implements IModelApi {
         datosPago.setTasaId(tasaId);
         datosPago.setImporte(importe);
         datosPago.setModelo(modelo);
+        datosPago.setMetodosPago(metodosPago);
 
         pago.setDatosPago(datosPago);
         pago.setFechaCreacion(fechaCreacion);

@@ -44,6 +44,9 @@ public class DatosPago {
     /** Modelo. */
     private String modelo;
 
+    /** Establecer métodos de pago por API*/
+    private String metodosPago;
+
     /**
      * Método de acceso a identificador.
      *
@@ -253,12 +256,44 @@ public class DatosPago {
         this.detallePago = detallePago;
     }
 
+
+    /**
+     * Método de acceso a modelo.
+     *
+     * @return modelo
+     */
     public String getModelo() {
         return modelo;
     }
 
+
+    /**
+     * Método para establecer modelo.
+     *
+     * @param modelo
+     *            modelo a establecer
+     */
     public void setModelo(final String modelo) {
         this.modelo = modelo;
+    }
+
+    /**
+     * Método de acceso a metodosPago.
+     *
+     * @return metodosPago
+     */
+    public String getMetodosPago() {
+        return metodosPago;
+    }
+
+    /**
+     * Método para establecer metodosPago.
+     *
+     * @param metodosPago
+     *            metodosPago a establecer
+     */
+    public void setMetodosPago(final String metodosPago) {
+        this.metodosPago = metodosPago;
     }
 
 }

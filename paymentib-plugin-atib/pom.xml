@@ -3,7 +3,7 @@
   <parent>
     <groupId>es.caib.paymentib</groupId>
     <artifactId>paymentib</artifactId>
-    <version>1.1.4</version>
+    <version>1.1.5</version>
   </parent>
   <artifactId>paymentib-plugin-atib</artifactId>
 
@@ -153,6 +153,8 @@
 				</executions>
 				<inherited>true</inherited>
 				<configuration>
+					<javaSource>1.5</javaSource><!-- only "1.5" is actually recognized, others values revert to "1.4" code -->
+					<noJavac>true</noJavac>
 					<schemaDirectory>src/main/resources/xsd</schemaDirectory>
 					<!-- <classGenerationDirectory></classGenerationDirectory> -->
 					<!-- <sourceGenerationDirectory>target/generated-sources</sourceGenerationDirectory>  -->

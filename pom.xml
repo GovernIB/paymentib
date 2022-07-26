@@ -2,19 +2,25 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>es.caib.paymentib</groupId>
   <artifactId>paymentib</artifactId>
-  <version>1.1.4</version>
+  <version>1.1.5</version>
   <packaging>pom</packaging>
 
    <properties>
-		<paymentib.version>1.1.4</paymentib.version>
+		<paymentib.version>1.1.5</paymentib.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
 		<maven.compiler.version>3.7.0</maven.compiler.version>
 		<maven.jar.version>3.0.2</maven.jar.version>
 		<maven.war.version>3.2.0</maven.war.version>
-		<maven.ear.version>2.10.1</maven.ear.version>
 		<maven.ejb.version>3.0.0</maven.ejb.version>
 		<maven.properties.version>1.0.0</maven.properties.version>
+
+		<!-- PARA COMPILAR EN JDK 11 HACIA 1.8 -->
+		<maven.ear.version>3.0.1</maven.ear.version>
+		<maven.compiler.release>8</maven.compiler.release>
+
+		 <!-- PARA COMPILAR EN JDK 1.8 -->
+		 <!--  <maven.ear.version>2.10.1</maven.ear.version> -->
 
 		<commons-io.version>2.6</commons-io.version>
 		<commons-lang3.version>3.7</commons-lang3.version>
@@ -44,7 +50,7 @@
 		<swagger.version>2.7.0</swagger.version>
 
 		<plugins-ib.version>2.0.0</plugins-ib.version>
-		<cxf.version>3.1.4</cxf.version>
+		<cxf.version>3.3.0</cxf.version>
 
 		<javax.inject.version>1</javax.inject.version>
 		<jsf2.version>2.2.15</jsf2.version>

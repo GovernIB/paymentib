@@ -89,6 +89,7 @@ public class PagoDaoImpl implements PagoDao {
 		jo.setImporte(datosPago.getImporte());
 		jo.setUrlCallbackOrigen(urlCallbackAppOrigen);
 		jo.setToken(tokenAcceso);
+		jo.setMetodosPago(datosPago.getMetodosPago());
 
 		entityManager.persist(jo);
 

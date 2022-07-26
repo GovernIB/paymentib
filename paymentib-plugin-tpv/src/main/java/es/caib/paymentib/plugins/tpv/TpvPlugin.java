@@ -45,7 +45,7 @@ public class TpvPlugin extends AbstractPluginProperties implements IPasarelaPago
 	}
 
 	@Override
-	public List<EntidadPago> obtenerEntidadesPagoElectronico(final TypeIdioma idioma) throws PasarelaPagoException {
+	public List<EntidadPago> obtenerEntidadesPagoElectronico(final TypeIdioma idioma, final String metodosPago) throws PasarelaPagoException {
 		final List<EntidadPago> res = new ArrayList<>();
 		final EntidadPago ep = new EntidadPago();
 		ep.setCodigo("TPV");

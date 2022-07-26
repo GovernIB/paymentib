@@ -30,7 +30,7 @@ public interface IPasarelaPagoPlugin extends IPlugin {
 	 *            idioma
 	 * @return entidades
 	 */
-	List<EntidadPago> obtenerEntidadesPagoElectronico(TypeIdioma idioma) throws PasarelaPagoException;
+	List<EntidadPago> obtenerEntidadesPagoElectronico(TypeIdioma idioma, String metodosPago) throws PasarelaPagoException;
 
 	/**
 	 * Inicia pago a través de la pasarela de pago.

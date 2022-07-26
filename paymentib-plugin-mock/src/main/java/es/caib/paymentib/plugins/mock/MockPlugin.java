@@ -28,7 +28,7 @@ public class MockPlugin implements IPasarelaPagoPlugin {
 	}
 
 	@Override
-	public List<EntidadPago> obtenerEntidadesPagoElectronico(final TypeIdioma idioma) throws PasarelaPagoException {
+	public List<EntidadPago> obtenerEntidadesPagoElectronico(final TypeIdioma idioma, final String metodosPago) throws PasarelaPagoException {
 		final List<EntidadPago> res = new ArrayList<>();
 		EntidadPago ep = null;
 		for (int i = 1; i <= 3; i++) {

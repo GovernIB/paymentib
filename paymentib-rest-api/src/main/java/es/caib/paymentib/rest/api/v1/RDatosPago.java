@@ -60,6 +60,10 @@ public class RDatosPago {
     @ApiModelProperty(value = "importe")
     private int importe;
 
+    /** Booleano para activar/desactivar el pagopor banca electrónica en la ATIB*/
+    @ApiModelProperty(value = "metodosPago")
+    private String metodosPago;
+
     /**
      * Método de acceso a identificador.
      *
@@ -271,7 +275,7 @@ public class RDatosPago {
 
     /**
      * Método de acceso a modelo.
-     * 
+     *
      * @return modelo
      */
     public String getModelo() {
@@ -280,12 +284,31 @@ public class RDatosPago {
 
     /**
      * Método para establecer modelo.
-     * 
+     *
      * @param modelo
      *            modelo a establecer
      */
     public void setModelo(String modelo) {
         this.modelo = modelo;
+    }
+
+    /**
+     * Método de acceso a metodosPago.
+     *
+     * @return metodosPago
+     */
+    public String getMetodosPago() {
+        return this.metodosPago;
+    }
+
+    /**
+     * Método para establecer modelo.
+     *
+     * @param modelo
+     *            modelo a establecer
+     */
+    public void setMetodosPago(String metodosPago) {
+        this.metodosPago = metodosPago;
     }
 
 }

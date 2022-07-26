@@ -133,7 +133,7 @@ public final class PagoFrontServiceImpl implements PagoFrontService {
 
 		// Obtiene entidades de pago
 		try {
-			return plgPago.obtenerEntidadesPagoElectronico(dp.getDatosPago().getIdioma());
+			return plgPago.obtenerEntidadesPagoElectronico(dp.getDatosPago().getIdioma(), dp.getDatosPago().getMetodosPago());
 		} catch (final PasarelaPagoException e) {
 			throw new ObtenerEntidadesException(e);
 		}

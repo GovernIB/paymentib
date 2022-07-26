@@ -44,10 +44,8 @@ public class AtibPlugin extends AbstractPluginProperties implements IPasarelaPag
 	 *
 	 * Constructor.
 	 *
-	 * @param prefijoPropiedades
-	 *                               prefijo
-	 * @param properties
-	 *                               propiedades
+	 * @param prefijoPropiedades prefijo
+	 * @param properties         propiedades
 	 */
 	public AtibPlugin(final String prefijoPropiedades, final Properties properties) {
 		super(prefijoPropiedades, properties);
@@ -59,19 +57,39 @@ public class AtibPlugin extends AbstractPluginProperties implements IPasarelaPag
 	}
 
 	@Override
-	public List<EntidadPago> obtenerEntidadesPagoElectronico(final TypeIdioma idioma) throws PasarelaPagoException {
+	public List<EntidadPago> obtenerEntidadesPagoElectronico(final TypeIdioma idioma, final String metodosPago)
+			throws PasarelaPagoException {
 		final List<EntidadPago> res = new ArrayList<>();
 		final String entidadesPago[] = this.getProperty("entidadesPago").split(";");
+
 		EntidadPago ep = null;
-		for (final String id : entidadesPago) {
+
+		/**
+		 * En caso de que no se indiquen los metodos de pago por API, se establece por
+		 * defecto el pago con tarjeta
+		 */
+		if (metodosPago == null && this.getProperty("entidadesPago").contains("TJ")) {
 			ep = new EntidadPago();
-			ep.setCodigo(id);
-			ep.setDescripcion(this.getProperty("entidadPago." + id + "." + idioma.toString()));
+			ep.setCodigo("TJ");
+			ep.setDescripcion(this.getProperty("entidadPago.TJ." + idioma.toString()));
 			if (StringUtils.isBlank(ep.getDescripcion())) {
-				ep.setDescripcion(id);
+				ep.setDescripcion("TJ");
 			}
-			ep.setLogo(this.getProperty("entidadPago." + id + ".logo"));
 			res.add(ep);
+		} else {
+			for (final String id : entidadesPago) {
+
+				ep = new EntidadPago();
+				ep.setCodigo(id);
+				ep.setDescripcion(this.getProperty("entidadPago." + id + "." + idioma.toString()));
+				if (StringUtils.isBlank(ep.getDescripcion())) {
+					ep.setDescripcion(id);
+				}
+				ep.setLogo(this.getProperty("entidadPago." + id + ".logo"));
+				if (metodosPago.contains(id)) {
+					res.add(ep);
+				}
+			}
 		}
 		return res;
 	}
@@ -99,7 +117,8 @@ public class AtibPlugin extends AbstractPluginProperties implements IPasarelaPag
 			// Obtenemos url pago
 			final ArrayOfGuid refsModelos = new ArrayOfGuid();
 			refsModelos.getGuid().add(resInserta046.getToken());
-			final DatosRespuestaGetUrlPago resUrlPago = cliente.getUrlPago(refsModelos, entidadPagoId, urlCallback);
+			final DatosRespuestaGetUrlPago resUrlPago = cliente.getUrlPago(refsModelos, entidadPagoId, urlCallback,
+					datosPago.getIdioma().toString());
 			if (resUrlPago.getUrl() == null) {
 				throw new PasarelaPagoException("Error obteniendo url pago ");
 			}
@@ -223,8 +242,7 @@ public class AtibPlugin extends AbstractPluginProperties implements IPasarelaPag
 	/**
 	 * Convierte de cents a euros.
 	 *
-	 * @param importe
-	 *                    importe en cents
+	 * @param importe importe en cents
 	 * @return importe en euros
 	 */
 	private String centsToEur(final String importe) {

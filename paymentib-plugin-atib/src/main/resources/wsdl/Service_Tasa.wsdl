@@ -236,6 +236,7 @@
             <s:element minOccurs="0" maxOccurs="1" name="refsModelos" type="tns:ArrayOfGuid"/>
             <s:element minOccurs="0" maxOccurs="1" name="CodigoEntidad" type="s:string"/>
             <s:element minOccurs="0" maxOccurs="1" name="UrlDeVuelta" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="idioma" type="s:string"/>
           </s:sequence>
         </s:complexType>
       </s:element>

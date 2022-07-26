@@ -160,6 +160,7 @@ public class ApiRestController {
 		datosPago.setConcepto(rDatosPago.getConcepto());
 		datosPago.setTasaId(rDatosPago.getTasaId());
 		datosPago.setImporte(rDatosPago.getImporte());
+		datosPago.setMetodosPago(rDatosPago.getMetodosPago());
 		return datosPago;
 	}
 

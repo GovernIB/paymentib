@@ -89,23 +89,21 @@ public class SessionBean {
 		lang = FacesContext.getCurrentInstance().getViewRoot().getLocale().getLanguage();
 		locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 		rolesList = securityService.getRoles();
-		final String pathProperties = System
-	                .getProperty("es.caib.paymentib.properties.path");
-	        // Carga fichero de propiedades
-	    try (FileInputStream fis = new FileInputStream(pathProperties);) {
-	    	propiedadesLocales = new Properties();
-	        propiedadesLocales.load(fis);
-	    } catch (final IOException e) {
-	        throw new ConfiguracionException(e);
-	    }
+		final String pathProperties = System.getProperty("es.caib.paymentib.properties.path");
+		// Carga fichero de propiedades
+		try (FileInputStream fis = new FileInputStream(pathProperties);) {
+			propiedadesLocales = new Properties();
+			propiedadesLocales.load(fis);
+		} catch (final IOException e) {
+			throw new ConfiguracionException(e);
+		}
 
-
-	    logo = propiedadesLocales.getProperty("back.logo");
-	    if(logo.equals(null)) {
-	    	this.setHayLogo(false);
-	    } else {
-	    	this.setHayLogo(true);
-	    }
+		logo = propiedadesLocales.getProperty("back.logo");
+		if (logo == null) {
+			this.setHayLogo(false);
+		} else {
+			this.setHayLogo(true);
+		}
 
 		// Establece role activo por defecto
 		activeRole = null;

@@ -7,6 +7,9 @@ import javax.xml.ws.BindingProvider;
 
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
+import org.apache.cxf.interceptor.LoggingInInterceptor;
+import org.apache.cxf.interceptor.LoggingOutInterceptor;
+import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 
@@ -42,6 +45,7 @@ public class ClienteAtib {
             throw new Exception(
                     "No ha sido posible inicializar el ClienteAtib");
         }
+
     }
 
     /**
@@ -102,11 +106,12 @@ public class ClienteAtib {
      * @param refsModelos
      * @param codigoEntidad
      * @param urlDeVuelta
+     * @param idioma
      * @return
      */
     public DatosRespuestaGetUrlPago getUrlPago(ArrayOfGuid refsModelos,
-            String codigoEntidad, String urlDeVuelta) {
-        return cliente.getUrlPago(refsModelos, codigoEntidad, urlDeVuelta,
+            String codigoEntidad, String urlDeVuelta, String idioma) {
+        return cliente.getUrlPago(refsModelos, codigoEntidad, urlDeVuelta, idioma,
                 this.cabecera);
     }
 

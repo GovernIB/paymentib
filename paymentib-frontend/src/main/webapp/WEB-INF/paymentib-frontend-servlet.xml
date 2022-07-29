@@ -64,6 +64,7 @@
 	<!-- Idioma -->
 	<bean id="localeResolver"
 		class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+		<property name="cookieName" value="CookieLocaleResolver.LOCALE"/>
 		<property name="defaultLocale" value="es" />
 	</bean>
 

@@ -117,8 +117,9 @@ public class AtibPlugin extends AbstractPluginProperties implements IPasarelaPag
 			// Obtenemos url pago
 			final ArrayOfGuid refsModelos = new ArrayOfGuid();
 			refsModelos.getGuid().add(resInserta046.getToken());
+			String idioma = datosPago.getIdioma().toString().equals("es") ? "02" : "01";
 			final DatosRespuestaGetUrlPago resUrlPago = cliente.getUrlPago(refsModelos, entidadPagoId, urlCallback,
-					datosPago.getIdioma().toString());
+					idioma);
 			if (resUrlPago.getUrl() == null) {
 				throw new PasarelaPagoException("Error obteniendo url pago ");
 			}

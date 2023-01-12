@@ -171,7 +171,7 @@ public final class PagoFrontServiceImpl implements PagoFrontService {
 		// Obtiene justificante
 		byte[] justif = null;
 		try {
-			justif = plgPago.obtenerJustificantePagoElectronico(dp.getDatosPago(), dp.getLocalizador());
+			justif = plgPago.obtenerJustificantePagoElectronico(dp.getDatosPago(), dp.getLocalizador(), dp.getFechaCreacion());
 
 			// Si la pasarela no provee justificante, proveemos justificante
 			// genérico

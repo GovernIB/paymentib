@@ -1,5 +1,6 @@
 package es.caib.paymentib.plugins.api;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -80,7 +81,7 @@ public interface IPasarelaPagoPlugin extends IPlugin {
 	 *            Localizador pago en la pasarela
 	 * @return Justificante de pago (nulo si la pasarela no genera justificante).
 	 */
-	byte[] obtenerJustificantePagoElectronico(DatosPago datosPago, String localizador) throws PasarelaPagoException;
+	byte[] obtenerJustificantePagoElectronico(DatosPago datosPago, String localizador, Date fechaCreacion) throws PasarelaPagoException;
 
 	/**
 	 * Obtiene importe tasa.

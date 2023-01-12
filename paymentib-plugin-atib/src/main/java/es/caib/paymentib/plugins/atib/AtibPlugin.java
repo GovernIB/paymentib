@@ -147,7 +147,7 @@ public class AtibPlugin extends AbstractPluginProperties implements IPasarelaPag
 	}
 
 	@Override
-	public byte[] obtenerJustificantePagoElectronico(final DatosPago datosPago, final String localizador)
+	public byte[] obtenerJustificantePagoElectronico(final DatosPago datosPago, final String localizador, final Date fechaCreacion)
 			throws PasarelaPagoException {
 		try {
 			log.debug("Obtener justificante pago");
@@ -157,7 +157,7 @@ public class AtibPlugin extends AbstractPluginProperties implements IPasarelaPag
 
 			// Obtenemos PDF
 			final byte[] resPDF = cliente.getPdf046(localizador, centsToEur(datosPago.getImporte() + ""),
-					datosPago.getSujetoPasivoNif(), new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
+					datosPago.getSujetoPasivoNif(), new SimpleDateFormat("dd/MM/yyyy").format(fechaCreacion));
 
 			if (resPDF == null) {
 				throw new PasarelaPagoException("Error obteniendo justificante pago");

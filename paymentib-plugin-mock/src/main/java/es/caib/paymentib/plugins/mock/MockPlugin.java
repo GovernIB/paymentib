@@ -71,7 +71,7 @@ public class MockPlugin implements IPasarelaPagoPlugin {
 	}
 
 	@Override
-	public byte[] obtenerJustificantePagoElectronico(final DatosPago datosPago, final String localizador)
+	public byte[] obtenerJustificantePagoElectronico(final DatosPago datosPago, final String localizador, final Date fechaCreacion)
 			throws PasarelaPagoException {
 		return null;
 	}

@@ -102,7 +102,7 @@ public class TpvPlugin extends AbstractPluginProperties implements IPasarelaPago
 	}
 
 	@Override
-	public byte[] obtenerJustificantePagoElectronico(final DatosPago datosPago, final String localizador)
+	public byte[] obtenerJustificantePagoElectronico(final DatosPago datosPago, final String localizador, final Date fechaCreacion)
 			throws PasarelaPagoException {
 		// TPV no proporciona justificante pago
 		// Devolvemos nulo para generar justificante genérico

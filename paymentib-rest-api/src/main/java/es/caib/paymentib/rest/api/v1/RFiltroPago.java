@@ -35,6 +35,15 @@ public class RFiltroPago {
 	@ApiModelProperty(value = "entidad")
 	private String entidad;
 
+	@ApiModelProperty(value = "claveTramitacion")
+	private String claveTramitacion;
+
+	@ApiModelProperty(value = "idTramite")
+	private String idTramite;
+
+	@ApiModelProperty(value = "versionTramite")
+	private Integer versionTramite;
+
 	/**
 	 * @return the id
 	 */
@@ -173,5 +182,47 @@ public class RFiltroPago {
 	 */
 	public final void setEntidad(String entidad) {
 		this.entidad = entidad;
+	}
+
+	/**
+	 * @return the claveTramitacion
+	 */
+	public String getClaveTramitacion() {
+		return claveTramitacion;
+	}
+
+	/**
+	 * @param claveTramitacion the claveTramitacion to set
+	 */
+	public void setClaveTramitacion(String claveTramitacion) {
+		this.claveTramitacion = claveTramitacion;
+	}
+
+	/**
+	 * @return the idTramite
+	 */
+	public String getIdTramite() {
+		return idTramite;
+	}
+
+	/**
+	 * @param idTramite the idTramite to set
+	 */
+	public void setIdTramite(String idTramite) {
+		this.idTramite = idTramite;
+	}
+
+	/**
+	 * @return the versionTramite
+	 */
+	public Integer getVersionTramite() {
+		return versionTramite;
+	}
+
+	/**
+	 * @param versionTramite the versionTramite to set
+	 */
+	public void setVersionTramite(Integer versionTramite) {
+		this.versionTramite = versionTramite;
 	}
 }

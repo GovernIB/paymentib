@@ -64,6 +64,14 @@ public class RDatosPago {
     @ApiModelProperty(value = "metodosPago")
     private String metodosPago;
 
+    /** Identificador del trámite*/
+    @ApiModelProperty(value = "idTramite")
+    private String idTramite;
+
+    /** Versión del trámite*/
+    @ApiModelProperty(value = "versionTramite")
+    private Integer versionTramite;
+
     /**
      * Método de acceso a identificador.
      *
@@ -310,5 +318,34 @@ public class RDatosPago {
     public void setMetodosPago(String metodosPago) {
         this.metodosPago = metodosPago;
     }
+
+	/**
+	 * @return the idTramite
+	 */
+	public String getIdTramite() {
+		return idTramite;
+	}
+
+	/**
+	 * @param idTramite the idTramite to set
+	 */
+	public void setIdTramite(String idTramite) {
+		this.idTramite = idTramite;
+	}
+
+	/**
+	 * @return the versionTramite
+	 */
+	public Integer getVersionTramite() {
+		return versionTramite;
+	}
+
+	/**
+	 * @param versionTramite the versionTramite to set
+	 */
+	public void setVersionTramite(Integer versionTramite) {
+		this.versionTramite = versionTramite;
+	}
+
 
 }

@@ -38,8 +38,8 @@ public final class PagoBackServiceImpl implements PagoBackService {
 	@Override
 	@NegocioInterceptor
 	public List<DatosSesionPago> listaPagos(final String filtro, final Date fechaDesde, final Date fechaHasta,
-			final TypeFiltroFecha tipoFecha) {
-		return pagoDao.getAllByFiltro(filtro, fechaDesde, fechaHasta, tipoFecha);
+			final TypeFiltroFecha tipoFecha, final String filtroClaveTramitacion, final String filtroTramite, final Integer filtroVersion) {
+		return pagoDao.getAllByFiltro(filtro, fechaDesde, fechaHasta, tipoFecha, filtroClaveTramitacion, filtroTramite, filtroVersion);
 	}
 
 	@Override

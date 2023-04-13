@@ -1,0 +1,43 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+</head>
+<body>
+<h1 class="stgH1">PAGO</h1>
+<p>
+	En la pantalla de '<i>Pago</i>' se pueden consultar los datos correspondientes a un pago.
+</p>
+<h2 class="stgH2">CAMPOS</h2>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Identificador</span>: c&oacute;digo un&iacute;voco que identifica al pago dentro de la aplicaci&oacute;n.</li>
+		<li><span class="nombreCampo">Fecha creaci&oacute;n</span>: fecha en la que se ha creado el registro del pago.</li>
+		<li><span class="nombreCampo">Estado</span>: se refiere al estado actual del pago, que puede ser &lsquo;No pagado&rsquo; (cuando el pago a&uacute;n no se ha realizado por parte del usuario), &lsquo;Pagado&rsquo; (cuando el pago ha sido realizado por el usuario o confirmado por el superadministrador) o &lsquo;Desconocido&rsquo; (cuando, por alg&uacute;n problema de comunicaci&oacute;n con la pasarela de pago, &eacute;ste ha quedado en un estado inconsistente).</li>
+		<li><span class="nombreCampo">Fecha pago</span>: fecha en la que se ha confirmado el pago.</li>
+		<li><span class="nombreCampo">Aplicaci&oacute;n</span>: muestra la aplicaci&oacute;n con la que se ha realizado el pago.</li>
+		<li><span class="nombreCampo">Entidad</span>: muestra la entidad desde la que se realiza el pago.</li>
+		<li><span class="nombreCampo">&Oacute;rgano</span>: muestra el &oacute;rgano desde el que se realiza el pago.</li>
+		<li><span class="nombreCampo">Pasarela</span>: muestra la pasarela a trav&eacute;s de la que se realiza el pago: ATIB o TPV.</li>
+		<li><span class="nombreCampo">Localizador</span>: : muestra el c&oacute;digo localizador que devuelve la pasarela de pago.</li>
+		<li><span class="nombreCampo">Modelo</span>: muestra el modelo utilizado para el pago.</li>
+		<li><span class="nombreCampo">Concepto</span>: muestra el concepto del pago.</li>
+		<li><span class="nombreCampo">Tasa</span>: muestra el c&oacute;digo que define la tasa del pago.</li>
+		<li><span class="nombreCampo">Importe</span>: muestra el importe pagado.</li>
+		<li><span class="nombreCampo">Detalle</span>: muestra el identificador de la sesi&oacute;n de tramitaci&oacute;n asociada al pago.</li>
+		<li><span class="nombreCampo">Tr&aacute;mite</span>: muestra el tr&aacute;mite asociado al pago.</li>
+		<li><span class="nombreCampo">Versi&oacute;n</span>: muestra la sesi&oacute;n del tr&aacute;mite vinculado al pago.</li>
+		<li><span class="nombreCampo">URL Callback</span>: muestra la URL generada por el asistente de tramitaci&oacute;n al regresar de la pasarela de pago, donde aparece el identificador de la sesi&oacute;n de pago.</li>
+		<li><span class="nombreCampo">Confirmaci&oacute;n manual</span>: indica, en los pagos con estado &lsquo;desconocido&rsquo; y &lsquo;no pagado&rsquo;, si se ha confirmado el pago manualmente.</li>
+		<li><span class="nombreCampo">Usuario confirmaci&oacute;n</span>: en caso de que se haya confirmado el pago manualmente, indica el usuario que lo ha confirmado.</li>
+	</ul>
+</p>
+<h2 class="stgH2">OPERATIVA</h2>
+<p>
+	<ul>
+		<li><span class="boton">Cerrar</span>: cierra la pantalla.</li>
+	</ul>
+</p>
+</body>
+</html>

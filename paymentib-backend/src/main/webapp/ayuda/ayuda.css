@@ -1,0 +1,157 @@
+/* Ayudas PIB */
+body {
+	font:normal 80% Arial,Helvetica,sans-serif;
+	color: #333;
+	height: 100% !important;
+}
+
+table {
+  font:normal 100% Arial,Helvetica,sans-serif;
+  color: #333;
+  border: 1px solid #AAA;
+  border-spacing: 0px;
+}
+
+table td, table th {
+  border: 1px solid #AAA;
+  padding-left: 0.5em
+}
+
+table thead th {
+  font-weight: bold;
+}
+
+.bodyPlugins {
+	background-color:beige;
+}
+
+h1.stgH1 {
+		text-decoration: underline;
+        font-size:1.5em;
+        margin-bottom:.8em;
+}
+
+h2.stgH2 {
+        font-size:1.2em;
+        margin-bottom:.8em;
+        color: #000000;
+}
+
+p {
+	line-height: 1.5em;
+}
+
+span.nombreCampo {
+		font-weight: bold;
+		color: #808040;
+}
+
+span.boton {
+		font-weight: bold;
+        color: #003eff;
+}
+
+ul {
+        list-style-type: square;
+        line-height: 1.5em;
+}
+
+ul.detalle {
+        list-style-type: circle;
+}
+
+ul.detalle2 {
+        list-style-type: disc;
+}
+
+a {
+	text-decoration: underline;
+    color: #f39507;
+}
+
+.iconCopy {
+	cursor:pointer;
+	border: 1px solid #AAA;
+	padding:3px;
+	border-radius: 4px;
+	margin-left:2px;
+}
+
+.ulDescripcion {
+	list-style-type: none;
+}
+
+
+/* AYUDA DE LOS PLUGINS DE SCRIPT */
+/* Breadcrumb */
+.seccionBreadcrumb {
+
+    margin-top: 0.2rem;
+    margin-bottom: 0.2rem;
+    padding: 0.7rem;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12), 0 3px 1px -2px rgba(0, 0, 0, .2);
+    background-color: #f6f6dd;
+    color: #000;
+    border-radius: 2px;
+}
+
+.seccionBreadcrumb ul {
+    padding-left: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    list-style: none;
+    flex-wrap: wrap;
+    display: block;
+	width: 100%;
+	height: 20px;
+}
+
+.seccionBreadcrumb ul li {
+  	margin-left:10px;
+  	color: #f39507;
+  	float: left;
+}
+
+.volver
+{
+    float:right !important;
+    cursor:pointer;
+}
+
+.seccionBreadcrumb ul li a{
+  	/*margin-left:10px;*/
+  	text-decoration:none;
+  	transition: 1.5s;
+}
+
+.seccionBreadcrumb ul li a:hover {
+    text-decoration:underline beige;
+}
+
+/* Cabecera */
+.cabeceraPlugin {
+	color: #f39507;
+}
+.cabeceraPlugin img {
+	margin-right:5px;
+}
+
+/* Métodos */
+.seccionMetodos ul  {
+	 list-style: none;
+}
+.seccionMetodos ul li a {
+	 margin-left: 4px;
+	 vertical-align:top;
+}
+.seccionMetodos ul li span {
+	 vertical-align:top;
+}
+
+
+.codigoScript {
+	color: #00d;
+	font-style: italic;
+	font-size: 10px;
+	margin-left: 10px;
+}

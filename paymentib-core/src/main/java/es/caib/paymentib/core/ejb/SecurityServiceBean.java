@@ -37,6 +37,12 @@ public class SecurityServiceBean implements SecurityService {
 
 	@Override
 	@PermitAll
+	public boolean isConsulta() {
+		return securityService.isConsulta();
+	}
+
+	@Override
+	@PermitAll
 	public List<TypeRoleAcceso> getRoles() {
 		return securityService.getRoles();
 	}

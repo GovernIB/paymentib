@@ -53,8 +53,8 @@ public class PagoDaoImpl implements PagoDao {
 	 */
 	@Override
 	public List<DatosSesionPago> getAllByFiltro(final String filtro, final Date fechaDesde, final Date fechaHasta,
-			final TypeFiltroFecha tipoFecha) {
-		return listarPagos(filtro, fechaDesde, fechaHasta, tipoFecha);
+			final TypeFiltroFecha tipoFecha, final String filtroClaveTramitacion, final String filtroTramite, final Integer filtroVersion) {
+		return listarPagos(filtro, fechaDesde, fechaHasta, tipoFecha, filtroClaveTramitacion, filtroTramite, filtroVersion);
 	}
 
 	/*
@@ -64,7 +64,7 @@ public class PagoDaoImpl implements PagoDao {
 	 */
 	@Override
 	public List<DatosSesionPago> getAll() {
-		return listarPagos(null, null, null, null);
+		return listarPagos(null, null, null, null, null, null, null);
 	}
 
 	@Override
@@ -90,6 +90,8 @@ public class PagoDaoImpl implements PagoDao {
 		jo.setUrlCallbackOrigen(urlCallbackAppOrigen);
 		jo.setToken(tokenAcceso);
 		jo.setMetodosPago(datosPago.getMetodosPago());
+		jo.setIdTramite(datosPago.getIdTramite());
+		jo.setVersionTramite(datosPago.getVersionTramite());
 
 		entityManager.persist(jo);
 
@@ -147,7 +149,7 @@ public class PagoDaoImpl implements PagoDao {
 
 	@SuppressWarnings("unchecked")
 	private List<DatosSesionPago> listarPagos(final String filtro, final Date fechaDesde, final Date fechaHasta,
-			final TypeFiltroFecha tipoFecha) {
+			final TypeFiltroFecha tipoFecha, final String filtroClaveTramitacion, final String filtroTramite, final Integer filtroVersion) {
 		final List<DatosSesionPago> listaPagos = new ArrayList<>();
 
 		final String sqlSelect = "SELECT p FROM JPagoE p ";
@@ -193,6 +195,33 @@ public class PagoDaoImpl implements PagoDao {
 
 		}
 
+		if (StringUtils.isNotBlank(filtroClaveTramitacion)) {
+			if (sqlWhere.length() > 0) {
+				sqlWhere.append(" AND ");
+			}
+
+			sqlWhere.append(" LOWER(p.detallePago) LIKE :filtroClaveTramitacion");
+
+		}
+
+		if (StringUtils.isNotBlank(filtroTramite)) {
+			if (sqlWhere.length() > 0) {
+				sqlWhere.append(" AND ");
+			}
+
+			sqlWhere.append(" LOWER(p.idTramite) LIKE :filtroTramite");
+
+		}
+
+		if (filtroVersion != null) {
+			if (sqlWhere.length() > 0) {
+				sqlWhere.append(" AND ");
+			}
+
+			sqlWhere.append(" p.versionTramite = :filtroVersion");
+
+		}
+
 		if (sqlWhere.length() > 0) {
 			sqlWhere.insert(0, " WHERE");
 		}
@@ -214,6 +243,18 @@ public class PagoDaoImpl implements PagoDao {
 			}
 		}
 
+		if (StringUtils.isNotBlank(filtroClaveTramitacion) || StringUtils.isNotBlank(filtroTramite) || filtroVersion != null) {
+			if (StringUtils.isNotBlank(filtroClaveTramitacion)) {
+				queryCount.setParameter("filtroClaveTramitacion", "%" + filtroClaveTramitacion.toLowerCase() + "%");
+			}
+			if (StringUtils.isNotBlank(filtroTramite)) {
+				queryCount.setParameter("filtroTramite", "%" + filtroTramite.toLowerCase() + "%");
+			}
+			if (filtroVersion != null) {
+				queryCount.setParameter("filtroVersion", filtroVersion);
+			}
+		}
+
 		final Long nfilas = (Long) queryCount.getSingleResult();
 
 		if (nfilas > Constantes.MAX_NUM_PAGOS) {
@@ -232,6 +273,18 @@ public class PagoDaoImpl implements PagoDao {
 			}
 			if (fechaHasta != null) {
 				query.setParameter("fechaHasta", fechaHasta);
+			}
+		}
+
+		if (StringUtils.isNotBlank(filtroClaveTramitacion) || StringUtils.isNotBlank(filtroTramite) || filtroVersion != null) {
+			if (StringUtils.isNotBlank(filtroClaveTramitacion)) {
+				query.setParameter("filtroClaveTramitacion", "%" + filtroClaveTramitacion.toLowerCase() + "%");
+			}
+			if (StringUtils.isNotBlank(filtroTramite)) {
+				query.setParameter("filtroTramite", "%" + filtroTramite.toLowerCase() + "%");
+			}
+			if (filtroVersion != null) {
+				query.setParameter("filtroVersion", filtroVersion);
 			}
 		}
 
@@ -373,6 +426,15 @@ public class PagoDaoImpl implements PagoDao {
 			if (filtro.getEstado() != null && !filtro.getEstado().isEmpty()) {
 				sqlWhere.append(" AND p.estado LIKE :estado");
 			}
+			if (filtro.getClaveTramitacion() != null && !filtro.getClaveTramitacion().isEmpty()) {
+				sqlWhere.append(" AND p.detallePago LIKE :claveTramitacion");
+			}
+			if (filtro.getIdTramite() != null && !filtro.getIdTramite().isEmpty()) {
+				sqlWhere.append(" AND p.idTramite LIKE :idTramite");
+			}
+			if (filtro.getVersionTramite() != null) {
+				sqlWhere.append(" AND p.versionTramite = :versionTramite");
+			}
 		}
 
 		if ((fechaDesde != null || fechaHasta != null)) {
@@ -444,6 +506,15 @@ public class PagoDaoImpl implements PagoDao {
 			if (filtro.getEstado() != null && !filtro.getEstado().isEmpty()) {
 				queryCount.setParameter("estado", "%" + filtro.getEstado() + "%");
 			}
+			if (filtro.getClaveTramitacion() != null && !filtro.getClaveTramitacion().isEmpty()) {
+				queryCount.setParameter("claveTramitacion", "%" + filtro.getClaveTramitacion() + "%");
+			}
+			if (filtro.getIdTramite() != null && !filtro.getIdTramite().isEmpty()) {
+				queryCount.setParameter("idTramite", "%" + filtro.getIdTramite() + "%");
+			}
+			if (filtro.getVersionTramite() != null) {
+				queryCount.setParameter("versionTramite", filtro.getVersionTramite());
+			}
 		}
 
 		if ((fechaDesde != null || fechaHasta != null)) {
@@ -503,6 +574,15 @@ public class PagoDaoImpl implements PagoDao {
 			}
 			if (filtro.getEstado() != null && !filtro.getEstado().isEmpty()) {
 				query.setParameter("estado", "%" + filtro.getEstado() + "%");
+			}
+			if (filtro.getClaveTramitacion() != null && !filtro.getClaveTramitacion().isEmpty()) {
+				query.setParameter("claveTramitacion", "%" + filtro.getClaveTramitacion() + "%");
+			}
+			if (filtro.getIdTramite() != null && !filtro.getIdTramite().isEmpty()) {
+				query.setParameter("idTramite", "%" + filtro.getIdTramite() + "%");
+			}
+			if (filtro.getVersionTramite() != null) {
+				query.setParameter("versionTramite", filtro.getVersionTramite());
 			}
 		}
 

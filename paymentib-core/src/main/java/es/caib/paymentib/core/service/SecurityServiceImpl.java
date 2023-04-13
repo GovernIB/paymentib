@@ -32,6 +32,12 @@ public class SecurityServiceImpl implements SecurityService {
 
 	@Override
 	@NegocioInterceptor
+	public boolean isConsulta() {
+		return contextService.getRoles().contains(TypeRoleAcceso.CONSULTA);
+	}
+
+	@Override
+	@NegocioInterceptor
 	public String getUsername() {
 		return contextService.getUsername();
 	}

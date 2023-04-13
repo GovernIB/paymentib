@@ -495,6 +495,11 @@ label.ui-state-disabled {
   background-color: #F2F5F9;
 }
 
+.ui-datatable table{
+	border-collapse: separate;
+	border-spacing: 0;
+}
+
 /** eliminar cabecera tabla**/
 .hide-table-header thead {
     display: none;
@@ -527,3 +532,21 @@ label.ui-state-disabled {
 
 .confirmar_botonera {float:right !important;}
 .confirmar_icono {height: auto !important;width: auto !important;}
+
+.ayuda-frame {width:100%; height:500px; overflow:auto;border: none;}
+
+.ayuda-scroll{
+    overflow-y: hidden !important;
+}
+
+.resaltar{
+	border: #0a95ff 2px dotted !important;
+}
+
+.noBorderColor{
+	border-color:#f0f0f0;
+}
+
+.d-none{
+	display: none !important;
+}

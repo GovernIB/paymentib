@@ -26,14 +26,14 @@ public class PagoBackServiceBean implements PagoBackService {
 	private PagoBackService service;
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN })
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.CONSULTA })
 	public List<DatosSesionPago> listaPagos(final String filtro, final Date fechaDesde, final Date fechaHasta,
-			final TypeFiltroFecha tipoFecha) {
-		return service.listaPagos(filtro, fechaDesde, fechaHasta, tipoFecha);
+			final TypeFiltroFecha tipoFecha, final String filtroClaveTramitacion, final String filtroTramite, final Integer filtroVersion) {
+		return service.listaPagos(filtro, fechaDesde, fechaHasta, tipoFecha, filtroClaveTramitacion, filtroTramite, filtroVersion);
 	}
 
 	@Override
-	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN })
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.CONSULTA })
 	public DatosSesionPago getPagoByCodigo(final Long codigo) {
 		return service.getPagoByCodigo(codigo);
 	}

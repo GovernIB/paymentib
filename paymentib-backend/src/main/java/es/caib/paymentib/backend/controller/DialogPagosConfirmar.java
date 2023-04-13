@@ -13,6 +13,10 @@ import es.caib.paymentib.core.api.model.types.TypeModoAcceso;
 import es.caib.paymentib.core.api.model.types.TypeNivelGravedad;
 import es.caib.paymentib.core.api.service.PagoBackService;
 
+/**
+ * @author aagudo
+ *
+ */
 @ManagedBean
 @ViewScoped
 public class DialogPagosConfirmar extends DialogControllerBase {
@@ -32,6 +36,10 @@ public class DialogPagosConfirmar extends DialogControllerBase {
 	 * Datos elemento.
 	 */
 	private DatosSesionPago data;
+
+	private String portapapeles;
+
+	private String errorCopiar;
 
 	/**
 	 * Inicialización.
@@ -81,6 +89,24 @@ public class DialogPagosConfirmar extends DialogControllerBase {
 		UtilJSF.closeDialog(result);
 	}
 
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		if (portapapeles.equals("") || portapapeles.equals(null)) {
+			copiadoErr();
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+		}
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.copiar"));
+	}
+
 	public String getId() {
 		return id;
 	}
@@ -95,6 +121,34 @@ public class DialogPagosConfirmar extends DialogControllerBase {
 
 	public void setData(final DatosSesionPago data) {
 		this.data = data;
+	}
+
+	/**
+	 * @return the portapapeles
+	 */
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	/**
+	 * @param portapapeles the portapapeles to set
+	 */
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
+	}
+
+	/**
+	 * @return the errorCopiar
+	 */
+	public final String getErrorCopiar() {
+		return errorCopiar;
+	}
+
+	/**
+	 * @param errorCopiar the errorCopiar to set
+	 */
+	public final void setErrorCopiar(String errorCopiar) {
+		this.errorCopiar = errorCopiar;
 	}
 
 }

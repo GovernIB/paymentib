@@ -1,0 +1,41 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+</head>
+<body>
+<h1 class="stgH1">LLISTAT DE PAGAMENTS</h1>
+<p>
+	A la pantalla de &#39;Llistat de Pagaments&#39; es poden veure els pagaments que s&#39;han realitzat des de l&#39;assistent de tramitaci&oacute;.
+</p>
+<p>El manteniment de pagaments ho ha de fer un usuari que disposi del rol de &#39;Superadministrador&#39;, que podr&agrave;, a m&eacute;s de consultar els pagaments, confirmar-los i verificar-los. Si l&#39;usuari t&eacute; el rol de &#39;Consulta&#39;, nom&eacute;s els podr&agrave; consultar.</p>
+<h2 class="stgH2">OPERATIVA</h2>
+<p>
+	<ul>
+		<li><span class="boton">Filtratge de cerca</span>: per fer la cerca cal indicar les condicions a complir. Mitjan&ccedil;ant el camp &#39;Cerca&#39; (que permet buscar per qualsevol camp del pagament, a excepci&oacute; del tr&agrave;mit i versi&oacute;), &#39;Des de&#39;, &#39;Fins&#39;, &#39;Clau de tramitaci&oacute;&#39; i &#39;Tr&agrave;mit / Versi&oacute;&#39;, i seleccionant si la cerca va a considerar la data de creaci&oacute; o la data de pagament, es fixen els valors dels filtres que cal aplicar. A continuaci&oacute; cal pr&eacute;mer sobre la lupa i es mostraran els pagaments que compleixin aquestes condicions de filtratge.</li>
+		<li><span class="boton">Consultar</span>: fent clic al bot&oacute; s&#39;obre una pantalla que mostra les dades i detalls del pagament seleccionat.</li>
+		<li><span class="boton">Verificar</span>: si el pagament seleccionat est&agrave; en estat &#39;No pagat&#39; o &#39;Desconegut&#39; i si l&#39;usuari t&eacute; rol de &#39;Superadministrador&#39;, en pr&eacute;mer aquest bot&oacute; es podr&agrave; validar si el pagament ha estat realitzat o no, mitjan&ccedil;ant una consulta a la passarel&middot;la de pagament, qui indicar&agrave; si l&#39;estat s&#39;ha modificat.</li>
+		<li><span class="boton">Confirmar</span>: si el pagament seleccionat est&agrave; en estat &#39;No pagat&#39; o &#39;Desconegut&#39; i si l&#39;usuari t&eacute; rol de &#39;Superadministrador&#39;, en pr&eacute;mer aquest bot&oacute; es podr&agrave; confirmar el pagament, deixant l&#39;estat del pagament com a &#39;Pagat&#39;. Aquesta acci&oacute; nom&eacute;s s&#39;ha de fer manualment si hi ha una evid&egrave;ncia que realment s&#39;ha fet el pagament i l&#39;usuari no ho pot confirmar mitjan&ccedil;ant l&#39;assistent de tramitaci&oacute;.</li>
+	</ul>
+</p>
+<h2 class="stgH2">CAMPS</h2>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Identificador</span>: codi un&iacute;voc que identifica el pagament dins de l&#39;aplicaci&oacute;.</li>
+		<li><span class="nombreCampo">Data creaci&oacute;</span>: data en qu&egrave; s&#39;ha creat el registre del pagament.</li>
+		<li><span class="nombreCampo">Passarel&middot;la</span>: mostra la passarel&middot;la a trav&eacute;s de la qual es realitza el pagament: ATIB o TPV.</li>
+		<li><span class="nombreCampo">Entitat</span>: mostra l&#39;entitat des de la qual es fa el pagament.</li>
+		<li><span class="nombreCampo">Aplicaci&oacute;</span>: mostra l&#39;aplicaci&oacute; amb qu&egrave; s&#39;ha fet el pagament.</li>
+		<li><span class="nombreCampo">Nif</span>: mostra el NIF de l&#39;usuari autenticat al tr&agrave;mit relacionat amb el pagament.</li>
+		<li><span class="nombreCampo">Nom</span>: mostra el nom i els cognoms de l&#39;usuari autenticat en el tr&agrave;mit relacionat amb el pagament.</li>
+		<li><span class="nombreCampo">Import</span>: mostra l&#39;import pagat.</li>
+		<li><span class="nombreCampo">Estat</span>: es refereix a l&#39;estat actual del pagament, que pot ser &#39;No pagat&#39; (quan el pagament encara no s&#39;ha realitzat per part de l&#39;usuari), &#39;Pagado&#39; (quan el pagament ha estat realitzat per l&#39;usuari o confirmat pel superadministrador ) o &#39;Desconocido&#39; (quan, per algun problema de comunicaci&oacute; amb la passarel&middot;la de pagament, aquest ha quedat en un estat inconsistent).</li>
+		<li><span class="nombreCampo">Data pagament</span>: data en qu&egrave; s&#39;ha confirmat el pagament.</li>
+		<li><span class="nombreCampo">Clau de tramitaci&oacute;</span>: mostra lidentificador de la sessi&oacute; de tramitaci&oacute; associada al pagament.</li>
+		<li><span class="nombreCampo">Tr&agrave;mit</span>: mostra el tr&agrave;mit associat al pagament.</li>
+		<li><span class="nombreCampo">Versi&oacute;</span>: mostra la sessi&oacute; del tr&agrave;mit vinculat al pagament.</li>
+	</ul>
+</p>
+</body>
+</html>

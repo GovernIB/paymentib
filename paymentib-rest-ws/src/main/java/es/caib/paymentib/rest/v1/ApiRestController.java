@@ -161,6 +161,8 @@ public class ApiRestController {
 		datosPago.setTasaId(rDatosPago.getTasaId());
 		datosPago.setImporte(rDatosPago.getImporte());
 		datosPago.setMetodosPago(rDatosPago.getMetodosPago());
+		datosPago.setIdTramite(rDatosPago.getIdTramite());
+		datosPago.setVersionTramite(rDatosPago.getVersionTramite());
 		return datosPago;
 	}
 
@@ -196,6 +198,9 @@ public class ApiRestController {
 			f.setPasarela(rf.getPasarela());
 			f.setFechaCre(rf.getFechaCre());
 			f.setFechaPago(rf.getFechaPago());
+			f.setClaveTramitacion(rf.getClaveTramitacion());
+			f.setIdTramite(rf.getIdTramite());
+			f.setVersionTramite(rf.getVersionTramite());
 		}
 		return f;
 	}

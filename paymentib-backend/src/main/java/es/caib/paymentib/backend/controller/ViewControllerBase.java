@@ -145,6 +145,9 @@ public abstract class ViewControllerBase {
 		if (filtro != null && StringUtils.isBlank(filtro)) {
 			filtro = null;
 		}
+		if (filtro != null) {
+			filtro = filtro.trim();
+		}
 		return filtro;
 	}
 

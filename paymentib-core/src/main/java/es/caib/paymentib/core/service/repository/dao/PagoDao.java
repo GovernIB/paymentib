@@ -22,7 +22,7 @@ public interface PagoDao {
 	 * @return lista de pagos
 	 */
 	List<DatosSesionPago> getAllByFiltro(final String filtro, final Date fechaDesde, final Date fechaHasta,
-			final TypeFiltroFecha tipoFecha);
+			final TypeFiltroFecha tipoFecha, final String filtroClaveTramitacion, final String filtroTramite, final Integer filtroVersion);
 
 	/**
 	 * Obtiene la lista de todos los pagos

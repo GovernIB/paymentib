@@ -1,12 +1,16 @@
 package es.caib.paymentib.backend.controller;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.ejb.EJBException;
 import javax.faces.bean.ManagedBean;
@@ -14,6 +18,7 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import es.caib.paymentib.backend.model.DialogResult;
 import es.caib.paymentib.backend.model.types.TypeParametroVentana;
@@ -23,10 +28,12 @@ import es.caib.paymentib.core.api.model.pago.DatosSesionPago;
 import es.caib.paymentib.core.api.model.types.TypeFiltroFecha;
 import es.caib.paymentib.core.api.model.types.TypeModoAcceso;
 import es.caib.paymentib.core.api.model.types.TypeNivelGravedad;
+import es.caib.paymentib.core.api.model.types.TypeRoleAcceso;
 import es.caib.paymentib.core.api.service.PagoBackService;
 import es.caib.paymentib.core.api.service.PagoFrontService;
 import es.caib.paymentib.plugins.api.EstadoPago;
 import es.caib.paymentib.plugins.api.TypeEstadoPago;
+import es.caib.paymentib.core.api.exception.CargaConfiguracionException;
 
 /**
  * Mantenimiento de entidades.
@@ -50,6 +57,9 @@ public class ViewPagos extends ViewControllerBase {
 	@Inject
 	private PagoFrontService pagoFrontService;
 
+	/** Propiedades configuración especificadas en properties. */
+	private Properties propiedadesLocales = recuperarConfiguracionProperties();
+
 	/**
 	 * Filtro (puede venir por parametro).
 	 */
@@ -57,6 +67,9 @@ public class ViewPagos extends ViewControllerBase {
 	private Date filtroFechaDesde;
 	private Date filtroFechaHasta;
 	private TypeFiltroFecha filtroFecha;
+	private String filtroClaveTramitacion;
+	private String filtroTramite;
+	private Integer filtroVersion;
 
 	/**
 	 * Lista de datos.
@@ -68,20 +81,29 @@ public class ViewPagos extends ViewControllerBase {
 	 */
 	private DatosSesionPago datoSeleccionado;
 
+	private String portapapeles;
+
+	private String errorCopiar;
+
 	/**
 	 * Inicializacion.
 	 */
 	public void init() {
 		// Control acceso
-		UtilJSF.verificarAccesoSuperAdministrador();
+		UtilJSF.verificarAcceso();
 		// Titulo pantalla
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
 
-		final DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		String propiedad = propiedadesLocales.getProperty("filtroInicial");
 
 		try {
-			filtroFechaDesde = formatter.parse(formatter.format(new Date()));
-		} catch (final ParseException e) {
+			int num = Integer.parseInt(propiedad);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(getToday()); // Configuramos la fecha que se recibe
+			calendar.add(Calendar.DAY_OF_YEAR, -num); // numero de días a añadir, o restar en caso de días<0
+			filtroFechaDesde = calendar.getTime(); // Devuelve el objeto Date con los nuevos días añadidos
+		} catch (final NumberFormatException e) {
+			filtroFechaDesde = getToday();
 		}
 
 		filtroFecha = TypeFiltroFecha.CREACION;
@@ -92,13 +114,61 @@ public class ViewPagos extends ViewControllerBase {
 	}
 
 	public boolean getPermiteVerificar() {
-		return (TypeEstadoPago.DESCONOCIDO.equals(datoSeleccionado.getEstado())
-				|| TypeEstadoPago.NO_PAGADO.equals(datoSeleccionado.getEstado()));
+		return ((TypeEstadoPago.DESCONOCIDO.equals(datoSeleccionado.getEstado())
+				|| TypeEstadoPago.NO_PAGADO.equals(datoSeleccionado.getEstado()))
+				&& UtilJSF.isAccesoSuperAdministrador());
 	}
 
 	public boolean getPermiteConfirmar() {
-		return (TypeEstadoPago.DESCONOCIDO.equals(datoSeleccionado.getEstado())
-				|| TypeEstadoPago.NO_PAGADO.equals(datoSeleccionado.getEstado()));
+		return ((TypeEstadoPago.DESCONOCIDO.equals(datoSeleccionado.getEstado())
+				|| TypeEstadoPago.NO_PAGADO.equals(datoSeleccionado.getEstado()))
+				&& UtilJSF.isAccesoSuperAdministrador());
+	}
+
+	/**
+	 * Copiado correctamente
+	 */
+	public void copiadoCorr() {
+		if (portapapeles.equals("") || portapapeles.equals(null)) {
+			copiadoErr();
+		} else {
+			UtilJSF.addMessageContext(TypeNivelGravedad.INFO, UtilJSF.getLiteral("info.copiado.ok"));
+		}
+	}
+
+	/**
+	 * Copiado error
+	 */
+	public void copiadoErr() {
+		UtilJSF.addMessageContext(TypeNivelGravedad.ERROR, UtilJSF.getLiteral("error.copiar"));
+	}
+
+	/**
+	 * @return the portapapeles
+	 */
+	public final String getPortapapeles() {
+		return portapapeles;
+	}
+
+	/**
+	 * @param portapapeles the portapapeles to set
+	 */
+	public final void setPortapapeles(String portapapeles) {
+		this.portapapeles = portapapeles;
+	}
+
+	/**
+	 * @return the errorCopiar
+	 */
+	public final String getErrorCopiar() {
+		return errorCopiar;
+	}
+
+	/**
+	 * @param errorCopiar the errorCopiar to set
+	 */
+	public final void setErrorCopiar(String errorCopiar) {
+		this.errorCopiar = errorCopiar;
 	}
 
 	/**
@@ -112,7 +182,7 @@ public class ViewPagos extends ViewControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
-		UtilJSF.openDialog(DialogPagos.class, TypeModoAcceso.CONSULTA, params, true, 1100, 500);
+		UtilJSF.openDialog(DialogPagos.class, TypeModoAcceso.CONSULTA, params, true, 1100, 540);
 	}
 
 	/**
@@ -133,8 +203,7 @@ public class ViewPagos extends ViewControllerBase {
 	/**
 	 * Retorno dialogo confirmar
 	 *
-	 * @param event
-	 *                  respuesta dialogo
+	 * @param event respuesta dialogo
 	 ***/
 	public void returnDialogoConfirmar(final SelectEvent event) {
 		final DialogResult respuesta = (DialogResult) event.getObject();
@@ -199,7 +268,7 @@ public class ViewPagos extends ViewControllerBase {
 		// Filtra
 
 		try {
-			listaDatos = pagoBackService.listaPagos(filtro, filtroFechaDesde, filtroFechaHasta, filtroFecha);
+			listaDatos = pagoBackService.listaPagos(filtro, filtroFechaDesde, filtroFechaHasta, filtroFecha, filtroClaveTramitacion, filtroTramite, filtroVersion);
 		} catch (final EJBException e) {
 			if (e.getCause() instanceof MaxNumFilasException) {
 				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.maxnumfilas"));
@@ -224,6 +293,34 @@ public class ViewPagos extends ViewControllerBase {
 	}
 
 	/**
+	 * Ayuda.
+	 */
+	public void ayuda() {
+		UtilJSF.openHelp("pagos");
+	}
+
+	private Properties recuperarConfiguracionProperties() {
+		final String pathProperties = System.getProperty("es.caib.paymentib.properties.path");
+		try (FileInputStream fis = new FileInputStream(pathProperties);) {
+			final Properties props = new Properties();
+			props.load(fis);
+			return props;
+		} catch (final IOException e) {
+			throw new CargaConfiguracionException(
+					"Error al cargar la configuracion del properties '" + pathProperties + "' : " + e.getMessage(), e);
+		}
+	}
+
+	private Date getToday() {
+		final Calendar calendar = Calendar.getInstance();
+		final int year = calendar.get(Calendar.YEAR);
+		final int month = calendar.get(Calendar.MONTH);
+		final int day = calendar.get(Calendar.DATE);
+		calendar.set(year, month, day, 0, 0, 0);
+		return calendar.getTime();
+	}
+
+	/**
 	 * @return the filtro
 	 */
 	public String getFiltro() {
@@ -231,8 +328,7 @@ public class ViewPagos extends ViewControllerBase {
 	}
 
 	/**
-	 * @param filtro
-	 *                   the filtro to set
+	 * @param filtro the filtro to set
 	 */
 	public void setFiltro(final String filtro) {
 		this.filtro = filtro;
@@ -246,8 +342,7 @@ public class ViewPagos extends ViewControllerBase {
 	}
 
 	/**
-	 * @param listaDatos
-	 *                       the listaDatos to set
+	 * @param listaDatos the listaDatos to set
 	 */
 	public void setListaDatos(final List<DatosSesionPago> listaDatos) {
 		this.listaDatos = listaDatos;
@@ -261,8 +356,7 @@ public class ViewPagos extends ViewControllerBase {
 	}
 
 	/**
-	 * @param datoSeleccionado
-	 *                             the datoSeleccionado to set
+	 * @param datoSeleccionado the datoSeleccionado to set
 	 */
 	public void setDatoSeleccionado(final DatosSesionPago datoSeleccionado) {
 		this.datoSeleccionado = datoSeleccionado;
@@ -291,5 +385,30 @@ public class ViewPagos extends ViewControllerBase {
 	public void setFiltroFechaHasta(final Date filtroFechaFin) {
 		this.filtroFechaHasta = filtroFechaFin;
 	}
+
+	public String getFiltroClaveTramitacion() {
+		return filtroClaveTramitacion;
+	}
+
+	public void setFiltroClaveTramitacion(final String filtroClaveTramitacion) {
+		this.filtroClaveTramitacion = filtroClaveTramitacion;
+	}
+
+	public String getFiltroTramite() {
+		return filtroTramite;
+	}
+
+	public void setFiltroTramite(final String filtroTramite) {
+		this.filtroTramite = filtroTramite;
+	}
+
+	public Integer getFiltroVersion() {
+		return filtroVersion;
+	}
+
+	public void setFiltroVersion(final Integer filtroVersion) {
+		this.filtroVersion = filtroVersion;
+	}
+
 
 }

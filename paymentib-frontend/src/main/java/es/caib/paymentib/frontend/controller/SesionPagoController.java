@@ -44,13 +44,13 @@ public final class SesionPagoController {
 	@Autowired
 	private SesionHttp sesionHttp;
 
-	/** Configuracion. */
-	@Autowired
-	private ModuleConfig config;
-
 	/** Service. */
 	@Autowired
 	private PagoFrontService service;
+
+	/** Configuracion. */
+	@Autowired
+	private ModuleConfig config;
 
 	/** Mensaje error particularizado usuario. */
 	private static final String ERROR_MESSAGE_USER = "ERROR_MESSAGE_USER";
@@ -80,8 +80,7 @@ public final class SesionPagoController {
 	/**
 	 * Inicio proceso de pago.
 	 *
-	 * @param token
-	 *                  token
+	 * @param token token
 	 * @return Redirige inicio pago
 	 */
 	@RequestMapping(value = "/inicioPago/{token}.html")
@@ -98,8 +97,7 @@ public final class SesionPagoController {
 	/**
 	 * Seleccion entidad de pago.
 	 *
-	 * @param token
-	 *                  token
+	 * @param token token
 	 * @return Redirige inicio pago
 	 */
 	@RequestMapping(value = "/" + URL_SELECCION_ENTIDAD_PAGO + ".html")
@@ -132,8 +130,7 @@ public final class SesionPagoController {
 	/**
 	 * Redirige pasarela pago.
 	 *
-	 * @param token
-	 *                  token
+	 * @param token token
 	 * @return Redirige inicio pago
 	 */
 	@RequestMapping(value = "/" + URL_REDIRIGIR_PASARELA + ".html")
@@ -143,8 +140,7 @@ public final class SesionPagoController {
 		// Genera url callback (se adicionará token en service)
 		final String urlCallback = service.obtenerUrlFrontal() + "/" + URL_RETORNO_PASARELA;
 		// Obtiene url redirección pago
-		final UrlRedireccionPasarelaPago url = service.redirigirPasarelaPago(identificador, entidadPagoId,
-				urlCallback);
+		final UrlRedireccionPasarelaPago url = service.redirigirPasarelaPago(identificador, entidadPagoId, urlCallback);
 		// Eliminamos identificador de sesion
 		sesionHttp.setIdentificador(null);
 		// Muestra pantalla para redirigir pago
@@ -154,8 +150,7 @@ public final class SesionPagoController {
 	/**
 	 * Retorno pasarela pagos.
 	 *
-	 * @param token
-	 *                  token
+	 * @param token token
 	 * @return Vuelve a aplicación origen
 	 */
 	@RequestMapping(value = "/" + URL_RETORNO_PASARELA + "/{token}.html")
@@ -185,8 +180,7 @@ public final class SesionPagoController {
 	/**
 	 * Confirmacion pago pasarela pagos.
 	 *
-	 * @param token
-	 *                  token
+	 * @param token token
 	 * @return Vuelve a aplicación origen
 	 */
 	@RequestMapping(value = "/" + URL_CONFIRMACION_PASARELA + "/{identificador}.html")
@@ -229,8 +223,7 @@ public final class SesionPagoController {
 	/**
 	 * Muestra error.
 	 *
-	 * @param errorCode
-	 *                      codigo error
+	 * @param errorCode codigo error
 	 * @return pagina error
 	 */
 	@RequestMapping("/error.html")
@@ -257,10 +250,8 @@ public final class SesionPagoController {
 	/**
 	 * Handler de excepciones de negocio.
 	 *
-	 * @param pex
-	 *                    Excepción
-	 * @param request
-	 *                    Request
+	 * @param pex     Excepción
+	 * @param request Request
 	 * @return Respuesta JSON indicando el mensaje producido
 	 */
 	@ExceptionHandler({ Exception.class })

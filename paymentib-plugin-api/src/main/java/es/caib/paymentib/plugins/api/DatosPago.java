@@ -47,6 +47,12 @@ public class DatosPago {
     /** Establecer métodos de pago por API*/
     private String metodosPago;
 
+    /** Identificador del trámite*/
+    private String idTramite;
+
+    /** Versión del trámite*/
+    private Integer versionTramite;
+
     /**
      * Método de acceso a identificador.
      *
@@ -295,5 +301,35 @@ public class DatosPago {
     public void setMetodosPago(final String metodosPago) {
         this.metodosPago = metodosPago;
     }
+
+	/**
+	 * @return the idTramite
+	 */
+	public String getIdTramite() {
+		return idTramite;
+	}
+
+	/**
+	 * @param idTramite the idTramite to set
+	 */
+	public void setIdTramite(final String idTramite) {
+		this.idTramite = idTramite;
+	}
+
+	/**
+	 * @return the versionTramite
+	 */
+	public Integer getVersionTramite() {
+		return versionTramite;
+	}
+
+	/**
+	 * @param versionTramite the versionTramite to set
+	 */
+	public void setVersionTramite(final Integer versionTramite) {
+		this.versionTramite = versionTramite;
+	}
+
+
 
 }

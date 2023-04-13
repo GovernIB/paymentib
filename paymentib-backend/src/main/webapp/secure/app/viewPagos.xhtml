@@ -3,6 +3,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	template="../layout/mainLayout.xhtml">
 
 
@@ -20,34 +21,172 @@
 
 			<!-- Growl mensajes -->
 			<p:growl id="growl" widgetVar="growl" showDetail="false" life="2000" sticky="false" />
+			<h:outputScript >
 
+			  var arrayCm = [];
+
+			  window.onload=function(){
+			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+				onVisible(contextMenu, () => eliminarResaltar());
+
+				document.addEventListener('contextmenu', function(ev) {
+			    	ev.preventDefault();
+			    	getPos();
+			    	return false;
+				}, false);
+				$('#form\\:btnBuscar').click();
+			  }
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			  		let elementos = document.getElementsByClassName('resaltar');
+			  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+				}
+
+				function onVisible(element, callback) {
+				  new IntersectionObserver((entries, observer) => {
+				    entries.forEach(entry => {
+				      if(entry.intersectionRatio == 0) {
+				        callback(element);
+				      }
+				    });
+				  }).observe(element);
+				}
+
+			  function getPos(){
+			 	var e = window.event;
+
+			    var posX = e.clientX;
+			    var posY = e.clientY;
+			    var el = document.elementFromPoint(posX, posY);
+
+			    let elementos = document.getElementsByClassName('resaltar');
+			  		if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+
+				el.classList.add("resaltar");
+				var aux = document.getElementById("form:auxCopiar");
+				if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
+					aux.value = el.textContent;
+				}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
+					aux.value = el.firstChild.value;
+				}else if(el.value!=null &amp;&amp; el.value!=''){
+					aux.value = el.value;
+				}else{
+		          aux.value = '';
+		        }
+
+				if(aux.value!='' ){
+		            var multiple = false;
+		            var hijos = el.children;
+		            if((el.tagName == 'UL' || el.tagName == 'TABLE' || el.tagName == 'TR') &amp;&amp; hijos.length &gt; 1){
+                    	multiple = true;
+					}else if(hijos.length &gt;= 1 ){
+							if(hijos.length==1  &amp;&amp; hijos[0].tagName=='DIV'){
+							hijos = hijos[0].children;
+						}
+						for(i=0;i&lt;hijos.length;i++){
+							if(hijos[i].tagName!='SPAN' &amp;&amp; hijos[i].tagName!='LABEL'){
+								multiple=true;
+							}
+						}                          
+					}
+                  	  var listaCm = document.getElementsByClassName('ui-contextmenu');
+	                  if(multiple){
+	                    for(i=0;i&lt;listaCm.length;i++){
+		                   	if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+	                    		arrayCm.push(listaCm[i]);
+	                    	}
+		                	listaCm[i].classList.add("d-none");
+					    }
+	                 }else{
+	                 	for(i=0;i&lt;listaCm.length;i++){
+		                 	if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+	                    		arrayCm.push(listaCm[i]);
+	                    	}
+		                	listaCm[i].classList.remove("d-none");
+						}
+					 if(arrayCm.length&gt;1){
+						arrayCm.pop();
+						for(let i=0; i&lt;arrayCm.length; i++){
+							arrayCm[i].style.display='none';
+						}
+					 }
+					 arrayCm = [];
+	                 }            
+				}
+			 }
+
+			 function opcVista(){
+			if(document.getElementById("form:btnConsultar")!=null){
+          		document.getElementById("form:mnuConsultarTabla2").style.display='block';
+          	}else{
+          		document.getElementById("form:mnuConsultarTabla2").style.display='none';
+          	}
+
+          	if(document.getElementById("form:btnVerificar")!=null){
+          		document.getElementById("form:mnuVerificarTabla2").style.display='block';
+          	}else{
+          		document.getElementById("form:mnuVerificarTabla2").style.display='none';
+          	}
+
+          	if(document.getElementById("form:btnConfirmar")!=null){
+          		document.getElementById("form:mnuConfirmarTabla2").style.display='block';
+          	}else{
+          		document.getElementById("form:mnuConfirmarTabla2").style.display='none';
+          	}
+          }
+
+			</h:outputScript>
 			<!-- Toolbar -->
 			<p:toolbar id="toolbar">
 		        <f:facet name="left">
 		        	<!-- Si se pone process="panelFiltro" en el commadButton solo se envian los datos de panelFiltro. Si no se pone process se envia todo el formulario. -->
-		        	<h:panelGrid id="panelFiltro" columns="6" cellspacing="5">
+		        	<h:panelGrid id="panelFiltro" columns="8" cellspacing="5">
 			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewPagos.filtro}"/>
 						<p:spacer width="20px"/>
 						<p:calendar placeholder="#{msg['viewPagos.fechaDesde']}" id="fechaDesde" value="#{viewPagos.filtroFechaDesde}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
 						<p:calendar placeholder="#{msg['viewPagos.fechaHasta']}" id="fechaHasta" value="#{viewPagos.filtroFechaHasta}" size="15" locale="#{sessionBean.locale}"  pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
-
+						<h:panelGrid columns="2" styleClass="w100, noPadding" >
+			        		<p:outputLabel for="filtroClaveTramitacion" value="#{msg['viewPagos.filtroClaveTramitacion']}:"/>
+				        	<p:inputText id="filtroClaveTramitacion" value="#{viewPagos.filtroClaveTramitacion}" size="20" maxlength="30" onkeyup="capitalize(this)" onblur="trim(this)"/>
+			        	</h:panelGrid>
+						<h:panelGrid columns="2" styleClass="w100, noPadding">
+			        		<p:outputLabel for="filtroTramite" value="#{msg['viewPagos.filtroTramite']}:"/>
+			        		<h:panelGroup>
+				        		<p:inputText id="filtroTramite" value="#{viewPagos.filtroTramite}" size="15" maxlength="20"  onkeyup="capitalize(this)" onblur="trim(this)">
+				        			<p:keyFilter preventPaste="false" regEx="/[a-z0-9_-]/i"/>
+				        		</p:inputText>
+				        		<p:outputLabel value=" / "/>
+				        		<p:inputText id="filtroVersion" value="#{viewPagos.filtroVersion}" size="1" maxlength="2"  onkeyup="capitalize(this)" onblur="trim(this)">
+				        			<p:keyFilter preventPaste="false" regEx="/[0-9]/i"/>
+				        		</p:inputText>
+			        		</h:panelGroup>
+			        	</h:panelGrid>
 				        <p:selectOneButton id="fechaBusqueda" value="#{viewPagos.filtroFecha}">
 				            <f:selectItem itemLabel="#{msg['viewPagos.headerFechaCreacion']}" itemValue="#{TypeFiltroFecha.CREACION}" />
 				            <f:selectItem itemLabel="#{msg['viewPagos.headerFechaPago']}" itemValue="#{TypeFiltroFecha.PAGO}" />
 				        </p:selectOneButton>
 
-	           			<p:commandButton icon="fa fa-search" actionListener="#{viewPagos.filtrar()}" process="panelFiltro" update="panelBotones dataTable growl" />
+	           			<p:commandButton id="btnBuscar" icon="fa fa-search" actionListener="#{viewPagos.filtrar()}" process="panelFiltro" update="panelBotones dataTable growl" />
 	           		</h:panelGrid>
 		        </f:facet>
 
 		        <f:facet name="right">
-		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5">
+		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5" onchange="opcVista();">
     					<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewPagos.consultar}" process="@this" update="growl" rendered="#{viewPagos.filaSeleccionada}" />
     					<p:commandButton id="btnVerificar" value="#{msg['botones.verificar']}" icon="fa fa-check" actionListener="#{viewPagos.verificar}" process="@this" update="growl @form" rendered="#{viewPagos.filaSeleccionada and viewPagos.permiteVerificar}" />
     					<p:commandButton id="btnConfirmar" value="#{msg['botones.confirmar']}" icon="fa fa-thumbs-o-up" actionListener="#{viewPagos.confirmar}" process="@this" update="growl" rendered="#{viewPagos.filaSeleccionada and viewPagos.permiteConfirmar}">
     						<p:ajax event="dialogReturn" listener="#{viewPagos.returnDialogoConfirmar}" update="@form"  />
     					</p:commandButton>
-
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewPagos.ayuda()}" process="@this" />
 			        </h:panelGrid>
 		        </f:facet>
 		    </p:toolbar>
@@ -57,7 +196,7 @@
 
 			<!-- Data table -->
 			<p:dataTable  id="dataTable" var="td" value="#{viewPagos.listaDatos}"
-						 rows="10" emptyMessage="#{msg['info.emptyRows']}"
+						 rows="13" emptyMessage="#{msg['info.emptyRows']}"
 						 scrollable="true" scrollHeight="90%"
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -68,6 +207,8 @@
 				<!-- Necesario para actualizar en controlador la fila seleccionada -->
 				<p:ajax event="rowSelect" global="false" update="form:panelBotones"/>
 				<p:ajax event="rowDblselect" oncomplete="triggerDblClick();"/>
+				<p:ajax event="contextMenu" global="false" process="@this" update="form:panelBotones" oncomplete="opcVista();"/>
+
 
 				<!-- Columnas -->
 			    <p:column headerText="#{msg['viewPagos.headerIdentificador']}">
@@ -106,9 +247,53 @@
  			        	<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" timeZone="CET"/>
 			        </h:outputText>
 			    </p:column>
-
+			    <p:column headerText="#{msg['viewPagos.headerDetallePago']}">
+			        <h:outputText value="#{td.datosPago.detallePago}" />
+			    </p:column>
+			    <p:column headerText="#{msg['viewPagos.headerTramite']}">
+			        <h:outputText value="#{td.datosPago.idTramite}" />
+			    </p:column>
+			    <p:column headerText="#{msg['viewPagos.headerVersion']}">
+			        <h:outputText value="#{td.datosPago.versionTramite}" />
+			    </p:column>
 			</p:dataTable>
+			<p:contextMenu for=":work">
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyMain"  process="@this :form:auxCopiar" update="growl" />
+		    </p:contextMenu>
+		    <pe:clipboard id="clipContextCopyMain" trigger="mnuCopyMain" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{viewPagos.copiadoCorr}" process="@this" update="@this growl"/>
+            	<p:ajax event="error" listener="#{viewPagos.copiadoErr}" update="@this growl"/>
+        	</pe:clipboard>
 
+			<p:contextMenu for=":form:dataTable" id="contextWork">
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" />
+       			<p:separator/>
+        		<p:menuitem id="mnuVerificarTabla2" value="#{msg['botones.verificar']}" icon="fa fa-check" onclick="document.getElementById('form:btnVerificar').click();" process="@this" style="display:none;"/>
+        		<p:menuitem id="mnuConsultarTabla2" value="#{msg['botones.consultar']}" icon="fa fa-eye" onclick="document.getElementById('form:btnConsultar').click();" process="@this"  style="display:none;"/>
+        		<p:menuitem id="mnuConfirmarTabla2" value="#{msg['botones.confirmar']}" icon="fa fa-thumbs-o-up" onclick="document.getElementById('form:btnConfirmar').click();" process="@this" style="display:none;"/>
+		    </p:contextMenu>
+		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{viewPagos.copiadoCorr}" process="@this" update="@this growl"/>
+            	<p:ajax event="error" listener="#{viewPagos.copiadoErr}" update="@this growl"/>
+        	</pe:clipboard>
+
+        	<p:contextMenu id="mainCmH" widgetVar="mainCmH"  for=":header">
+				<p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
+			</p:contextMenu>
+			<pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{viewPagos.copiadoCorr}" process="@this" update="@this growl"/>
+				<p:ajax event="error" listener="#{viewPagos.copiadoErr}" update="@this growl"/>
+			</pe:clipboard>
+
+			 <p:contextMenu id="mainCmF" widgetVar="mainCmF"  for=":footer">
+				<p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
+			</p:contextMenu>
+			<pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{viewPagos.copiadoCorr}" process="@this" update="@this growl"/>
+				<p:ajax event="error" listener="#{viewPagos.copiadoErr}" update="@this growl"/>
+			</pe:clipboard>
+
+			<p:inputText id="auxCopiar" value="#{viewPagos.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 		</h:form>
 
 		<h:outputScript >

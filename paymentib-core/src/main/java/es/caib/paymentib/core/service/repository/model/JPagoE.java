@@ -103,6 +103,12 @@ public class JPagoE implements IModelApi {
     @Column(name = "PAE_METPAG", nullable = true, length = 20)
     private String metodosPago;
 
+    @Column(name = "PAE_IDTRA", nullable = false, length = 100)
+    private String idTramite;
+
+	@Column(name = "PAE_VERTRA", nullable = false, precision = 2, scale = 0)
+    private Integer versionTramite;
+
     public JPagoE() {
         super();
     }
@@ -275,6 +281,22 @@ public class JPagoE implements IModelApi {
         this.usuarioConfirmacion = usuarioConfirmacion;
     }
 
+    public String getIdTramite() {
+		return idTramite;
+	}
+
+	public void setIdTramite(final String idTramite) {
+		this.idTramite = idTramite;
+	}
+
+	public Integer getVersionTramite() {
+		return versionTramite;
+	}
+
+	public void setVersionTramite(final Integer versionTramite) {
+		this.versionTramite = versionTramite;
+	}
+
     /**
      * Método de acceso a codigoErrorPasarela.
      *
@@ -351,6 +373,8 @@ public class JPagoE implements IModelApi {
         datosPago.setImporte(importe);
         datosPago.setModelo(modelo);
         datosPago.setMetodosPago(metodosPago);
+        datosPago.setIdTramite(idTramite);
+        datosPago.setVersionTramite(versionTramite);
 
         pago.setDatosPago(datosPago);
         pago.setFechaCreacion(fechaCreacion);

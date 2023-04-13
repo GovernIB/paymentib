@@ -1,6 +1,8 @@
 package es.caib.paymentib.backend.util;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.Date;
@@ -8,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 import java.util.ResourceBundle;
 
 import javax.faces.application.FacesMessage;
@@ -33,6 +36,7 @@ import es.caib.paymentib.core.api.model.types.TypeModoAcceso;
 import es.caib.paymentib.core.api.model.types.TypeNivelGravedad;
 import es.caib.paymentib.core.api.model.types.TypeRoleAcceso;
 import es.caib.paymentib.plugins.api.TypeIdioma;
+import es.caib.paymentib.backend.controller.DialogAyuda;
 
 /**
  * Utilidades.
@@ -428,6 +432,27 @@ public final class UtilJSF {
 	}
 
 	/**
+	 * Devuelve la AyudaExternaPaymentIB.
+	 *
+	 * @return
+	 */
+	public static String getAyudaExternaPaymentIB() {
+		String ruta = System.getProperty("es.caib.paymentib.properties.path", null);
+		if (ruta == null || ruta.isEmpty()) {
+			return null;
+		}
+
+		try (InputStream input = new FileInputStream(ruta)) {
+			Properties prop = new Properties();
+			prop.load(input);
+			String rutaAyudaExterna = prop.getProperty("ayuda.paymentib.path");
+			return rutaAyudaExterna;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	/**
 	 * Redirige pagina JSF por defecto para role.
 	 *
 	 * @param jsfPage path JSF page
@@ -449,6 +474,9 @@ public final class UtilJSF {
 		} else {
 			switch (role) {
 			case SUPER_ADMIN:
+				url = getUrlOpcionMenuSuperadministrador(getDefaultOpcionSuperadministrador());
+				break;
+			case CONSULTA:
 				url = getUrlOpcionMenuSuperadministrador(getDefaultOpcionSuperadministrador());
 				break;
 			default:
@@ -501,5 +529,81 @@ public final class UtilJSF {
 		if (sb.getActiveRole() != TypeRoleAcceso.SUPER_ADMIN) {
 			throw new ErrorBackException("No se está accediendo con perfil SuperAdministrador");
 		}
+	}
+
+	/**
+	 * Verifica si accede el superadministrador generando excepción en caso
+	 * contrario.
+	 *
+	 */
+	public static boolean isAccesoSuperAdministrador() {
+		final SessionBean sb = (SessionBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+				.get("sessionBean");
+		if (sb.getActiveRole() != TypeRoleAcceso.SUPER_ADMIN) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	/**
+	 * Verifica si accede el consulta generando excepción en caso contrario.
+	 *
+	 */
+	public static void verificarAccesoConsulta() {
+		final SessionBean sb = (SessionBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+				.get("sessionBean");
+		if (sb.getActiveRole() != TypeRoleAcceso.CONSULTA) {
+			throw new ErrorBackException("No se está accediendo con perfil SuperAdministrador");
+		}
+	}
+
+	/**
+	 * Verifica si accede el superadministrador generando excepción en caso
+	 * contrario.
+	 *
+	 */
+	public static boolean isAccesoConsulta() {
+		final SessionBean sb = (SessionBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+				.get("sessionBean");
+		if (sb.getActiveRole() != TypeRoleAcceso.CONSULTA) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	/**
+	 * Verifica si accede el superadministrador generando excepción en caso
+	 * contrario.
+	 *
+	 */
+	public static void verificarAcceso() {
+		final SessionBean sb = (SessionBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+				.get("sessionBean");
+		if (sb.getActiveRole() != TypeRoleAcceso.SUPER_ADMIN && sb.getActiveRole() != TypeRoleAcceso.CONSULTA) {
+			throw new ErrorBackException("No se está accediendo con perfil SuperAdministrador");
+		}
+	}
+
+	public static void openHelp(final String id) {
+		final Map<String, String> params = new HashMap<>();
+		if (StringUtils.isBlank(id)) {
+			throw new ErrorBackException("No existe identificador");
+		}
+
+		params.put(TypeParametroVentana.ID.toString(), id);
+
+		UtilJSF.openDialog(DialogAyuda.class, TypeModoAcceso.CONSULTA, params, true, 900, 550);
+	}
+
+	public static void openHelp(final String id, Map<String, String> params) {
+		if (StringUtils.isBlank(id)) {
+			throw new ErrorBackException("No existe identificador");
+		}
+
+		params.put(TypeParametroVentana.ID.toString(), id);
+
+		UtilJSF.openDialog(DialogAyuda.class, TypeModoAcceso.CONSULTA, params, true, 900, 550);
 	}
 }

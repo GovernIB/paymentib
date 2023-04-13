@@ -33,4 +33,11 @@ public interface SecurityService {
 	 */
 	public boolean isSuperAdministrador();
 
+	/**
+	 * Verifica si es usuario Consulta.
+	 *
+	 * @return boolean.
+	 */
+	public boolean isConsulta();
+
 }

@@ -4,6 +4,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:p="http://primefaces.org/ui">
 
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
@@ -23,6 +24,110 @@
 		<f:viewAction action="#{dialogPagos.init}" />
 	</f:metadata>
 	<h:form id="dialogPagos" styleClass="margin-top-10">
+						<h:outputScript >
+
+			var arrayCm = [];
+
+	  		window.onload=function(){
+			    let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+				onVisible(contextMenu, () => eliminarResaltar());
+
+				document.addEventListener('contextmenu', function(ev) {
+			    	ev.preventDefault();
+			    	getPos();
+			    	return false;
+				}, false);
+
+			  }
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+			  		let elementos = document.getElementsByClassName('resaltar');
+			  		if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+				}
+
+				function onVisible(element, callback) {
+				  new IntersectionObserver((entries, observer) => {
+				    entries.forEach(entry => {
+				      if(entry.intersectionRatio == 0) {
+				        callback(element);
+				      }
+				    });
+				  }).observe(element);
+				}
+
+			  function getPos(){
+			 	var e = window.event;
+
+			    var posX = e.clientX;
+			    var posY = e.clientY;
+			    var el = document.elementFromPoint(posX, posY);
+
+			    let elementos = document.getElementsByClassName('resaltar');
+			  		if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+			  		}
+
+				el.classList.add("resaltar");
+				var aux = document.getElementById("dialogPagos:auxCopiar");
+				if(el.textContent!='' &amp;&amp; el.textContent!='ui-button'){
+					aux.value = el.textContent;
+				}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
+					aux.value = el.firstChild.value;
+				}else if(el.value!=null &amp;&amp; el.value!=''){
+					aux.value = el.value;
+				}else{
+		          aux.value = '';
+		        }
+
+				if(aux.value!='' ){
+		            var multiple = false;
+		            var hijos = el.children;
+		            if((el.tagName == 'UL' || el.tagName == 'TABLE' || el.tagName == 'TR') &amp;&amp; hijos.length &gt; 1){
+                    	multiple = true;
+                          }else if(hijos.length &gt;= 1 ){
+                              if(hijos.length==1  &amp;&amp; hijos[0].tagName=='DIV'){
+                                  hijos = hijos[0].children;
+                              }
+                                for(i=0;i&lt;hijos.length;i++){
+                                  if(hijos[i].tagName!='SPAN' &amp;&amp; hijos[i].tagName!='LABEL'){
+                                    multiple=true;
+                                  }
+                                }                          
+							}
+                  	  var listaCm = document.getElementsByClassName('ui-contextmenu');
+	                  if(multiple){
+	                    for(i=0;i&lt;listaCm.length;i++){
+		                   	if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+	                    		arrayCm.push(listaCm[i]);
+	                    	}
+		                	listaCm[i].classList.add("d-none");
+					    }
+	                 }else{
+	                 	for(i=0;i&lt;listaCm.length;i++){
+		                 	if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+	                    		arrayCm.push(listaCm[i]);
+	                    	}
+		                	listaCm[i].classList.remove("d-none");
+						}
+					 if(arrayCm.length&gt;1){
+						arrayCm.pop();
+						for(let i=0; i&lt;arrayCm.length; i++){
+							arrayCm[i].style.display='none';
+						}
+					 }
+					 arrayCm = [];
+	                 }               
+				}
+			 }
+			 </h:outputScript >
+
   			<p:outputPanel>
 				<!-- Contenido dialogo -->
 				<!-- Growl mensajes -->
@@ -90,12 +195,22 @@
 					</div>
 
 					<div class="ui-g ui-datatable-odd padding-left-18 padding-right-18 margin-top-20 margin-bottom-20">
+						<div class="ui-g-12 ui-md-6 ui-lg-8">
+							<p:outputLabel for="tramite" value="#{msg['dialogPagos.tramite']}" styleClass="label-size-fixed"/><p:inputText id="tramite" value="#{dialogPagos.data.datosPago.idTramite}" size="50" disabled="true"/>
+						</div>
+
+						<div class="ui-g-12 ui-md-6 ui-lg-4">
+							<p:outputLabel for="version" value="#{msg['dialogPagos.version']}" styleClass="padding-right-8"/><p:inputText id="version" value="#{dialogPagos.data.datosPago.versionTramite}" size="2" disabled="true"/>
+						</div>
+					</div>
+
+					<div class="ui-g padding-left-18 padding-right-18 margin-top-20 margin-bottom-20">
 						<div class="ui-g-12 ui-md-6 ui-lg-12">
 							<p:outputLabel for="urlCallbackOrigen" value="#{msg['dialogPagos.urlCallbackOrigen']}" styleClass="label-size-fixed"/><p:inputText id="urlCallbackOrigen" value="#{dialogPagos.data.urlCallbackOrigen}" disabled="true" styleClass="w90"/>
 						</div>
 					</div>
 
-					<div class="ui-g padding-left-18 padding-right-18 margin-top-20 margin-bottom-20">
+					<div class="ui-g ui-datatable-odd padding-left-18 padding-right-18 margin-top-20 margin-bottom-20">
 						<div class="ui-g-12 ui-md-6 ui-lg-4 grid-right">
 							<p:selectBooleanCheckbox value="#{dialogPagos.data.usuarioConfirmacion ne null}" disabled="true" itemLabel="#{msg['dialogPagos.confirmacionManual']}"/>
 						</div>
@@ -104,15 +219,23 @@
 						</div>
 
 					</div>
-
+			<p:contextMenu >
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyMain"  process="@this :dialogPagos:auxCopiar" update="growlDialog" />
+		    </p:contextMenu>
+		    <pe:clipboard id="clipContextCopyMain" trigger="mnuCopyMain" action="copy" target="auxCopiar">
+				<p:ajax event="success" listener="#{dialogPagos.copiadoCorr}" process="@this" update="@this growlDialog"/>
+            	<p:ajax event="error" listener="#{dialogPagos.copiadoErr}" update="@this growlDialog"/>
+        	</pe:clipboard>
 			</p:outputPanel>
 		  	 <p:outputPanel styleClass="botonera">
 		     	<p:toolbar>
 					<f:facet name="right">
 						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogPagos.cerrar}" process="@this"/>
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{dialogPagos.ayuda()}" process="@this" />
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>
+		    <p:inputText id="auxCopiar" value="#{dialogPagos.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 	</h:form>
 </h:body>
 

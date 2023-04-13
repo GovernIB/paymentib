@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="#{sessionBean.lang}"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
+
+
+<h:head>
+	<title><h:outputText value="#{msg['dialogAyuda.titulo']}"/></title>
+</h:head>
+
+<h:body class="ayuda-scroll">
+    <f:facet name="last">
+    	<h:outputStylesheet library="css" name="style.css" />
+    </f:facet>
+	<!-- Parametros dialogo -->
+	<f:metadata>
+		<f:viewParam name="MODO_ACCESO" value="#{dialogAyuda.modoAcceso}"/>
+		<f:viewParam name="ID" value="#{dialogAyuda.id}"/>
+		<f:viewAction action="#{dialogAyuda.init}" />
+	</f:metadata>
+
+	<!-- Growl mensajes -->
+	<p:growl id="growlDialogAyuda" widgetVar="growlDialogAyuda" showDetail="false" life="2000" sticky="false" />
+
+	<h:form id="dialogAyuda" >
+
+
+			<!-- Workpanel: Iframe HTML -->
+			<p:outputPanel id="formulario-panel" styleClass="w100 h100">
+				<iframe id="formulario-frame" name="formulario-frame" src="#{dialogAyuda.urlIframe}"  class="ayuda-frame">
+				  <p>Tu navegador no soporta iframes.</p>
+				</iframe>
+			 </p:outputPanel>
+
+		<!-- Botonera abajo -->
+
+		<p:outputPanel styleClass="botonera" id="botonera">
+			<p:toolbar>
+				<f:facet name="right">
+					<p:outputPanel styleClass="confirmar_botonera">
+						<p:commandButton value="#{msg['botones.cerrar']}" actionListener="#{dialogAyuda.cancelar}" process="@this"/>
+					</p:outputPanel>
+				</f:facet>
+			</p:toolbar>
+		</p:outputPanel>
+
+
+	</h:form>
+
+	<h:outputScript>
+		      window.onresize = function() {
+		      	$("#formulario-frame").height(window.innerHeight - 40);
+		      	$("#formulario-frame").width(window.innerWidth);
+		      }
+
+	</h:outputScript>
+
+</h:body>
+
+</f:view>
+</html>

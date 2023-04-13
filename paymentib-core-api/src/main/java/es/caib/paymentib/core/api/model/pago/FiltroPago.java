@@ -17,6 +17,9 @@ public class FiltroPago {
 	private String estado;
 	private Date fechaPago;
 	private String entidad;
+	private String claveTramitacion;
+	private String idTramite;
+	private Integer versionTramite;
 
 	/**
 	 * @return the id
@@ -156,5 +159,47 @@ public class FiltroPago {
 	 */
 	public final void setEntidad(String entidad) {
 		this.entidad = entidad;
+	}
+
+	/**
+	 * @return the claveTramitacion
+	 */
+	public String getClaveTramitacion() {
+		return claveTramitacion;
+	}
+
+	/**
+	 * @param claveTramitacion the claveTramitacion to set
+	 */
+	public void setClaveTramitacion(String claveTramitacion) {
+		this.claveTramitacion = claveTramitacion;
+	}
+
+	/**
+	 * @return the idTramite
+	 */
+	public String getIdTramite() {
+		return idTramite;
+	}
+
+	/**
+	 * @param idTramite the idTramite to set
+	 */
+	public void setIdTramite(String idTramite) {
+		this.idTramite = idTramite;
+	}
+
+	/**
+	 * @return the versionTramite
+	 */
+	public Integer getVersionTramite() {
+		return versionTramite;
+	}
+
+	/**
+	 * @param versionTramite the versionTramite to set
+	 */
+	public void setVersionTramite(Integer versionTramite) {
+		this.versionTramite = versionTramite;
 	}
 }

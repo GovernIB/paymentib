@@ -106,14 +106,16 @@ public class SessionBean {
 		}
 
 		// Establece role activo por defecto
-		activeRole = null;
-		if (rolesList.contains(TypeRoleAcceso.SUPER_ADMIN)) {
-			activeRole = TypeRoleAcceso.SUPER_ADMIN;
-		} else {
-			UtilJSF.redirectJsfPage("/error/errorUsuarioSinRol.xhtml", new HashMap<String, List<String>>());
-			return;
+		if (activeRole == null) {
+			if (rolesList.contains(TypeRoleAcceso.SUPER_ADMIN)) {
+				activeRole = TypeRoleAcceso.SUPER_ADMIN;
+			} else if (rolesList.contains(TypeRoleAcceso.CONSULTA)) {
+				activeRole = TypeRoleAcceso.CONSULTA;
+			} else {
+				UtilJSF.redirectJsfPage("/error/errorUsuarioSinRol.xhtml", new HashMap<String, List<String>>());
+				return;
+			}
 		}
-
 		// inicializamos mochila
 		mochilaDatos = new HashMap<>();
 	}
@@ -137,7 +139,7 @@ public class SessionBean {
 		if (!rolesList.contains(roleChange)) {
 			throw new ErrorBackException("No tiene el role indicado");
 		}
-		activeRole = roleChange;
+		this.setActiveRole(roleChange);
 
 		// Recarga pagina principal segun role
 		UtilJSF.redirectJsfDefaultPageRole(activeRole);
@@ -200,6 +202,20 @@ public class SessionBean {
 		firstSubmenu.addElement(item);
 
 		model.addElement(firstSubmenu);
+
+		final DefaultSubMenu secondSubmenu = new DefaultSubMenu(
+				UtilJSF.getLiteral("roles." + activeRole.name().toLowerCase()));
+		secondSubmenu.setIcon("fa-li fa fa-id-card-o");
+		for (final TypeRoleAcceso role : rolesList) {
+			if (!activeRole.equals(role)) {
+				final DefaultMenuItem item2 = new DefaultMenuItem(
+						UtilJSF.getLiteral("roles." + role.name().toLowerCase()));
+				item2.setCommand("#{sessionBean.cambiarRoleActivo(\"" + role.toString() + "\")}");
+				item2.setIcon("fa-li fa fa-id-card-o");
+				secondSubmenu.addElement(item2);
+			}
+		}
+		model.addElement(secondSubmenu);
 
 		model.generateUniqueIds();
 		return model;

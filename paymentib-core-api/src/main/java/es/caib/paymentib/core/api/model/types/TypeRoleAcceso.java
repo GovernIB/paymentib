@@ -10,8 +10,9 @@ import es.caib.paymentib.core.api.model.comun.ConstantesRolesAcceso;
  */
 public enum TypeRoleAcceso {
 
-	SUPER_ADMIN(ConstantesRolesAcceso.SUPER_ADMIN);
+	SUPER_ADMIN(ConstantesRolesAcceso.SUPER_ADMIN),
 
+	CONSULTA(ConstantesRolesAcceso.CONSULTA);
 	/**
 	 * Role name;
 	 */
@@ -20,8 +21,7 @@ public enum TypeRoleAcceso {
 	/**
 	 * Constructor.
 	 *
-	 * @param pRoleName
-	 *            Role name
+	 * @param pRoleName Role name
 	 */
 	private TypeRoleAcceso(final String pRoleName) {
 		roleName = pRoleName;
@@ -30,8 +30,7 @@ public enum TypeRoleAcceso {
 	/**
 	 * Obtiene enum desde string.
 	 *
-	 * @param text
-	 *            string
+	 * @param text string
 	 * @return TypeSiNo
 	 */
 	public static TypeRoleAcceso fromString(final String text) {

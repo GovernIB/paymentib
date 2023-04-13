@@ -1,0 +1,41 @@
+<html>
+<head>
+	<meta charset=UTF-8>
+	<meta http-equiv="content-type" content="text/html; utf-8">
+	<link rel="stylesheet" href="AyudaServlet?css=ayuda" type="text/css" />
+</head>
+<body>
+<h1 class="stgH1">LISTADO DE PAGOS</h1>
+<p>
+	En la pantalla de '<i>Listado de Pagos</i>' se pueden ver los pagos que se han realizado desde el asistente de tramitación.
+</p>
+<p>El mantenimiento de pagos lo tiene que hacer un usuario que disponga del rol de &#39;Superadministrador&#39;, quien podr&aacute;, adem&aacute;s de consultar los pagos, confirmarlos y verificarlos. Si el usuario tiene el rol de &#39;Consulta&#39;, s&oacute;lo podr&aacute; consultarlos.</p>
+<h2 class="stgH2">OPERATIVA</h2>
+<p>
+	<ul>
+		<li><span class="boton">Filtrado de b&uacute;squeda</span>: para realizar la b&uacute;squeda ha de indicarse las condiciones a cumplir. Mediante el campo &lsquo;Buscar&rsquo; (que permite buscar por cualquier campo del pago, a excepci&oacute;n del tr&aacute;mite y versi&oacute;n), &lsquo;Desde&rsquo;, &lsquo;Hasta&rsquo;, &lsquo;Clave de tramitaci&oacute;n&rsquo; y &lsquo;Tr&aacute;mite / Versi&oacute;n&rsquo;, y seleccionando si la b&uacute;squeda va a considerar la fecha de creaci&oacute;n o la fecha de pago, se fijan los valores de los filtros a aplicar. A continuaci&oacute;n se debe pulsar sobre la lupa y se mostrar&aacute;n los pagos que cumplan esas condiciones de filtrado.</li>
+		<li><span class="boton">Consultar</span>: pulsando en el bot&oacute;n se abre una pantalla que muestra los datos y detalles del pago seleccionado.</li>
+		<li><span class="boton">Verificar</span>: si el pago seleccionado est&aacute; en estado &lsquo;No pagado&rsquo; o &lsquo;Desconocido&rsquo; y si el usuario tiene rol de &lsquo;Superadministrador&rsquo;, al pulsar este bot&oacute;n se podr&aacute; validar si el pago ha sido realizado o no, mediante una consulta a la pasarela de pago, quien indicar&aacute; si se ha modificado el estado.</li>
+		<li><span class="boton">Confirmar</span>: si el pago seleccionado est&aacute; en estado &lsquo;No pagado&rsquo; o &lsquo;Desconocido&rsquo; y si el usuario tiene rol de &lsquo;Superadministrador&rsquo;, al pulsar este bot&oacute;n se podr&aacute; confirmar el pago, dejando el estado del pago como &lsquo;Pagado&rsquo;. Esta acci&oacute;n s&oacute;lo debe hacerse manualmente si hay una evidencia de que realmente se ha realizado el pago y el usuario no puede confirmarlo mediante el asistente de tramitaci&oacute;n.</li>
+	</ul>
+</p>
+<h2 class="stgH2">CAMPOS</h2>
+<p>
+	<ul>
+		<li><span class="nombreCampo">Identificador</span>: c&oacute;digo un&iacute;voco que identifica al pago dentro de la aplicaci&oacute;n.</li>
+		<li><span class="nombreCampo">Fecha creaci&oacute;n</span>: fecha en la que se ha creado el registro del pago.</li>
+		<li><span class="nombreCampo">Pasarela</span>: muestra la pasarela a trav&eacute;s de la que se realiza el pago: ATIB o TPV.</li>
+		<li><span class="nombreCampo">Entidad</span>: muestra la entidad desde la que se realiza el pago.</li>
+		<li><span class="nombreCampo">Aplicaci&oacute;n</span>: muestra la aplicaci&oacute;n con la que se ha realizado el pago.</li>
+		<li><span class="nombreCampo">Nif</span>: muestra el NIF del usuario autenticado en el tr&aacute;mite relacionado con el pago.</li>
+		<li><span class="nombreCampo">Nombre</span>: muestra el nombre y apellidos del usuario autenticado en el tr&aacute;mite relacionado con el pago.</li>
+		<li><span class="nombreCampo">Importe</span>: muestra el importe pagado.</li>
+		<li><span class="nombreCampo">Estado</span>: se refiere al estado actual del pago, que puede ser &lsquo;No pagado&rsquo; (cuando el pago a&uacute;n no se ha realizado por parte del usuario), &lsquo;Pagado&rsquo; (cuando el pago ha sido realizado por el usuario o confirmado por el superadministrador) o &lsquo;Desconocido&rsquo; (cuando, por alg&uacute;n problema de comunicaci&oacute;n con la pasarela de pago, &eacute;ste ha quedado en un estado inconsistente).</li>
+		<li><span class="nombreCampo">Fecha pago</span>: fecha en la que se ha confirmado el pago.</li>
+		<li><span class="nombreCampo">Clave de tramitaci&oacute;n</span>: muestra el identificador de la sesi&oacute;n de tramitaci&oacute;n asociada al pago.</li>
+		<li><span class="nombreCampo">Tr&aacute;mite</span>: muestra el tr&aacute;mite asociado al pago.</li>
+		<li><span class="nombreCampo">Versi&oacute;n</span>: muestra la sesi&oacute;n del tr&aacute;mite vinculado al pago.</li>
+	</ul>
+</p>
+</body>
+</html>

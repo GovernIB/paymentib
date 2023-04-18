@@ -103,10 +103,10 @@ public class JPagoE implements IModelApi {
     @Column(name = "PAE_METPAG", nullable = true, length = 20)
     private String metodosPago;
 
-    @Column(name = "PAE_IDTRA", nullable = false, length = 100)
+    @Column(name = "PAE_IDTRA", nullable = true , length = 100)
     private String idTramite;
 
-	@Column(name = "PAE_VERTRA", nullable = false, precision = 2, scale = 0)
+	@Column(name = "PAE_VERTRA", nullable = true, precision = 2, scale = 0)
     private Integer versionTramite;
 
     public JPagoE() {

@@ -53,8 +53,25 @@ public class PagoDaoImpl implements PagoDao {
 	 */
 	@Override
 	public List<DatosSesionPago> getAllByFiltro(final String filtro, final Date fechaDesde, final Date fechaHasta,
-			final TypeFiltroFecha tipoFecha, final String filtroClaveTramitacion, final String filtroTramite, final Integer filtroVersion) {
-		return listarPagos(filtro, fechaDesde, fechaHasta, tipoFecha, filtroClaveTramitacion, filtroTramite, filtroVersion);
+			final TypeFiltroFecha tipoFecha, final String filtroClaveTramitacion, final String filtroTramite, final Integer filtroVersion,
+				final String filtroPasarela, final String filtroEntidad, final String filtroAplicacion, final String filtroLocATIB) {
+		return listarPagos(filtro, fechaDesde, fechaHasta, tipoFecha, filtroClaveTramitacion, filtroTramite,
+							filtroVersion, filtroPasarela, filtroEntidad, filtroAplicacion, filtroLocATIB);
+	}
+
+	@Override
+	public List<String> getPasarelas() {
+		return listarPasarelas();
+	}
+
+	@Override
+	public List<String> getEntidades() {
+		return listarEntidades();
+	}
+
+	@Override
+	public List<String> getAplicaciones() {
+		return listarAplicaciones();
 	}
 
 	/*
@@ -64,7 +81,7 @@ public class PagoDaoImpl implements PagoDao {
 	 */
 	@Override
 	public List<DatosSesionPago> getAll() {
-		return listarPagos(null, null, null, null, null, null, null);
+		return listarPagos(null, null, null, null, null, null, null, null, null, null, null);
 	}
 
 	@Override
@@ -149,7 +166,8 @@ public class PagoDaoImpl implements PagoDao {
 
 	@SuppressWarnings("unchecked")
 	private List<DatosSesionPago> listarPagos(final String filtro, final Date fechaDesde, final Date fechaHasta,
-			final TypeFiltroFecha tipoFecha, final String filtroClaveTramitacion, final String filtroTramite, final Integer filtroVersion) {
+			final TypeFiltroFecha tipoFecha, final String filtroClaveTramitacion, final String filtroTramite,
+					final Integer filtroVersion, final String filtroPasarela, final String filtroEntidad, final String filtroAplicacion, final String filtroLocATIB) {
 		final List<DatosSesionPago> listaPagos = new ArrayList<>();
 
 		final String sqlSelect = "SELECT p FROM JPagoE p ";
@@ -158,12 +176,12 @@ public class PagoDaoImpl implements PagoDao {
 		final StringBuilder sqlWhere = new StringBuilder();
 
 		if (StringUtils.isNotBlank(filtro)) {
-			sqlWhere.append(" (LOWER(p.aplicacionId) LIKE :filtro OR LOWER(p.concepto) LIKE :filtro")
-					.append(" OR LOWER(p.detallePago) LIKE :filtro OR LOWER(p.entidadId) LIKE :filtro")
+			sqlWhere.append(" (LOWER(p.concepto) LIKE :filtro") //LOWER(p.aplicacionId) LIKE :filtro OR
+					.append(" OR LOWER(p.detallePago) LIKE :filtro")  // OR LOWER(p.entidadId) LIKE :filtro
 					.append(" OR LOWER(p.estado) LIKE :filtro OR LOWER(p.identificador) LIKE :filtro")
 					.append(" OR LOWER(p.localizador) LIKE :filtro OR LOWER(p.sujetoPasivoNif) LIKE :filtro")
 					.append(" OR LOWER(p.sujetoPasivoNombre) LIKE :filtro OR LOWER(p.organoId) LIKE :filtro")
-					.append(" OR LOWER(p.pasarelaId) LIKE :filtro OR LOWER(p.tasaId) LIKE :filtro ")
+					.append(" OR LOWER(p.tasaId) LIKE :filtro ")  //OR LOWER(p.pasarelaId) LIKE :filtro
 					.append(" OR LOWER(p.modelo) LIKE :filtro OR LOWER(p.urlCallbackOrigen) LIKE :filtro")
 					.append(" OR LOWER(p.usuarioConfirmacion) LIKE :filtro) ");
 		}
@@ -222,6 +240,42 @@ public class PagoDaoImpl implements PagoDao {
 
 		}
 
+		if (StringUtils.isNotBlank(filtroPasarela)) {
+			if (sqlWhere.length() > 0) {
+				sqlWhere.append(" AND ");
+			}
+
+			sqlWhere.append(" LOWER(p.pasarelaId) LIKE :filtroPasarela");
+
+		}
+
+		if (StringUtils.isNotBlank(filtroEntidad)) {
+			if (sqlWhere.length() > 0) {
+				sqlWhere.append(" AND ");
+			}
+
+			sqlWhere.append(" LOWER(p.entidadId) LIKE :filtroEntidad");
+
+		}
+
+		if (StringUtils.isNotBlank(filtroAplicacion)) {
+			if (sqlWhere.length() > 0) {
+				sqlWhere.append(" AND ");
+			}
+
+			sqlWhere.append(" LOWER(p.aplicacionId) LIKE :filtroAplicacion");
+
+		}
+
+		if (StringUtils.isNotBlank(filtroLocATIB)) {
+			if (sqlWhere.length() > 0) {
+				sqlWhere.append(" AND ");
+			}
+
+			sqlWhere.append(" LOWER(p.localizador) LIKE :filtroLocATIB");
+
+		}
+
 		if (sqlWhere.length() > 0) {
 			sqlWhere.insert(0, " WHERE");
 		}
@@ -252,6 +306,21 @@ public class PagoDaoImpl implements PagoDao {
 			}
 			if (filtroVersion != null) {
 				queryCount.setParameter("filtroVersion", filtroVersion);
+			}
+		}
+
+		if (StringUtils.isNotBlank(filtroPasarela) || StringUtils.isNotBlank(filtroEntidad) || StringUtils.isNotBlank(filtroAplicacion) || StringUtils.isNotBlank(filtroLocATIB)) {
+			if (StringUtils.isNotBlank(filtroPasarela)) {
+				queryCount.setParameter("filtroPasarela", "%" + filtroPasarela.toLowerCase() + "%");
+			}
+			if (StringUtils.isNotBlank(filtroEntidad)) {
+				queryCount.setParameter("filtroEntidad", "%" + filtroEntidad.toLowerCase() + "%");
+			}
+			if (StringUtils.isNotBlank(filtroAplicacion)) {
+				queryCount.setParameter("filtroAplicacion", "%" + filtroAplicacion.toLowerCase() + "%");
+			}
+			if (StringUtils.isNotBlank(filtroLocATIB)) {
+				queryCount.setParameter("filtroLocATIB", "%" + filtroLocATIB.toLowerCase() + "%");
 			}
 		}
 
@@ -288,6 +357,21 @@ public class PagoDaoImpl implements PagoDao {
 			}
 		}
 
+		if (StringUtils.isNotBlank(filtroPasarela) || StringUtils.isNotBlank(filtroEntidad) || StringUtils.isNotBlank(filtroAplicacion) || StringUtils.isNotBlank(filtroLocATIB)) {
+			if (StringUtils.isNotBlank(filtroPasarela)) {
+				query.setParameter("filtroPasarela", "%" + filtroPasarela.toLowerCase() + "%");
+			}
+			if (StringUtils.isNotBlank(filtroEntidad)) {
+				query.setParameter("filtroEntidad", "%" + filtroEntidad.toLowerCase() + "%");
+			}
+			if (StringUtils.isNotBlank(filtroAplicacion)) {
+				query.setParameter("filtroAplicacion", "%" + filtroAplicacion.toLowerCase() + "%");
+			}
+			if (StringUtils.isNotBlank(filtroLocATIB)) {
+				query.setParameter("filtroLocATIB", "%" + filtroLocATIB.toLowerCase() + "%");
+			}
+		}
+
 		final List<JPagoE> results = query.getResultList();
 
 		if (results != null && !results.isEmpty()) {
@@ -298,6 +382,114 @@ public class PagoDaoImpl implements PagoDao {
 		}
 
 		return listaPagos;
+	}
+
+	@SuppressWarnings("unchecked")
+	private List<String> listarPasarelas() {
+		final List<String> listaPasarelas = new ArrayList<>();
+
+		final String sqlSelect = "SELECT DISTINCT(p.pasarelaId) FROM JPagoE p ";
+		final String sqlSelectCount = "SELECT COUNT(p) FROM JPagoE p ";
+
+		final StringBuilder sqlWhere = new StringBuilder();
+
+		if (sqlWhere.length() > 0) {
+			sqlWhere.insert(0, " WHERE");
+		}
+
+		final String sqlOrder = " ORDER BY p.pasarelaId";
+
+		final Query queryCount = entityManager.createQuery(sqlSelectCount + sqlWhere);
+
+		final Long nfilas = (Long) queryCount.getSingleResult();
+
+		if (nfilas > Constantes.MAX_NUM_PAGOS) {
+			throw new MaxNumFilasException(String.valueOf(nfilas) + " recuperadas");
+		}
+
+		final Query query = entityManager.createQuery(sqlSelect + sqlWhere + sqlOrder);
+
+		final List<String> results = query.getResultList();
+
+		if (results != null && !results.isEmpty()) {
+			for (final String pasarela : results) {
+				listaPasarelas.add(pasarela);
+			}
+		}
+
+		return listaPasarelas;
+	}
+
+	@SuppressWarnings("unchecked")
+	private List<String> listarEntidades() {
+		final List<String> listaEntidades = new ArrayList<>();
+
+		final String sqlSelect = "SELECT DISTINCT(p.entidadId) FROM JPagoE p ";
+		final String sqlSelectCount = "SELECT COUNT(p) FROM JPagoE p ";
+
+		final StringBuilder sqlWhere = new StringBuilder();
+
+		if (sqlWhere.length() > 0) {
+			sqlWhere.insert(0, " WHERE");
+		}
+
+		final String sqlOrder = " ORDER BY p.entidadId";
+
+		final Query queryCount = entityManager.createQuery(sqlSelectCount + sqlWhere);
+
+		final Long nfilas = (Long) queryCount.getSingleResult();
+
+		if (nfilas > Constantes.MAX_NUM_PAGOS) {
+			throw new MaxNumFilasException(String.valueOf(nfilas) + " recuperadas");
+		}
+
+		final Query query = entityManager.createQuery(sqlSelect + sqlWhere + sqlOrder);
+
+		final List<String> results = query.getResultList();
+
+		if (results != null && !results.isEmpty()) {
+			for (final String entidad : results) {
+				listaEntidades.add(entidad);
+			}
+		}
+
+		return listaEntidades;
+	}
+
+	@SuppressWarnings("unchecked")
+	private List<String> listarAplicaciones() {
+		final List<String> listaAplicaciones = new ArrayList<>();
+
+		final String sqlSelect = "SELECT DISTINCT(p.aplicacionId) FROM JPagoE p ";
+		final String sqlSelectCount = "SELECT COUNT(p) FROM JPagoE p ";
+
+		final StringBuilder sqlWhere = new StringBuilder();
+
+		if (sqlWhere.length() > 0) {
+			sqlWhere.insert(0, " WHERE");
+		}
+
+		final String sqlOrder = " ORDER BY p.aplicacionId";
+
+		final Query queryCount = entityManager.createQuery(sqlSelectCount + sqlWhere);
+
+		final Long nfilas = (Long) queryCount.getSingleResult();
+
+		if (nfilas > Constantes.MAX_NUM_PAGOS) {
+			throw new MaxNumFilasException(String.valueOf(nfilas) + " recuperadas");
+		}
+
+		final Query query = entityManager.createQuery(sqlSelect + sqlWhere + sqlOrder);
+
+		final List<String> results = query.getResultList();
+
+		if (results != null && !results.isEmpty()) {
+			for (final String aplicacion : results) {
+				listaAplicaciones.add(aplicacion);
+			}
+		}
+
+		return listaAplicaciones;
 	}
 
 	private JPagoE getJPagoByIdentificador(final String identificador) {

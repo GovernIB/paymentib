@@ -70,6 +70,10 @@ public class ViewPagos extends ViewControllerBase {
 	private String filtroClaveTramitacion;
 	private String filtroTramite;
 	private Integer filtroVersion;
+	private String filtroPasarela;
+	private String filtroEntidad;
+	private String filtroAplicacion;
+	private String filtroLocATIB;
 
 	/**
 	 * Lista de datos.
@@ -84,6 +88,10 @@ public class ViewPagos extends ViewControllerBase {
 	private String portapapeles;
 
 	private String errorCopiar;
+
+	private List<String> listaPasarelas;
+	private List<String> listaEntidades;
+	private List<String> listaAplicaciones;
 
 	/**
 	 * Inicializacion.
@@ -107,6 +115,10 @@ public class ViewPagos extends ViewControllerBase {
 		}
 
 		filtroFecha = TypeFiltroFecha.CREACION;
+
+		listaPasarelas = pagoBackService.listaPasarelas();
+		listaEntidades = pagoBackService.listaEntidades();
+		listaAplicaciones = pagoBackService.listaAplicaciones();
 	}
 
 	public boolean getFilaSeleccionada() {
@@ -268,7 +280,8 @@ public class ViewPagos extends ViewControllerBase {
 		// Filtra
 
 		try {
-			listaDatos = pagoBackService.listaPagos(filtro, filtroFechaDesde, filtroFechaHasta, filtroFecha, filtroClaveTramitacion, filtroTramite, filtroVersion);
+			listaDatos = pagoBackService.listaPagos(filtro, filtroFechaDesde, filtroFechaHasta, filtroFecha, filtroClaveTramitacion, filtroTramite, filtroVersion,
+																filtroPasarela, filtroEntidad, filtroAplicacion, filtroLocATIB);
 		} catch (final EJBException e) {
 			if (e.getCause() instanceof MaxNumFilasException) {
 				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.maxnumfilas"));
@@ -410,5 +423,60 @@ public class ViewPagos extends ViewControllerBase {
 		this.filtroVersion = filtroVersion;
 	}
 
+	public String getFiltroPasarela() {
+		return filtroPasarela;
+	}
+
+	public void setFiltroPasarela(String filtroPasarela) {
+		this.filtroPasarela = filtroPasarela;
+	}
+
+	public List<String> getListaEntidades() {
+		return listaEntidades;
+	}
+
+	public void setListaEntidades(List<String> listaEntidades) {
+		this.listaEntidades = listaEntidades;
+	}
+
+	public String getFiltroEntidad() {
+		return filtroEntidad;
+	}
+
+	public void setFiltroEntidad(String filtroEntidad) {
+		this.filtroEntidad = filtroEntidad;
+	}
+
+	public String getFiltroAplicacion() {
+		return filtroAplicacion;
+	}
+
+	public void setFiltroAplicacion(String filtroAplicacion) {
+		this.filtroAplicacion = filtroAplicacion;
+	}
+
+	public List<String> getListaPasarelas() {
+		return listaPasarelas;
+	}
+
+	public void setListaPasarelas(List<String> listaPasarelas) {
+		this.listaPasarelas = listaPasarelas;
+	}
+
+	public List<String> getListaAplicaciones() {
+		return listaAplicaciones;
+	}
+
+	public void setListaAplicaciones(List<String> listaAplicaciones) {
+		this.listaAplicaciones = listaAplicaciones;
+	}
+
+	public String getFiltroLocATIB() {
+		return filtroLocATIB;
+	}
+
+	public void setFiltroLocATIB(String filtroLocATIB) {
+		this.filtroLocATIB = filtroLocATIB;
+	}
 
 }

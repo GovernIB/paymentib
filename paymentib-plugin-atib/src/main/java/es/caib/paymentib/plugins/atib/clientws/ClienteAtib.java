@@ -56,7 +56,8 @@ public class ClienteAtib {
      * @throws Exception
      * @throws NumberFormatException
      */
-    private ServiceTasaSoap getCliente(String url)
+    @SuppressWarnings("deprecation")
+	private ServiceTasaSoap getCliente(String url)
             throws NumberFormatException, Exception {
         final ServiceTasa servicio = new ServiceTasa();
         final ServiceTasaSoap serviceTasaSoap = servicio.getServiceTasaSoap();
@@ -66,6 +67,8 @@ public class ClienteAtib {
 
         final Client client = ClientProxy.getClient(serviceTasaSoap);
         final HTTPConduit conduit = (HTTPConduit) client.getConduit();
+        client.getInInterceptors().add(new LoggingInInterceptor());
+        client.getOutInterceptors().add(new LoggingOutInterceptor());
 
         // Vemos si hay que pasar por proxy
         final String proxyHost = System.getProperty("http.proxyHost");

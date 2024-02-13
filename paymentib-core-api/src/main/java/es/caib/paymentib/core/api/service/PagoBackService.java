@@ -28,7 +28,29 @@ public interface PagoBackService {
 	 * @return lista de pagos
 	 */
 	List<DatosSesionPago> listaPagos(final String filtro, final Date fechaDesde, final Date fechaHasta,
-			final TypeFiltroFecha tipoFecha, final String filtroClaveTramitacion, final String filtroTramite, final Integer filtroVersion);
+			final TypeFiltroFecha tipoFecha, final String filtroClaveTramitacion, final String filtroTramite, final Integer filtroVersion,
+			final String filtroPasarela, final String filtroEntidad, final String filtroAplicacion, final String filtroLocATIB);
+
+	/**
+	 * Lista pasarelas.
+	 *
+	 * @return lista de pasarelas
+	 */
+	List<String> listaPasarelas();
+
+	/**
+	 * Lista entidades.
+	 *
+	 * @return lista de entidades
+	 */
+	List<String> listaEntidades();
+
+	/**
+	 * Lista aplicaciones.
+	 *
+	 * @return lista de aplicaciones
+	 */
+	List<String> listaAplicaciones();
 
 	/**
 	 * Recupera datos sesión pago por Codigo.

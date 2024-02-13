@@ -176,6 +176,36 @@
 				        </p:selectOneButton>
 
 	           			<p:commandButton id="btnBuscar" icon="fa fa-search" actionListener="#{viewPagos.filtrar()}" process="panelFiltro" update="panelBotones dataTable growl" />
+
+						<h:panelGrid columns="2" styleClass="w100, noPadding">
+							<p:outputLabel for="filtroPasarela" value="#{msg['viewPagos.headerPasarela']}:"/>
+		           			<p:selectOneMenu id="filtroPasarela" value="#{viewPagos.filtroPasarela}">
+		           				<f:selectItem itemLabel=""  noSelectionOption="true"/>
+		           				<f:selectItems value="#{viewPagos.listaPasarelas}" var="pasarela" itemLabel="#{pasarela}" itemValue="#{pasarela}"/>
+							</p:selectOneMenu >
+						</h:panelGrid>
+
+						<p:spacer width="20px"/>
+
+						<h:panelGrid columns="2" styleClass="w100, noPadding">
+							<p:outputLabel for="filtroEntidad" value="#{msg['viewPagos.headerEntidad']}:"/>
+							<p:selectOneMenu id="filtroEntidad" value="#{viewPagos.filtroEntidad}">
+							 	<f:selectItem itemLabel=""  noSelectionOption="true"/>
+		    					<f:selectItems value="#{viewPagos.listaEntidades}" var="entidad" itemLabel="#{entidad}" itemValue="#{entidad}"/>
+							</p:selectOneMenu >
+						</h:panelGrid>
+
+						<h:panelGrid columns="2" styleClass="w100, noPadding">
+							<p:outputLabel for="filtroAplicacion" value="#{msg['viewPagos.headerAplicacion']}:"/>
+							<p:selectOneMenu id="filtroAplicacion" value="#{viewPagos.filtroAplicacion}">
+		           				<f:selectItems value="#{viewPagos.listaAplicaciones}" var="aplicacion" itemLabel="#{aplicacion}" itemValue="#{aplicacion}"/>
+							</p:selectOneMenu >
+						</h:panelGrid>
+
+						<h:panelGrid columns="2" styleClass="w100, noPadding">
+							<p:outputLabel for="filtroLocATIB" value="#{msg['viewPagos.filtroLocATIB']}:"/>
+							<p:inputText id="filtroLocATIB" value="#{viewPagos.filtroLocATIB}" size="20" maxlength="30" onkeyup="capitalize(this)" onblur="trim(this)"/>
+						</h:panelGrid>
 	           		</h:panelGrid>
 		        </f:facet>
 
@@ -211,49 +241,43 @@
 
 
 				<!-- Columnas -->
-			    <p:column headerText="#{msg['viewPagos.headerIdentificador']}">
+			    <p:column headerText="#{msg['viewPagos.headerIdentificador']}" sortBy="#{td.datosPago.identificador}">
 			        <h:outputText value="#{td.datosPago.identificador}" />
 			    </p:column>
-			    <p:column headerText="#{msg['viewPagos.headerFechaCreacion']}">
+			    <p:column headerText="#{msg['viewPagos.headerFechaCreacion']}" sortBy="#{td.fechaCreacion}">
 			        <h:outputText value="#{td.fechaCreacion}" >
  			        	<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" timeZone="CET"/>
 			        </h:outputText>
 			    </p:column>
-			    <p:column headerText="#{msg['viewPagos.headerPasarela']}">
-			        <h:outputText value="#{td.pasarelaId}" />
+			    <p:column headerText="#{msg['viewPagos.headerLocalizador']}" sortBy="#{td.localizador}">
+			        <h:outputText value="#{td.localizador}" />
 			    </p:column>
-			    <p:column headerText="#{msg['viewPagos.headerEntidad']}">
-			        <h:outputText value="#{td.datosPago.entidadId}" />
-			    </p:column>
-			    <p:column headerText="#{msg['viewPagos.headerAplicacion']}">
-			        <h:outputText value="#{td.datosPago.aplicacionId}" />
-			    </p:column>
-			   	 <p:column headerText="#{msg['viewPagos.headerNif']}">
+			   	 <p:column headerText="#{msg['viewPagos.headerNif']}" sortBy="#{td.datosPago.sujetoPasivoNif}">
 			        <h:outputText value="#{td.datosPago.sujetoPasivoNif}" />
 			    </p:column>
-			   	 <p:column headerText="#{msg['viewPagos.headerNombre']}">
+			   	 <p:column headerText="#{msg['viewPagos.headerNombre']}" sortBy="#{td.datosPago.sujetoPasivoNombre}">
 			        <h:outputText value="#{td.datosPago.sujetoPasivoNombre}" />
 			    </p:column>
-			    <p:column headerText="#{msg['viewPagos.headerImporte']}" styleClass="grid-right">
+			    <p:column headerText="#{msg['viewPagos.headerImporte']}" styleClass="grid-right" sortBy="#{(td.datosPago.importe/100)}">
 			        <h:outputText value="#{(td.datosPago.importe/100)}">
 			        	<f:convertNumber pattern="#####.00"/>
 			        </h:outputText>
 			    </p:column>
-			    <p:column headerText="#{msg['viewPagos.headerEstado']}">
+			    <p:column headerText="#{msg['viewPagos.headerEstado']}" sortBy="#{msg['typeEstadoPago.' += td.estado]}">
 			        <h:outputText value="#{msg['typeEstadoPago.' += td.estado]}" />
 			    </p:column>
-			    <p:column headerText="#{msg['viewPagos.headerFechaPago']}">
+			    <p:column headerText="#{msg['viewPagos.headerFechaPago']}" sortBy="#{td.fechaPago}">
 			        <h:outputText value="#{td.fechaPago}" >
  			        	<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" type="date" timeZone="CET"/>
 			        </h:outputText>
 			    </p:column>
-			    <p:column headerText="#{msg['viewPagos.headerDetallePago']}">
+			    <p:column headerText="#{msg['viewPagos.headerDetallePago']}" sortBy="#{td.datosPago.detallePago}">
 			        <h:outputText value="#{td.datosPago.detallePago}" />
 			    </p:column>
-			    <p:column headerText="#{msg['viewPagos.headerTramite']}">
+			    <p:column headerText="#{msg['viewPagos.headerTramite']}" sortBy="#{td.datosPago.idTramite}">
 			        <h:outputText value="#{td.datosPago.idTramite}" />
 			    </p:column>
-			    <p:column headerText="#{msg['viewPagos.headerVersion']}">
+			    <p:column headerText="#{msg['viewPagos.headerVersion']}" sortBy="#{td.datosPago.versionTramite}">
 			        <h:outputText value="#{td.datosPago.versionTramite}" />
 			    </p:column>
 			</p:dataTable>

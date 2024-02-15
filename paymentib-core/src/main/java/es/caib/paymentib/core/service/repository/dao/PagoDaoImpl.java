@@ -324,11 +324,11 @@ public class PagoDaoImpl implements PagoDao {
 			}
 		}
 
-		final Long nfilas = (Long) queryCount.getSingleResult();
+		//final Long nfilas = (Long) queryCount.getSingleResult();
 
-		if (nfilas > Constantes.MAX_NUM_PAGOS) {
+		/*if (nfilas > Constantes.MAX_NUM_PAGOS) {
 			throw new MaxNumFilasException(String.valueOf(nfilas) + " recuperadas");
-		}
+		}*/
 
 		final Query query = entityManager.createQuery(sqlSelect + sqlWhere + sqlOrder);
 
@@ -399,13 +399,13 @@ public class PagoDaoImpl implements PagoDao {
 
 		final String sqlOrder = " ORDER BY p.pasarelaId";
 
-		final Query queryCount = entityManager.createQuery(sqlSelectCount + sqlWhere);
+		/*final Query queryCount = entityManager.createQuery(sqlSelectCount + sqlWhere);
 
 		final Long nfilas = (Long) queryCount.getSingleResult();
 
 		if (nfilas > Constantes.MAX_NUM_PAGOS) {
 			throw new MaxNumFilasException(String.valueOf(nfilas) + " recuperadas");
-		}
+		}*/
 
 		final Query query = entityManager.createQuery(sqlSelect + sqlWhere + sqlOrder);
 
@@ -425,7 +425,7 @@ public class PagoDaoImpl implements PagoDao {
 		final List<String> listaEntidades = new ArrayList<>();
 
 		final String sqlSelect = "SELECT DISTINCT(p.entidadId) FROM JPagoE p ";
-		final String sqlSelectCount = "SELECT COUNT(p) FROM JPagoE p ";
+		//final String sqlSelectCount = "SELECT COUNT(p) FROM JPagoE p ";
 
 		final StringBuilder sqlWhere = new StringBuilder();
 
@@ -435,13 +435,13 @@ public class PagoDaoImpl implements PagoDao {
 
 		final String sqlOrder = " ORDER BY p.entidadId";
 
-		final Query queryCount = entityManager.createQuery(sqlSelectCount + sqlWhere);
+		//final Query queryCount = entityManager.createQuery(sqlSelectCount + sqlWhere);
 
-		final Long nfilas = (Long) queryCount.getSingleResult();
+		//final Long nfilas = (Long) queryCount.getSingleResult();
 
-		if (nfilas > Constantes.MAX_NUM_PAGOS) {
+		/*if (nfilas > Constantes.MAX_NUM_PAGOS) {
 			throw new MaxNumFilasException(String.valueOf(nfilas) + " recuperadas");
-		}
+		}*/
 
 		final Query query = entityManager.createQuery(sqlSelect + sqlWhere + sqlOrder);
 
@@ -471,13 +471,13 @@ public class PagoDaoImpl implements PagoDao {
 
 		final String sqlOrder = " ORDER BY p.aplicacionId";
 
-		final Query queryCount = entityManager.createQuery(sqlSelectCount + sqlWhere);
+		/*final Query queryCount = entityManager.createQuery(sqlSelectCount + sqlWhere);
 
 		final Long nfilas = (Long) queryCount.getSingleResult();
 
 		if (nfilas > Constantes.MAX_NUM_PAGOS) {
 			throw new MaxNumFilasException(String.valueOf(nfilas) + " recuperadas");
-		}
+		}*/
 
 		final Query query = entityManager.createQuery(sqlSelect + sqlWhere + sqlOrder);
 
@@ -718,11 +718,11 @@ public class PagoDaoImpl implements PagoDao {
 			}
 		}
 
-		final Long nfilas = (Long) queryCount.getSingleResult();
+		/*final Long nfilas = (Long) queryCount.getSingleResult();
 
 		if (nfilas > Constantes.MAX_NUM_PAGOS) {
 			throw new MaxNumFilasException(String.valueOf(nfilas) + " recuperadas");
-		}
+		}*/
 
 		final Query query = entityManager.createQuery(sqlSelect + sqlWhere + sqlOrder);
 

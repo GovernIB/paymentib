@@ -283,12 +283,12 @@ public class ViewPagos extends ViewControllerBase {
 			listaDatos = pagoBackService.listaPagos(filtro, filtroFechaDesde, filtroFechaHasta, filtroFecha, filtroClaveTramitacion, filtroTramite, filtroVersion,
 																filtroPasarela, filtroEntidad, filtroAplicacion, filtroLocATIB);
 		} catch (final EJBException e) {
-			if (e.getCause() instanceof MaxNumFilasException) {
+			/*if (e.getCause() instanceof MaxNumFilasException) {
 				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.maxnumfilas"));
 				return;
-			} else {
+			} else {*/
 				throw e;
-			}
+			//}
 
 		}
 

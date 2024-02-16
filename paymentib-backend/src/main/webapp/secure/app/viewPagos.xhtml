@@ -260,7 +260,7 @@
 			    </p:column>
 			    <p:column headerText="#{msg['viewPagos.headerImporte']}" styleClass="grid-right" sortBy="#{(td.datosPago.importe/100)}">
 			        <h:outputText value="#{(td.datosPago.importe/100)}">
-			        	<f:convertNumber pattern="#####.00"/>
+<!-- 			        	<f:convertNumber pattern="#####.00"/> -->
 			        </h:outputText>
 			    </p:column>
 			    <p:column headerText="#{msg['viewPagos.headerEstado']}" sortBy="#{msg['typeEstadoPago.' += td.estado]}">

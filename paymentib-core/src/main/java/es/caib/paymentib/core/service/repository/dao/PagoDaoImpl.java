@@ -1,7 +1,5 @@
 package es.caib.paymentib.core.service.repository.dao;
 
-import java.security.Timestamp;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -18,14 +16,12 @@ import org.springframework.stereotype.Repository;
 
 import es.caib.paymentib.core.api.exception.ConfiguracionException;
 import es.caib.paymentib.core.api.exception.FaltanDatosException;
-import es.caib.paymentib.core.api.exception.MaxNumFilasException;
 import es.caib.paymentib.core.api.exception.NoExisteSesionPagoException;
 import es.caib.paymentib.core.api.model.pago.DatosSesionPago;
 import es.caib.paymentib.core.api.model.pago.FiltroPago;
 import es.caib.paymentib.core.api.model.types.TypeFiltroFecha;
 import es.caib.paymentib.core.service.component.ConfiguracionComponent;
 import es.caib.paymentib.core.service.repository.model.JPagoE;
-import es.caib.paymentib.core.service.util.Constantes;
 import es.caib.paymentib.plugins.api.DatosPago;
 import es.caib.paymentib.plugins.api.EstadoPago;
 import es.caib.paymentib.plugins.api.TypeEstadoPago;
@@ -54,9 +50,9 @@ public class PagoDaoImpl implements PagoDao {
 	@Override
 	public List<DatosSesionPago> getAllByFiltro(final String filtro, final Date fechaDesde, final Date fechaHasta,
 			final TypeFiltroFecha tipoFecha, final String filtroClaveTramitacion, final String filtroTramite, final Integer filtroVersion,
-				final String filtroPasarela, final String filtroEntidad, final String filtroAplicacion, final String filtroLocATIB) {
+				final String filtroPasarela, final String filtroEntidad, final String filtroAplicacion, final String filtroLocATIB, final String filtroMetodosPago) {
 		return listarPagos(filtro, fechaDesde, fechaHasta, tipoFecha, filtroClaveTramitacion, filtroTramite,
-							filtroVersion, filtroPasarela, filtroEntidad, filtroAplicacion, filtroLocATIB);
+							filtroVersion, filtroPasarela, filtroEntidad, filtroAplicacion, filtroLocATIB, filtroMetodosPago);
 	}
 
 	@Override
@@ -74,6 +70,11 @@ public class PagoDaoImpl implements PagoDao {
 		return listarAplicaciones();
 	}
 
+	@Override
+	public List<String> getMetodosPago() {
+		return listarMetodosPago();
+	}
+
 	/*
 	 * (non-Javadoc)
 	 *
@@ -81,7 +82,7 @@ public class PagoDaoImpl implements PagoDao {
 	 */
 	@Override
 	public List<DatosSesionPago> getAll() {
-		return listarPagos(null, null, null, null, null, null, null, null, null, null, null);
+		return listarPagos(null, null, null, null, null, null, null, null, null, null, null, null);
 	}
 
 	@Override
@@ -116,11 +117,12 @@ public class PagoDaoImpl implements PagoDao {
 	}
 
 	@Override
-	public void iniciar(final String identificador, final String localizador, final String token) {
+	public void iniciar(final String identificador, final String localizador, final String token, final String metodoPago) {
 		final JPagoE jp = getJPagoByIdentificador(identificador);
 		jp.setEstado(TypeEstadoPago.DESCONOCIDO.toString());
 		jp.setLocalizador(localizador);
 		jp.setToken(token);
+		jp.setMetodoPagoSeleccionado(metodoPago);
 		entityManager.persist(jp);
 	}
 
@@ -135,9 +137,17 @@ public class PagoDaoImpl implements PagoDao {
 	}
 
 	@Override
+	public void actualizarMensajeError(final String identificador, final String mensajeError) {
+		// Actualiza msg error sin cambiar estado
+		final JPagoE jp = getJPagoByIdentificador(identificador);
+		jp.setCodigoErrorPasarela("**");
+		jp.setMensajeErrorPasarela(StringUtils.substring(mensajeError, 0, 500));
+		entityManager.persist(jp);
+	}
+
+	@Override
 	public DatosSesionPago getByToken(final String tokenSesion) {
 		DatosSesionPago dp = null;
-
 		// Recuperamos pago por token
 		final Query query = entityManager.createQuery("SELECT p FROM JPagoE p WHERE p.token = :token");
 		query.setParameter("token", tokenSesion);
@@ -145,11 +155,9 @@ public class PagoDaoImpl implements PagoDao {
 		if (!results.isEmpty()) {
 			final JPagoE jp = results.get(0);
 			dp = jp.toModel();
-
 			// Reseteamos token para evitar reusarlo
 			jp.setToken(null);
 			entityManager.persist(jp);
-
 		}
 		return dp;
 	}
@@ -167,7 +175,7 @@ public class PagoDaoImpl implements PagoDao {
 	@SuppressWarnings("unchecked")
 	private List<DatosSesionPago> listarPagos(final String filtro, final Date fechaDesde, final Date fechaHasta,
 			final TypeFiltroFecha tipoFecha, final String filtroClaveTramitacion, final String filtroTramite,
-					final Integer filtroVersion, final String filtroPasarela, final String filtroEntidad, final String filtroAplicacion, final String filtroLocATIB) {
+					final Integer filtroVersion, final String filtroPasarela, final String filtroEntidad, final String filtroAplicacion, final String filtroLocATIB, final String filtroMetodosPago) {
 		final List<DatosSesionPago> listaPagos = new ArrayList<>();
 
 		final String sqlSelect = "SELECT p FROM JPagoE p ";
@@ -276,6 +284,19 @@ public class PagoDaoImpl implements PagoDao {
 
 		}
 
+		if (StringUtils.isNotBlank(filtroMetodosPago)) {
+			if (sqlWhere.length() > 0) {
+				sqlWhere.append(" AND ");
+			}
+
+			if(filtroMetodosPago.equals("noInformado")) {
+				sqlWhere.append(" p.metodoPagoSeleccionado IS NULL");
+			}else {
+				sqlWhere.append(" LOWER(p.metodoPagoSeleccionado) LIKE :filtroMetodosPago");
+			}
+
+		}
+
 		if (sqlWhere.length() > 0) {
 			sqlWhere.insert(0, " WHERE");
 		}
@@ -309,7 +330,7 @@ public class PagoDaoImpl implements PagoDao {
 			}
 		}
 
-		if (StringUtils.isNotBlank(filtroPasarela) || StringUtils.isNotBlank(filtroEntidad) || StringUtils.isNotBlank(filtroAplicacion) || StringUtils.isNotBlank(filtroLocATIB)) {
+		if (StringUtils.isNotBlank(filtroPasarela) || StringUtils.isNotBlank(filtroEntidad) || StringUtils.isNotBlank(filtroAplicacion) || StringUtils.isNotBlank(filtroLocATIB) || StringUtils.isNotBlank(filtroMetodosPago)) {
 			if (StringUtils.isNotBlank(filtroPasarela)) {
 				queryCount.setParameter("filtroPasarela", "%" + filtroPasarela.toLowerCase() + "%");
 			}
@@ -321,6 +342,9 @@ public class PagoDaoImpl implements PagoDao {
 			}
 			if (StringUtils.isNotBlank(filtroLocATIB)) {
 				queryCount.setParameter("filtroLocATIB", "%" + filtroLocATIB.toLowerCase() + "%");
+			}
+			if (StringUtils.isNotBlank(filtroMetodosPago) && !filtroMetodosPago.equals("noInformado")) {
+				queryCount.setParameter("filtroMetodosPago", "%" + filtroMetodosPago.toLowerCase() + "%");
 			}
 		}
 
@@ -357,7 +381,7 @@ public class PagoDaoImpl implements PagoDao {
 			}
 		}
 
-		if (StringUtils.isNotBlank(filtroPasarela) || StringUtils.isNotBlank(filtroEntidad) || StringUtils.isNotBlank(filtroAplicacion) || StringUtils.isNotBlank(filtroLocATIB)) {
+		if (StringUtils.isNotBlank(filtroPasarela) || StringUtils.isNotBlank(filtroEntidad) || StringUtils.isNotBlank(filtroAplicacion) || StringUtils.isNotBlank(filtroLocATIB) || StringUtils.isNotBlank(filtroMetodosPago)) {
 			if (StringUtils.isNotBlank(filtroPasarela)) {
 				query.setParameter("filtroPasarela", "%" + filtroPasarela.toLowerCase() + "%");
 			}
@@ -369,6 +393,9 @@ public class PagoDaoImpl implements PagoDao {
 			}
 			if (StringUtils.isNotBlank(filtroLocATIB)) {
 				query.setParameter("filtroLocATIB", "%" + filtroLocATIB.toLowerCase() + "%");
+			}
+			if (StringUtils.isNotBlank(filtroMetodosPago) && !filtroMetodosPago.equals("noInformado")) {
+				query.setParameter("filtroMetodosPago", "%" + filtroMetodosPago.toLowerCase() + "%");
 			}
 		}
 
@@ -490,6 +517,34 @@ public class PagoDaoImpl implements PagoDao {
 		}
 
 		return listaAplicaciones;
+	}
+
+	private List<String> listarMetodosPago() {
+		final List<String> listaMetodosPago = new ArrayList<>();
+
+		final String sqlSelect = "SELECT DISTINCT(p.metodoPagoSeleccionado) FROM JPagoE p ";
+
+		final StringBuilder sqlWhere = new StringBuilder();
+
+		if (sqlWhere.length() > 0) {
+			sqlWhere.insert(0, " WHERE");
+		}
+
+		final String sqlOrder = " ORDER BY p.metodoPagoSeleccionado";
+
+		final Query query = entityManager.createQuery(sqlSelect + sqlWhere + sqlOrder);
+
+		final List<String> results = query.getResultList();
+
+		if (results != null && !results.isEmpty()) {
+			for (final String metodo : results) {
+				if(metodo != null && !metodo.isEmpty()){
+					listaMetodosPago.add(metodo);
+				}
+			}
+		}
+
+		return listaMetodosPago;
 	}
 
 	private JPagoE getJPagoByIdentificador(final String identificador) {

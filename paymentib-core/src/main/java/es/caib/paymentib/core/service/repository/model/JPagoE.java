@@ -109,6 +109,9 @@ public class JPagoE implements IModelApi {
 	@Column(name = "PAE_VERTRA", nullable = true, precision = 2, scale = 0)
     private Integer versionTramite;
 
+    @Column(name = "PAE_SELPAG", nullable = true, length = 2)
+    private String metodoPagoSeleccionado;
+
     public JPagoE() {
         super();
     }
@@ -297,6 +300,14 @@ public class JPagoE implements IModelApi {
 		this.versionTramite = versionTramite;
 	}
 
+    public String getMetodoPagoSeleccionado() {
+        return metodoPagoSeleccionado;
+    }
+
+    public void setMetodoPagoSeleccionado(String metodoPagoSeleccionado) {
+        this.metodoPagoSeleccionado = metodoPagoSeleccionado;
+    }
+
     /**
      * Método de acceso a codigoErrorPasarela.
      *
@@ -356,10 +367,8 @@ public class JPagoE implements IModelApi {
 
 
     public DatosSesionPago toModel() {
-        final DatosSesionPago pago = new DatosSesionPago();
-        final DatosPago datosPago = new DatosPago();
-        pago.setCodigo(codigo);
 
+        final DatosPago datosPago = new DatosPago();
         datosPago.setIdentificador(identificador);
         datosPago.setAplicacionId(aplicacionId);
         datosPago.setEntidadId(entidadId);
@@ -376,7 +385,10 @@ public class JPagoE implements IModelApi {
         datosPago.setIdTramite(idTramite);
         datosPago.setVersionTramite(versionTramite);
 
+        final DatosSesionPago pago = new DatosSesionPago();
         pago.setDatosPago(datosPago);
+        pago.setCodigo(codigo);
+        pago.setMetodoPagoSeleccionado(metodoPagoSeleccionado);
         pago.setFechaCreacion(fechaCreacion);
         pago.setEntidadId(entidadId);
         pago.setPasarelaId(pasarelaId);

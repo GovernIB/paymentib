@@ -2,11 +2,11 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>es.caib.paymentib</groupId>
   <artifactId>paymentib</artifactId>
-  <version>1.1.8</version>
+  <version>1.2.0</version>
   <packaging>pom</packaging>
 
    <properties>
-		<paymentib.version>1.1.8</paymentib.version>
+		<paymentib.version>1.2.0</paymentib.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
 		<maven.compiler.version>3.7.0</maven.compiler.version>
@@ -54,9 +54,9 @@
 
 		<javax.inject.version>1</javax.inject.version>
 		<jsf2.version>2.2.15</jsf2.version>
-		<primefaces.version>6.1</primefaces.version>
-		<primefacesExtensions.version>6.1.1</primefacesExtensions.version>
-		<primefaces.allThemes.version>1.0.8</primefaces.allThemes.version>
+		<primefaces.version>14.0.2</primefaces.version>
+		<primefacesExtensions.version>14.0.2</primefacesExtensions.version>
+		<primefaces.allThemes.version>1.1.0</primefaces.allThemes.version>
 
 		<xmlbeans.version>2.4.0</xmlbeans.version>
 
@@ -119,7 +119,7 @@
 		          </altDeploymentRepository>
 		        </configuration>
 		    </plugin>
-		    <plugin>
+			<plugin>
 				<groupId>com.github.github</groupId>
 				<artifactId>site-maven-plugin</artifactId>
 				<version>0.12</version>
@@ -151,6 +151,7 @@
 					</execution>
 				</executions>
 			</plugin>
+
     </plugins>
 
   </build>

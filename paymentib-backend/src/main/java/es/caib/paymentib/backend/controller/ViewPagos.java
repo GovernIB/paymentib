@@ -2,9 +2,6 @@ package es.caib.paymentib.backend.controller;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,22 +15,19 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import es.caib.paymentib.backend.model.DialogResult;
 import es.caib.paymentib.backend.model.types.TypeParametroVentana;
 import es.caib.paymentib.backend.util.UtilJSF;
-import es.caib.paymentib.core.api.exception.MaxNumFilasException;
+import es.caib.paymentib.core.api.exception.CargaConfiguracionException;
 import es.caib.paymentib.core.api.model.pago.DatosSesionPago;
 import es.caib.paymentib.core.api.model.types.TypeFiltroFecha;
 import es.caib.paymentib.core.api.model.types.TypeModoAcceso;
 import es.caib.paymentib.core.api.model.types.TypeNivelGravedad;
-import es.caib.paymentib.core.api.model.types.TypeRoleAcceso;
 import es.caib.paymentib.core.api.service.PagoBackService;
 import es.caib.paymentib.core.api.service.PagoFrontService;
 import es.caib.paymentib.plugins.api.EstadoPago;
 import es.caib.paymentib.plugins.api.TypeEstadoPago;
-import es.caib.paymentib.core.api.exception.CargaConfiguracionException;
 
 /**
  * Mantenimiento de entidades.
@@ -74,6 +68,7 @@ public class ViewPagos extends ViewControllerBase {
 	private String filtroEntidad;
 	private String filtroAplicacion;
 	private String filtroLocATIB;
+	private String filtroMetodosPago;
 
 	/**
 	 * Lista de datos.
@@ -92,6 +87,7 @@ public class ViewPagos extends ViewControllerBase {
 	private List<String> listaPasarelas;
 	private List<String> listaEntidades;
 	private List<String> listaAplicaciones;
+	private List<String> listaMetodosPago;
 
 	/**
 	 * Inicializacion.
@@ -119,6 +115,7 @@ public class ViewPagos extends ViewControllerBase {
 		listaPasarelas = pagoBackService.listaPasarelas();
 		listaEntidades = pagoBackService.listaEntidades();
 		listaAplicaciones = pagoBackService.listaAplicaciones();
+		listaMetodosPago = pagoBackService.listaMetodosPago();
 	}
 
 	public boolean getFilaSeleccionada() {
@@ -194,7 +191,7 @@ public class ViewPagos extends ViewControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
-		UtilJSF.openDialog(DialogPagos.class, TypeModoAcceso.CONSULTA, params, true, 1100, 540);
+		UtilJSF.openDialog(DialogPagos.class, TypeModoAcceso.CONSULTA, params, true, 1150, 600);
 	}
 
 	/**
@@ -274,6 +271,21 @@ public class ViewPagos extends ViewControllerBase {
 	}
 
 	/**
+	 * Método que se encarga de mostrar el metodo de pago
+	 * @param metodoPago Código del método de pago
+	 * @return Método de pago
+	 */
+	public String mostrarMetodoPago(String metodoPago) {
+		if (metodoPago == null || metodoPago.isEmpty()) {
+			return UtilJSF.getLiteral("typeMetodoPagoSeleccionado.noInformado");
+		}
+
+		String entidadesPago = propiedadesLocales.getProperty("pasarela.ATIB.entidadesPago");
+
+		return entidadesPago.contains(metodoPago) ? propiedadesLocales.getProperty("pasarela.ATIB.entidadPago." + metodoPago + "." + UtilJSF.getIdioma()) : metodoPago;
+	}
+
+	/**
 	 * Método final que se encarga de realizar la búsqueda
 	 */
 	private void buscar() {
@@ -281,7 +293,7 @@ public class ViewPagos extends ViewControllerBase {
 
 		try {
 			listaDatos = pagoBackService.listaPagos(filtro, filtroFechaDesde, filtroFechaHasta, filtroFecha, filtroClaveTramitacion, filtroTramite, filtroVersion,
-																filtroPasarela, filtroEntidad, filtroAplicacion, filtroLocATIB);
+																filtroPasarela, filtroEntidad, filtroAplicacion, filtroLocATIB, filtroMetodosPago);
 		} catch (final EJBException e) {
 			/*if (e.getCause() instanceof MaxNumFilasException) {
 				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.maxnumfilas"));
@@ -455,6 +467,14 @@ public class ViewPagos extends ViewControllerBase {
 		this.filtroAplicacion = filtroAplicacion;
 	}
 
+	public String getFiltroMetodosPago() {
+		return filtroMetodosPago;
+	}
+
+	public void setFiltroMetodosPago(String filtroMetodosPago) {
+		this.filtroMetodosPago = filtroMetodosPago;
+	}
+
 	public List<String> getListaPasarelas() {
 		return listaPasarelas;
 	}
@@ -469,6 +489,14 @@ public class ViewPagos extends ViewControllerBase {
 
 	public void setListaAplicaciones(List<String> listaAplicaciones) {
 		this.listaAplicaciones = listaAplicaciones;
+	}
+
+	public List<String> getListaMetodosPago() {
+		return listaMetodosPago;
+	}
+
+	public void setListaMetodosPago(List<String> listaMetodosPago) {
+		this.listaMetodosPago = listaMetodosPago;
 	}
 
 	public String getFiltroLocATIB() {

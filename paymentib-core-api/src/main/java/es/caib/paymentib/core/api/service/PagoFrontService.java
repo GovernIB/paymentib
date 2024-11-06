@@ -1,13 +1,11 @@
 package es.caib.paymentib.core.api.service;
 
-import java.security.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import es.caib.paymentib.core.api.model.pago.DatosSesionPago;
 import es.caib.paymentib.core.api.model.pago.FiltroPago;
-import es.caib.paymentib.core.api.model.types.TypeFiltroFecha;
 import es.caib.paymentib.plugins.api.DatosPago;
 import es.caib.paymentib.plugins.api.EntidadPago;
 import es.caib.paymentib.plugins.api.EstadoPago;
@@ -126,4 +124,11 @@ public interface PagoFrontService {
 
 	List<DatosSesionPago> obtenerPagos(final FiltroPago filtro, final Date fechaDesde, final Date fechaHasta,
 			final Long numPag, final Long maxNumElem);
+
+	/**
+	 * Establece mensaje de error no controlado.
+	 * @param identificador identificador
+	 * @param mensajeError mensaje error
+	 */
+	void establecerMensajeErrorNoControlado(String identificador, String mensajeError);
 }

@@ -16,6 +16,11 @@
 		<p:importEnum type="es.caib.paymentib.core.api.model.types.TypeFiltroFecha" var="TypeFiltroFecha" />
 		<h:outputScript library="primefaces-custom" name="calendar_es.js" />
 		<h:outputScript library="primefaces-custom" name="calendar_ca.js" />
+		<style>
+			#form\:panelFiltro > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(6) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) {
+				width: 1em;
+			}
+		</style>
 
 		<h:form id="form" style="height: 100%">
 
@@ -152,8 +157,8 @@
 		        	<h:panelGrid id="panelFiltro" columns="8" cellspacing="5">
 			        	<p:inputText placeholder="#{msg['botones.buscar']}" value="#{viewPagos.filtro}"/>
 						<p:spacer width="20px"/>
-						<p:calendar placeholder="#{msg['viewPagos.fechaDesde']}" id="fechaDesde" value="#{viewPagos.filtroFechaDesde}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
-						<p:calendar placeholder="#{msg['viewPagos.fechaHasta']}" id="fechaHasta" value="#{viewPagos.filtroFechaHasta}" size="15" locale="#{sessionBean.locale}"  pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
+						<p:datePicker showIcon="true" placeholder="#{msg['viewPagos.fechaDesde']}" id="fechaDesde" value="#{viewPagos.filtroFechaDesde}" size="15" locale="#{sessionBean.locale}" pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
+						<p:datePicker showIcon="true" placeholder="#{msg['viewPagos.fechaHasta']}" id="fechaHasta" value="#{viewPagos.filtroFechaHasta}" size="15" locale="#{sessionBean.locale}"  pattern="dd/MM/yyyy HH:mm:ss" showOn="button" showButtonPanel="true"/>
 						<h:panelGrid columns="2" styleClass="w100, noPadding" >
 			        		<p:outputLabel for="filtroClaveTramitacion" value="#{msg['viewPagos.filtroClaveTramitacion']}:"/>
 				        	<p:inputText id="filtroClaveTramitacion" value="#{viewPagos.filtroClaveTramitacion}" size="20" maxlength="30" onkeyup="capitalize(this)" onblur="trim(this)"/>
@@ -175,7 +180,7 @@
 				            <f:selectItem itemLabel="#{msg['viewPagos.headerFechaPago']}" itemValue="#{TypeFiltroFecha.PAGO}" />
 				        </p:selectOneButton>
 
-	           			<p:commandButton id="btnBuscar" icon="fa fa-search" actionListener="#{viewPagos.filtrar()}" process="panelFiltro" update="panelBotones dataTable growl" />
+	           			<p:commandButton id="btnBuscar" icon="pi pi-search" actionListener="#{viewPagos.filtrar()}" process="panelFiltro" update="panelBotones dataTable growl" />
 
 						<h:panelGrid columns="2" styleClass="w100, noPadding">
 							<p:outputLabel for="filtroPasarela" value="#{msg['viewPagos.headerPasarela']}:"/>
@@ -206,17 +211,26 @@
 							<p:outputLabel for="filtroLocATIB" value="#{msg['viewPagos.filtroLocATIB']}:"/>
 							<p:inputText id="filtroLocATIB" value="#{viewPagos.filtroLocATIB}" size="20" maxlength="30" onkeyup="capitalize(this)" onblur="trim(this)"/>
 						</h:panelGrid>
+
+						<h:panelGrid columns="2" styleClass="w100, noPadding">
+							<p:outputLabel for="filtroMetodosPago" value="#{msg['viewPagos.headerMetodoPagoSeleccionado']}:" style="white-space: pre-wrap;"/>
+							<p:selectOneMenu id="filtroMetodosPago" value="#{viewPagos.filtroMetodosPago}">
+								<f:selectItem itemLabel=""  noSelectionOption="true"/>
+								<f:selectItems value="#{viewPagos.listaMetodosPago}" var="pagoSeleccionado" itemLabel="#{viewPagos.mostrarMetodoPago(pagoSeleccionado)}" itemValue="#{pagoSeleccionado}"/>
+								<f:selectItem itemLabel="#{msg['typeMetodoPagoSeleccionado.noInformado']}" itemValue="noInformado"/>
+							</p:selectOneMenu >
+						</h:panelGrid>
 	           		</h:panelGrid>
 		        </f:facet>
 
 		        <f:facet name="right">
 		        	<h:panelGrid id="panelBotones" columns="7" cellspacing="5" onchange="opcVista();">
-    					<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="fa fa-eye" actionListener="#{viewPagos.consultar}" process="@this" update="growl" rendered="#{viewPagos.filaSeleccionada}" />
-    					<p:commandButton id="btnVerificar" value="#{msg['botones.verificar']}" icon="fa fa-check" actionListener="#{viewPagos.verificar}" process="@this" update="growl @form" rendered="#{viewPagos.filaSeleccionada and viewPagos.permiteVerificar}" />
-    					<p:commandButton id="btnConfirmar" value="#{msg['botones.confirmar']}" icon="fa fa-thumbs-o-up" actionListener="#{viewPagos.confirmar}" process="@this" update="growl" rendered="#{viewPagos.filaSeleccionada and viewPagos.permiteConfirmar}">
+    					<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="pi pi-eye" actionListener="#{viewPagos.consultar}" process="@this" update="growl" rendered="#{viewPagos.filaSeleccionada}" />
+    					<p:commandButton id="btnVerificar" value="#{msg['botones.verificar']}" icon="pi pi-check" actionListener="#{viewPagos.verificar}" process="@this" update="growl @form" rendered="#{viewPagos.filaSeleccionada and viewPagos.permiteVerificar}" />
+    					<p:commandButton id="btnConfirmar" value="#{msg['botones.confirmar']}" icon="pi pi-thumbs-up" actionListener="#{viewPagos.confirmar}" process="@this" update="growl" rendered="#{viewPagos.filaSeleccionada and viewPagos.permiteConfirmar}">
     						<p:ajax event="dialogReturn" listener="#{viewPagos.returnDialogoConfirmar}" update="@form"  />
     					</p:commandButton>
-						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="fa fa-question-circle-o" actionListener="#{viewPagos.ayuda()}" process="@this" />
+						<p:commandButton id="btnHelp" value="#{msg['botones.ayuda']}" icon="pi pi-question-circle" actionListener="#{viewPagos.ayuda()}" process="@this" />
 			        </h:panelGrid>
 		        </f:facet>
 		    </p:toolbar>
@@ -227,7 +241,7 @@
 			<!-- Data table -->
 			<p:dataTable  id="dataTable" var="td" value="#{viewPagos.listaDatos}"
 						 rows="13" emptyMessage="#{msg['info.emptyRows']}"
-						 scrollable="true" scrollHeight="90%"
+						 scrollable="true" scrollHeight="75%"
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          rowsPerPageTemplate="5,10,15,30"
@@ -280,9 +294,12 @@
 			    <p:column headerText="#{msg['viewPagos.headerVersion']}" sortBy="#{td.datosPago.versionTramite}">
 			        <h:outputText value="#{td.datosPago.versionTramite}" />
 			    </p:column>
+				<p:column headerText="#{msg['viewPagos.headerMetodoPagoSeleccionado']}" sortBy="#{td.metodoPagoSeleccionado}">
+					<h:outputText value="#{viewPagos.mostrarMetodoPago(td.metodoPagoSeleccionado)}" />
+				</p:column>
 			</p:dataTable>
 			<p:contextMenu for=":work">
-       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyMain"  process="@this :form:auxCopiar" update="growl" />
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="pi pi-copy" styleClass="w90" id="mnuCopyMain"  process="@this :form:auxCopiar" update="growl" />
 		    </p:contextMenu>
 		    <pe:clipboard id="clipContextCopyMain" trigger="mnuCopyMain" action="copy" target="auxCopiar">
 				<p:ajax event="success" listener="#{viewPagos.copiadoCorr}" process="@this" update="@this growl"/>
@@ -290,11 +307,11 @@
         	</pe:clipboard>
 
 			<p:contextMenu for=":form:dataTable" id="contextWork">
-       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" />
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="pi pi-question-circle" styleClass="w90" id="mnuCopy"  process="@this :form:auxCopiar" update="growl" />
        			<p:separator/>
-        		<p:menuitem id="mnuVerificarTabla2" value="#{msg['botones.verificar']}" icon="fa fa-check" onclick="document.getElementById('form:btnVerificar').click();" process="@this" style="display:none;"/>
-        		<p:menuitem id="mnuConsultarTabla2" value="#{msg['botones.consultar']}" icon="fa fa-eye" onclick="document.getElementById('form:btnConsultar').click();" process="@this"  style="display:none;"/>
-        		<p:menuitem id="mnuConfirmarTabla2" value="#{msg['botones.confirmar']}" icon="fa fa-thumbs-o-up" onclick="document.getElementById('form:btnConfirmar').click();" process="@this" style="display:none;"/>
+        		<p:menuitem id="mnuVerificarTabla2" value="#{msg['botones.verificar']}" icon="pi pi-check" onclick="document.getElementById('form:btnVerificar').click();" process="@this" style="display:none;"/>
+        		<p:menuitem id="mnuConsultarTabla2" value="#{msg['botones.consultar']}" icon="pi pi-eye" onclick="document.getElementById('form:btnConsultar').click();" process="@this"  style="display:none;"/>
+        		<p:menuitem id="mnuConfirmarTabla2" value="#{msg['botones.confirmar']}" icon="pi pi-thumbs-up" onclick="document.getElementById('form:btnConfirmar').click();" process="@this" style="display:none;"/>
 		    </p:contextMenu>
 		    <pe:clipboard id="clipContextCopy" trigger="mnuCopy" action="copy" target="auxCopiar">
 				<p:ajax event="success" listener="#{viewPagos.copiadoCorr}" process="@this" update="@this growl"/>
@@ -302,7 +319,7 @@
         	</pe:clipboard>
 
         	<p:contextMenu id="mainCmH" widgetVar="mainCmH"  for=":header">
-				<p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
+				<p:menuitem id="mnuCopyH" value="#{msg['botones.copiar']}" icon="pi pi-question-circle" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
 			</p:contextMenu>
 			<pe:clipboard id="clipContextCopyH" trigger="mnuCopyH" action="copy" target="auxCopiar">
 				<p:ajax event="success" listener="#{viewPagos.copiadoCorr}" process="@this" update="@this growl"/>
@@ -310,7 +327,7 @@
 			</pe:clipboard>
 
 			 <p:contextMenu id="mainCmF" widgetVar="mainCmF"  for=":footer">
-				<p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
+				<p:menuitem id="mnuCopyF" value="#{msg['botones.copiar']}" icon="pi pi-question-circle" styleClass="w90" process="@this :form:auxCopiar" update="growl" />
 			</p:contextMenu>
 			<pe:clipboard id="clipContextCopyF" trigger="mnuCopyF" action="copy" target="auxCopiar">
 				<p:ajax event="success" listener="#{viewPagos.copiadoCorr}" process="@this" update="@this growl"/>

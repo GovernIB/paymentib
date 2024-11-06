@@ -3,6 +3,7 @@ package es.caib.paymentib.core.ejb;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -29,9 +30,9 @@ public class PagoBackServiceBean implements PagoBackService {
 	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.CONSULTA })
 	public List<DatosSesionPago> listaPagos(final String filtro, final Date fechaDesde, final Date fechaHasta,
 			final TypeFiltroFecha tipoFecha, final String filtroClaveTramitacion, final String filtroTramite, final Integer filtroVersion,
-			final String filtroPasarela, final String filtroEntidad, final String filtroAplicacion, final String filtroLocATIB) {
+			final String filtroPasarela, final String filtroEntidad, final String filtroAplicacion, final String filtroLocATIB, final String filtroMetodosPago) {
 		return service.listaPagos(filtro, fechaDesde, fechaHasta, tipoFecha, filtroClaveTramitacion, filtroTramite,
-									filtroVersion, filtroPasarela, filtroEntidad, filtroAplicacion, filtroLocATIB);
+									filtroVersion, filtroPasarela, filtroEntidad, filtroAplicacion, filtroLocATIB, filtroMetodosPago);
 	}
 
 	@Override
@@ -54,8 +55,20 @@ public class PagoBackServiceBean implements PagoBackService {
 
 	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.CONSULTA })
+	public List<String> listaMetodosPago() {
+		return service.listaMetodosPago();
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.CONSULTA })
 	public DatosSesionPago getPagoByCodigo(final Long codigo) {
 		return service.getPagoByCodigo(codigo);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.CONSULTA })
+	public DatosSesionPago getPagoByIdentificador(final String identificador) {
+		return service.getPagoByIdentificador(identificador);
 	}
 
 	@Override
@@ -63,5 +76,6 @@ public class PagoBackServiceBean implements PagoBackService {
 	public void confirmarPago(final String identificador, final Date fechaPago, final String usuarioConfirmacion) {
 		service.confirmarPago(identificador, fechaPago, usuarioConfirmacion);
 	}
+
 
 }

@@ -140,7 +140,7 @@
 					<div class="panel">
 						<p:outputLabel for="fechaPago" value="#{msg['dialogPagosConfirmar.fechaPago']}" />
 						<p:spacer width="8" height="1" />
-						<p:calendar mask="true" showOn="button" styleClass="calendario-sin-boton" id="fechaPago" value="#{dialogPagosConfirmar.data.fechaPago}" pattern="dd/MM/yyyy HH:mm:ss"  size="19" locale="#{sessionBean.locale}" />
+						<p:datePicker showIcon="true" mask="true" showOn="button" styleClass="calendario-sin-boton" id="fechaPago" value="#{dialogPagosConfirmar.data.fechaPago}" pattern="dd/MM/yyyy HH:mm:ss"  size="19" locale="#{sessionBean.locale}" />
 					</div>
 				</div>
 			</p:outputPanel>
@@ -148,7 +148,7 @@
 		     	<p:toolbar>
 					<f:facet name="right">
 						<p:commandButton value="#{msg['botones.guardar']}" styleClass="boton-azul" process="@form" update="@form growlDialog" actionListener="#{dialogPagosConfirmar.aceptar}">
-							<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.pago']}" icon="fa fa-question-circle fa-3x confirmar_icono"/>
+							<p:confirm header="#{msg['confirm.titulo']}" message="#{msg['confirm.pago']}" icon="pi-question-circle pi-3x confirmar_icono"/>
 						</p:commandButton>
 
 						<p:commandButton value="#{msg['botones.cancelar']}" actionListener="#{dialogPagosConfirmar.cerrar}" process="@this"/>
@@ -156,7 +156,7 @@
 				</p:toolbar>
 		    </p:outputPanel>
 		    <p:contextMenu >
-       			<p:menuitem value="#{msg['botones.copiar']}" icon="fa fa-clipboard" styleClass="w90" id="mnuCopyMain"  process="@this :dialogPagosConfirmar:auxCopiar" update="growlDialog" />
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="pi pi-copy" styleClass="w90" id="mnuCopyMain"  process="@this :dialogPagosConfirmar:auxCopiar" update="growlDialog" />
 		    </p:contextMenu>
 		    <pe:clipboard id="clipContextCopyMain" trigger="mnuCopyMain" action="copy" target="auxCopiar">
 				<p:ajax event="success" listener="#{dialogPagosConfirmar.copiadoCorr}" process="@this" update="@this growlDialog"/>
@@ -166,8 +166,8 @@
 		    <!-- dialogo para confirmar -->
 		    <p:confirmDialog global="true" >
 				<p:outputPanel styleClass="confirmar_botonera">
-		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="fa fa-check"  process="@form"/>
-		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-close" process="@this"/>
+		        	<p:commandButton value="#{msg['botones.si']}" type="button" styleClass="ui-confirmdialog-yes boton-azul" icon="pi pi-check"  process="@form"/>
+		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-close" process="@this"/>
 				</p:outputPanel>
 		    </p:confirmDialog>
 		   	<p:inputText id="auxCopiar" value="#{dialogPagosConfirmar.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>

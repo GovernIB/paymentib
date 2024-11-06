@@ -27,6 +27,10 @@ public class REstadoPago {
     @ApiModelProperty(value = "localizador")
     private String localizador;
 
+    /** Método pago seleccionado (depende de la pasarela). */
+    @ApiModelProperty(value = "metodoPago")
+    private String metodoPago;
+
     /** Código error pasarela, opcional en caso de estado desconocido. */
     @ApiModelProperty(value = "codigoErrorPasarela")
     private String codigoErrorPasarela;
@@ -128,6 +132,25 @@ public class REstadoPago {
      */
     public void setLocalizador(String identificadorPagoPasarela) {
         this.localizador = identificadorPagoPasarela;
+    }
+
+    /**
+     * Método de acceso a metodoPago.
+     *
+     * @return metodoPago
+     */
+    public String getMetodoPago() {
+        return metodoPago;
+    }
+
+    /**
+     * Método para establecer metodoPago.
+     *
+     * @param metodoPago
+     *            metodoPago a establecer
+     */
+    public void setMetodoPago(String metodoPago) {
+        this.metodoPago = metodoPago;
     }
 
 }

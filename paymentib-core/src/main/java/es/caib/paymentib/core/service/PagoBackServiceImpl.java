@@ -39,8 +39,8 @@ public final class PagoBackServiceImpl implements PagoBackService {
 	@NegocioInterceptor
 	public List<DatosSesionPago> listaPagos(final String filtro, final Date fechaDesde, final Date fechaHasta,
 			final TypeFiltroFecha tipoFecha, final String filtroClaveTramitacion, final String filtroTramite, final Integer filtroVersion,
-			final String filtroPasarela, final String filtroEntidad, final String filtroAplicacion, final String filtroLocATIB) {
-		return pagoDao.getAllByFiltro(filtro, fechaDesde, fechaHasta, tipoFecha, filtroClaveTramitacion, filtroTramite, filtroVersion, filtroPasarela, filtroEntidad, filtroAplicacion, filtroLocATIB);
+			final String filtroPasarela, final String filtroEntidad, final String filtroAplicacion, final String filtroLocATIB, final String filtroMetodosPago) {
+		return pagoDao.getAllByFiltro(filtro, fechaDesde, fechaHasta, tipoFecha, filtroClaveTramitacion, filtroTramite, filtroVersion, filtroPasarela, filtroEntidad, filtroAplicacion, filtroLocATIB, filtroMetodosPago);
 	}
 
 	@Override
@@ -63,8 +63,20 @@ public final class PagoBackServiceImpl implements PagoBackService {
 
 	@Override
 	@NegocioInterceptor
+	public List<String> listaMetodosPago() {
+		return pagoDao.getMetodosPago();
+	}
+
+	@Override
+	@NegocioInterceptor
 	public DatosSesionPago getPagoByCodigo(final Long codigo) {
 		return pagoDao.getByCodigo(codigo);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public DatosSesionPago getPagoByIdentificador(final String identificador) {
+		return pagoDao.getByIdentificador(identificador);
 	}
 
 	@Override

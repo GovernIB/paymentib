@@ -15,6 +15,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 
+import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.DefaultSubMenu;
@@ -83,11 +84,31 @@ public class SessionBean {
 	/** Inicio sesión. */
 	@PostConstruct
 	public void init() {
-		// Recupera info usuario
 
-		userName = getSecurityService().getUsername();
-		lang = FacesContext.getCurrentInstance().getViewRoot().getLocale().getLanguage();
-		locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
+//		Sesion sesion = null;
+
+		// Recupera info usuario
+		userName = securityService.getUsername();
+
+		// recuperamos datos por defecto del usuario
+		/*if (StringUtils.isNotEmpty(userName)) {
+			sesion = systemService.getSesion(userName);
+		}*/
+
+		if (FacesContext.getCurrentInstance().getViewRoot().getLocale() == null) {
+			lang = "ca";
+			locale = new Locale("ca", "ES");
+		} else {
+			lang = FacesContext.getCurrentInstance().getViewRoot().getLocale().getLanguage();
+			locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
+		}
+		if (FacesContext.getCurrentInstance().getViewRoot() == null || FacesContext.getCurrentInstance().getViewRoot().getLocale() == null) {
+			lang = "ca";
+			locale = new Locale("ca", "ES");
+		} else {
+			lang = FacesContext.getCurrentInstance().getViewRoot().getLocale().getLanguage();
+			locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
+		}
 		rolesList = securityService.getRoles();
 		final String pathProperties = System.getProperty("es.caib.paymentib.properties.path");
 		// Carga fichero de propiedades
@@ -194,28 +215,38 @@ public class SessionBean {
 	public MenuModel getMenuModel() {
 		final MenuModel model = new DefaultMenuModel();
 
-		final DefaultSubMenu firstSubmenu = new DefaultSubMenu(getUserName());
-		firstSubmenu.setIcon("fa-li fa fa-user-o");
-		final DefaultMenuItem item = new DefaultMenuItem(UtilJSF.getLiteral(getChangeLang()));
+		final DefaultSubMenu firstSubmenu = new DefaultSubMenu();
+		firstSubmenu.setLabel(getUserName());
+		firstSubmenu.setIcon("fa-li fa pi pi-user");
+		final DefaultMenuItem item = new DefaultMenuItem();
+		String literalIdioma = UtilJSF.getLiteral(getChangeLang());
+		item.setAriaLabel(literalIdioma);
+		item.setTitle(literalIdioma);
+		item.setValue(literalIdioma);
 		item.setCommand("#{sessionBean.cambiarIdioma(sessionBean.getChangeLang())}");
 		item.setIcon("fa-li fa fa-flag");
-		firstSubmenu.addElement(item);
+		item.setStyleClass("colorNegro");
+		firstSubmenu.getElements().add(item);
 
-		model.addElement(firstSubmenu);
+		model.getElements().add(firstSubmenu);
 
-		final DefaultSubMenu secondSubmenu = new DefaultSubMenu(
-				UtilJSF.getLiteral("roles." + activeRole.name().toLowerCase()));
-		secondSubmenu.setIcon("fa-li fa fa-id-card-o");
+		final DefaultSubMenu secondSubmenu = new DefaultSubMenu();
+
+		secondSubmenu.setLabel(UtilJSF.getLiteral("roles." + activeRole.name().toLowerCase()));
+		secondSubmenu.setIcon("fa-li fa pi pi-id-card");
 		for (final TypeRoleAcceso role : rolesList) {
 			if (!activeRole.equals(role)) {
-				final DefaultMenuItem item2 = new DefaultMenuItem(
-						UtilJSF.getLiteral("roles." + role.name().toLowerCase()));
+				final DefaultMenuItem item2 = new DefaultMenuItem();
+				item2.setAriaLabel(UtilJSF.getLiteral("roles." + role.name().toLowerCase()));
+				item2.setTitle(UtilJSF.getLiteral("roles." + role.name().toLowerCase()));
+				item2.setValue(UtilJSF.getLiteral("roles." + role.name().toLowerCase()));
 				item2.setCommand("#{sessionBean.cambiarRoleActivo(\"" + role.toString() + "\")}");
-				item2.setIcon("fa-li fa fa-id-card-o");
-				secondSubmenu.addElement(item2);
+				item2.setIcon("fa-li fa pi pi-id-card");
+				item2.setStyleClass("colorNegro");
+				secondSubmenu.getElements().add(item2);
 			}
 		}
-		model.addElement(secondSubmenu);
+		model.getElements().add(secondSubmenu);
 
 		model.generateUniqueIds();
 		return model;

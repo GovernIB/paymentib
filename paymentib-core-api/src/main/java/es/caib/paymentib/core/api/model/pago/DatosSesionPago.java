@@ -49,15 +49,18 @@ public class DatosSesionPago {
     /** Url callback aplicación origen. */
     private String urlCallbackOrigen;
 
-    /**
-     * usuario confirmacion.
-     */
+    /** Usuario confirmacion. */
     private String usuarioConfirmacion;
 
+    /** Método pago seleccionado (depende de la pasarela). */
+    private String metodoPagoSeleccionado;
+
+    /** Obtiene codigo. */
     public long getCodigo() {
         return codigo;
     }
 
+    /** Establece codigo. */
     public void setCodigo(final long codigo) {
         this.codigo = codigo;
     }
@@ -279,4 +282,22 @@ public class DatosSesionPago {
         this.entidadId = entidadId;
     }
 
+    /**
+     * Método de acceso a metodoPagoSeleccionado.
+     *
+     * @return metodoPagoSeleccionado
+     */
+    public String getMetodoPagoSeleccionado() {
+        return metodoPagoSeleccionado;
+    }
+
+    /**
+     * Método para establecer metodoPagoSeleccionado.
+     *
+     * @param metodoPagoSeleccionado
+     *            metodoPagoSeleccionado a establecer
+     */
+    public void setMetodoPagoSeleccionado(String metodoPagoSeleccionado) {
+        this.metodoPagoSeleccionado = metodoPagoSeleccionado;
+    }
 }

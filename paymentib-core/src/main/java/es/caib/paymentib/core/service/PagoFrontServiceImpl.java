@@ -1,10 +1,10 @@
 package es.caib.paymentib.core.service;
 
-import java.security.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,6 @@ import es.caib.paymentib.core.api.exception.JustificantePagoException;
 import es.caib.paymentib.core.api.exception.NoExisteSesionPagoException;
 import es.caib.paymentib.core.api.exception.ObtenerEntidadesException;
 import es.caib.paymentib.core.api.exception.TokenSesionPagoException;
-import es.caib.paymentib.core.api.exception.VerificacionPagoException;
 import es.caib.paymentib.core.api.model.pago.DatosSesionPago;
 import es.caib.paymentib.core.api.model.pago.FiltroPago;
 import es.caib.paymentib.core.api.service.PagoFrontService;
@@ -113,7 +112,7 @@ public final class PagoFrontServiceImpl implements PagoFrontService {
 		}
 
 		// Almacena pago en persistencia cambiando estado
-		dao.iniciar(dp.getDatosPago().getIdentificador(), url.getLocalizador(), token);
+		dao.iniciar(dp.getDatosPago().getIdentificador(), url.getLocalizador(), token, entidadPagoId);
 
 		return url;
 
@@ -260,22 +259,13 @@ public final class PagoFrontServiceImpl implements PagoFrontService {
 		EstadoPago res = null;
 		// Recuperamos sesion pago
 		final DatosSesionPago dp = recuperarSesionPagoByIdentificador(identificador);
-		// Si no esta iniciado o si ya esta pagado, establecemos estado de
-		// persistencia
-		if (dp.getEstado() == TypeEstadoPago.NO_INICIADO || dp.getEstado() == TypeEstadoPago.PAGADO) {
-			res = new EstadoPago();
-			res.setEstado(dp.getEstado());
-			res.setLocalizador(dp.getLocalizador());
-			res.setFechaPago(dp.getFechaPago());
-			res.setCodigoErrorPasarela(dp.getCodigoErrorPasarela());
-			res.setMensajeErrorPasarela(dp.getMensajeErrorPasarela());
-		} else {
+
+		// Verificamos contra pasarela
+		if (dp.getEstado() != TypeEstadoPago.NO_INICIADO && dp.getEstado() != TypeEstadoPago.PAGADO) {
 			// Verificamos estado contra la pasarela
-			// Crea plugin pago
 			final IPasarelaPagoPlugin plgPago = crearPlugin(dp.getPasarelaId());
 			try {
-				// Verifica estado pago según si es retorno o una verifación
-				// normal
+				// Verifica estado pago según si es retorno o una verificación normal
 				EstadoPago ep = null;
 				if (retornoPago) {
 					ep = plgPago.verificarRetornoPagoElectronico(dp.getDatosPago(), dp.getLocalizador(),
@@ -287,9 +277,23 @@ public final class PagoFrontServiceImpl implements PagoFrontService {
 				dao.actualizarEstado(identificador, ep);
 				res = ep;
 			} catch (final PasarelaPagoException e) {
-				throw new VerificacionPagoException(identificador, e);
+				// Si hay error, actualizamos mensaje error sin cambiar el estado
+				String msgError = "No se ha podido verificar pago contra pasarela: " + e.getMessage() + "(" + ExceptionUtils.getRootCauseMessage(e) + ")";
+				dao.actualizarMensajeError(identificador, msgError);
 			}
 		}
+
+		// Si no se ha podido verificar, recuperamos estado de la base de datos
+		if (res == null) {
+			res = new EstadoPago();
+			res.setEstado(dp.getEstado());
+			res.setLocalizador(dp.getLocalizador());
+			res.setMetodoPago(dp.getMetodoPagoSeleccionado());
+			res.setFechaPago(dp.getFechaPago());
+			res.setCodigoErrorPasarela(dp.getCodigoErrorPasarela());
+			res.setMensajeErrorPasarela(dp.getMensajeErrorPasarela());
+		}
+
 		return res;
 	}
 
@@ -297,6 +301,11 @@ public final class PagoFrontServiceImpl implements PagoFrontService {
 	public List<DatosSesionPago> obtenerPagos(FiltroPago filtro, Date fechaDesde, Date fechaHasta, Long numPag,
 			Long maxNumElem) {
 		return dao.getAllByFiltro(filtro, fechaDesde, fechaHasta, numPag, maxNumElem);
+	}
+
+	@Override
+	public void establecerMensajeErrorNoControlado(String identificador, String mensajeError) {
+		dao.actualizarMensajeError(identificador, mensajeError);
 	}
 
 }

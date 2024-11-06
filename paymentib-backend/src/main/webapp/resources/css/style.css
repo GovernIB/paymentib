@@ -543,10 +543,79 @@ label.ui-state-disabled {
 	border: #0a95ff 2px dotted !important;
 }
 
+.opcionesFull {
+	flex-grow: 1;
+}
+.opcionesFull div {
+	display: flex; justify-content: flex-end;
+}
+
 .noBorderColor{
 	border-color:#f0f0f0;
 }
 
 .d-none{
 	display: none !important;
+}
+
+.claseTitulo {
+	color: white;                    /* Texto blanco */
+    background-color: #726F6B;       /* Fondo gris oscuro */
+    padding: 10px 20px;               /* Espacio alrededor del texto */
+    border-radius: 15px;              /* Bordes redondeados */
+    text-align: center;               /* Alineación centrada del texto dentro del h2 */
+    margin: 5px !important;
+}
+.panelCabecera div{
+	background-color: #CC073C;
+}
+.pi-user, .pi-id-card {
+	-webkit-filter: brightness(0) invert(1);
+    filter: brightness(0) invert(1);
+    padding-right: 4px;
+}
+
+.ui-menu-list .ui-icon-triangle-1-s {
+    -webkit-filter: brightness(0) invert(1) !important;
+    filter: brightness(0) invert(1) !important;
+}
+
+.colorNegro span{
+	color: #000  !important;
+}
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
+  background: #ededed !important;
+}
+
+#form\:cMenuTabla .ui-menuitem-text {
+	color: #000 !important;
+}
+
+[id$=":menuBar"] [role="menubar"] [role="menuitem"] .ui-menuitem-text {
+	color: #FFF;
+}
+
+
+.ui-state-active {
+  color: #444 !important;
+  font-weight: bold !important;
+}
+
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
+  border: 1px solid #444 !important;
+}
+.ui-state-active .ui-icon-triangle-1-n {
+  -webkit-filter: brightness(0) invert(0) !important;
+   filter: brightness(0) invert(0) !important;
+}
+.ui-state-active .ui-icon-triangle-1-s {
+  -webkit-filter: brightness(0) invert(0) !important;
+   filter: brightness(0) invert(0) !important;
+}
+
+@media (min-width: 640px) and (max-width: 1024px) {
+	.paddingIzquierdoResponsive {
+		padding-left: 20px !important;
+	}
+
 }

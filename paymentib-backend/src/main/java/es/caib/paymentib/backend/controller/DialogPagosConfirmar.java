@@ -47,7 +47,7 @@ public class DialogPagosConfirmar extends DialogControllerBase {
 	public void init() {
 		final TypeModoAcceso modo = TypeModoAcceso.valueOf(modoAcceso);
 
-		UtilJSF.checkSecOpenDialog(modo, getId());
+		UtilJSF.checkSecOpenDialog(modo, getId(), null);
 
 		if (id == null) {
 			setData(new DatosSesionPago());

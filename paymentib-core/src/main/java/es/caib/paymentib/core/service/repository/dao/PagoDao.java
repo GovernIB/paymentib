@@ -23,7 +23,7 @@ public interface PagoDao {
 	 */
 	List<DatosSesionPago> getAllByFiltro(final String filtro, final Date fechaDesde, final Date fechaHasta,
 			final TypeFiltroFecha tipoFecha, final String filtroClaveTramitacion, final String filtroTramite, final Integer filtroVersion,
-			final String filtroPasarela, final String filtroEntidad, final String filtroAplicacion, final String filtroLocATIB);
+			final String filtroPasarela, final String filtroEntidad, final String filtroAplicacion, final String filtroLocATIB, final String filtroMetodosPago);
 
 	/**
 	 * Obtiene la lista de todas las pasarelas
@@ -45,6 +45,13 @@ public interface PagoDao {
 	 * @return lista de aplicaciones
 	 */
 	List<String> getAplicaciones();
+
+	/**
+	 * Obtiene la lista de todos los métodos de pago
+	 *
+	 * @return lista de métodos de pago
+	 */
+	List<String> getMetodosPago();
 
 	/**
 	 * Obtiene la lista de todos los pagos
@@ -70,8 +77,9 @@ public interface PagoDao {
 	 * @param identificador identificador pago
 	 * @param localizador   localizador pago
 	 * @param token         token acceso para retorno pasarela
+	 * @param metodoPago    metodo de pago seleccionado
 	 */
-	void iniciar(String identificador, String localizador, String token);
+	void iniciar(String identificador, String localizador, String token, String metodoPago);
 
 	/**
 	 * Recupera datos sesión pago por token.
@@ -97,6 +105,15 @@ public interface PagoDao {
 	 * @param ep            Estado pago
 	 */
 	void actualizarEstado(String identificador, EstadoPago ep);
+
+	/**
+	 * Actualiza mensaje error (para cuando la pasarela no llega a devolver estado).
+	 *
+	 * @param identificador identificador
+	 *
+	 * @param String  Mensaje error
+	 */
+	void actualizarMensajeError(String identificador, String mensajeError);
 
 	/**
 	 * Recupera datos sesión pago por Codigo.

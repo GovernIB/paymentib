@@ -20,7 +20,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
+import org.primefaces.PrimeFaces;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -123,7 +123,7 @@ public final class UtilJSF {
 		getSessionBean().getMochilaDatos().put(SEC_OPEN_DIALOG, secOpenDialog);
 
 		// Abre dialogo
-		RequestContext.getCurrentInstance().openDialog(dialog, options, paramsDialog);
+		PrimeFaces.current().dialog().openDynamic(dialog, options, paramsDialog);
 	}
 
 	/**
@@ -132,9 +132,10 @@ public final class UtilJSF {
 	 * @param modoAcceso modo acceso
 	 * @param id         id
 	 */
-	public static void checkSecOpenDialog(final TypeModoAcceso modoAcceso, final String id) {
+	public static void checkSecOpenDialog(final TypeModoAcceso modoAcceso, final String id, final String token) {
 		// Buscamos si existe token
-		final String secOpenDialog = (String) getSessionBean().getMochilaDatos().get(SEC_OPEN_DIALOG);
+		final String secOpenDialog = token != null ? token : (String) getSessionBean().getMochilaDatos().get(SEC_OPEN_DIALOG);
+		//final String secOpenDialog = (String) getSessionBean().getMochilaDatos().get(SEC_OPEN_DIALOG);
 		if (secOpenDialog == null) {
 			throw new ErrorBackException(ERROR_APERTURA_DIALOG);
 		}
@@ -151,8 +152,10 @@ public final class UtilJSF {
 		if (diffInMillies > (ConstantesNumero.N60 * ConstantesNumero.N1000)) {
 			throw new ErrorBackException(ERROR_APERTURA_DIALOG);
 		}
-		// Eliminamos token de la sesion para que se pueda reusar
-		getSessionBean().getMochilaDatos().remove(SEC_OPEN_DIALOG);
+		// Eliminamos token de la sesion para que se pueda reusar si no viene en la URL
+		if (token == null) {
+			getSessionBean().getMochilaDatos().remove(SEC_OPEN_DIALOG);
+		}
 	}
 
 	/**
@@ -161,7 +164,7 @@ public final class UtilJSF {
 	 * @param result
 	 */
 	public static void closeDialog(final DialogResult result) {
-		RequestContext.getCurrentInstance().closeDialog(result);
+		PrimeFaces.current().dialog().closeDynamic(result);
 	}
 
 	/**
@@ -173,7 +176,7 @@ public final class UtilJSF {
 	 */
 	public static void showMessageDialog(final TypeNivelGravedad nivel, final String title, final String message) {
 		final Severity severity = getSeverity(nivel);
-		RequestContext.getCurrentInstance().showMessageInDialog(new FacesMessage(severity, title, message));
+		PrimeFaces.current().dialog().showMessageDynamic(new FacesMessage(severity, title, message));
 	}
 
 	/**
@@ -395,7 +398,7 @@ public final class UtilJSF {
 	 * @param pIdComponente identificador del componente
 	 */
 	public static void doUpdateComponent(final String pIdComponente) {
-		RequestContext.getCurrentInstance().update(pIdComponente);
+		PrimeFaces.current().ajax().update(pIdComponente);
 	}
 
 	/**

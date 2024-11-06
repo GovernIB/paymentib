@@ -79,7 +79,9 @@ public class ApiRestController {
 		final EstadoPago estado = service.verificarPagoElectronico(identificador);
 		final REstadoPago res = new REstadoPago();
 		res.setEstado(estado.getEstado().toString());
+		res.setLocalizador(estado.getLocalizador());
 		res.setFechaPago(formateaFecha(estado.getFechaPago()));
+		res.setMetodoPago(estado.getMetodoPago());
 		res.setCodigoErrorPasarela(estado.getCodigoErrorPasarela());
 		res.setMensajeErrorPasarela(estado.getMensajeErrorPasarela());
 		return res;

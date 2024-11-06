@@ -29,7 +29,7 @@ public interface PagoBackService {
 	 */
 	List<DatosSesionPago> listaPagos(final String filtro, final Date fechaDesde, final Date fechaHasta,
 			final TypeFiltroFecha tipoFecha, final String filtroClaveTramitacion, final String filtroTramite, final Integer filtroVersion,
-			final String filtroPasarela, final String filtroEntidad, final String filtroAplicacion, final String filtroLocATIB);
+			final String filtroPasarela, final String filtroEntidad, final String filtroAplicacion, final String filtroLocATIB, final String filtroMetodosPago);
 
 	/**
 	 * Lista pasarelas.
@@ -53,6 +53,13 @@ public interface PagoBackService {
 	List<String> listaAplicaciones();
 
 	/**
+	 * Lista métodos de pago.
+	 *
+	 * @return lista de métodos de pago
+	 */
+	List<String> listaMetodosPago();
+
+	/**
 	 * Recupera datos sesión pago por Codigo.
 	 *
 	 * @param codigo
@@ -60,6 +67,15 @@ public interface PagoBackService {
 	 * @return datos sesión pago
 	 */
 	DatosSesionPago getPagoByCodigo(Long codigo);
+
+	/**
+	 * Recupera datos sesión pago por identificador.
+	 *
+	 * @param identificador
+	 *            identificador
+	 * @return datos sesión pago
+	 */
+	DatosSesionPago getPagoByIdentificador(String identificador);
 
 	/**
 	 * Confirmar pago.
@@ -72,5 +88,6 @@ public interface PagoBackService {
 	 *            usuario confirmacion
 	 */
 	void confirmarPago(final String identificador, final Date fechaPago, final String usuarioConfirmacion);
+
 
 }

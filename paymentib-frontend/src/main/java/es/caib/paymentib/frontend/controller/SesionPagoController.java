@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,7 +98,6 @@ public final class SesionPagoController {
 	/**
 	 * Seleccion entidad de pago.
 	 *
-	 * @param token token
 	 * @return Redirige inicio pago
 	 */
 	@RequestMapping(value = "/" + URL_SELECCION_ENTIDAD_PAGO + ".html")
@@ -130,7 +130,6 @@ public final class SesionPagoController {
 	/**
 	 * Redirige pasarela pago.
 	 *
-	 * @param token token
 	 * @return Redirige inicio pago
 	 */
 	@RequestMapping(value = "/" + URL_REDIRIGIR_PASARELA + ".html")
@@ -159,6 +158,7 @@ public final class SesionPagoController {
 
 		// Recupera datos pago
 		final DatosSesionPago dp = service.recuperarPagoElectronicoByToken(token);
+		sesionHttp.setIdentificador(dp.getDatosPago().getIdentificador());
 		sesionHttp.setIdioma(dp.getDatosPago().getIdioma().toString());
 
 		if (dp.getEstado() != TypeEstadoPago.PAGADO) {
@@ -180,7 +180,6 @@ public final class SesionPagoController {
 	/**
 	 * Confirmacion pago pasarela pagos.
 	 *
-	 * @param token token
 	 * @return Vuelve a aplicación origen
 	 */
 	@RequestMapping(value = "/" + URL_CONFIRMACION_PASARELA + "/{identificador}.html")
@@ -262,8 +261,31 @@ public final class SesionPagoController {
 			log.error("Excepcion en capa front: " + pex.getMessage(), pex);
 		}
 
+		// Intentamos recuperar sesión pago para redirigir a origen
+		ModelAndView viewRedireccion = null;
+		try {
+			final String identificador = sesionHttp.getIdentificador();
+			if (identificador != null) {
+				// Actualiza mensaje error
+				String msgError = "Error no controlado: " + pex.getMessage() + "(" + ExceptionUtils.getRootCauseMessage(pex) + ")";
+				service.establecerMensajeErrorNoControlado(identificador, msgError);
+				// Recupera datos pago
+				final DatosSesionPago dp = service.recuperarPagoElectronico(identificador);
+				// Redirige a origen
+				viewRedireccion = new ModelAndView("redirect:" + dp.getUrlCallbackOrigen());
+			}
+		} catch (final Exception ex) {
+			// No se puede redirigir a origen
+			viewRedireccion = null;
+		}
+
 		// Mostramos pagina generica de error
-		return new ModelAndView("redirect:/error.html?code=" + ErrorCodes.ERROR_GENERAL.toString());
+		if (viewRedireccion == null) {
+			viewRedireccion = new ModelAndView("redirect:/error.html?code=" + ErrorCodes.ERROR_GENERAL.toString());
+		}
+
+		// Redirigimos
+		return viewRedireccion;
 	}
 
 }

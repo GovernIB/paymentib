@@ -114,4 +114,10 @@ public class PagoFrontServiceBean implements PagoFrontService {
 		return service.obtenerPagos(filtro, fechaDesde, fechaHasta, numPag, maxNumElem);
 	}
 
+	@Override
+	@PermitAll
+	public void establecerMensajeErrorNoControlado(String identificador, String mensajeError) {
+		service.establecerMensajeErrorNoControlado(identificador, mensajeError);
+	}
+
 }

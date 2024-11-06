@@ -327,9 +327,7 @@ public class DatosPago {
 	 * @param versionTramite the versionTramite to set
 	 */
 	public void setVersionTramite(final Integer versionTramite) {
-		this.versionTramite = versionTramite;
+        this.versionTramite = versionTramite;
 	}
-
-
 
 }

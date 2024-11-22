@@ -240,11 +240,12 @@
 
 			<!-- Data table -->
 			<p:dataTable  id="dataTable" var="td" value="#{viewPagos.listaDatos}"
-						 rows="13" emptyMessage="#{msg['info.emptyRows']}"
+						 rows="10" emptyMessage="#{msg['info.emptyRows']}"
 						 scrollable="true" scrollHeight="75%"
                          paginator="true" paginatorPosition="bottom"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                         rowsPerPageTemplate="5,10,15,30"
+						  currentPageReportTemplate="#{msg['dataTable.currentPageReportTemplate']}"
+                         rowsPerPageTemplate="5,10,15,30,50,75,100"
 			        	 selectionMode="single" selection="#{viewPagos.datoSeleccionado}" rowKey="#{td.codigo}">
 
 

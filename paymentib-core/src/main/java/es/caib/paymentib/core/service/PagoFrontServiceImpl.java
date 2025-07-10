@@ -163,9 +163,6 @@ public final class PagoFrontServiceImpl implements PagoFrontService {
 		if (dp.getEstado() != TypeEstadoPago.PAGADO) {
 			throw new EstadoSesionPagoException("El pago no está completado");
 		}
-		if (dp.getFechaPago() == null) {
-			throw new EstadoSesionPagoException("El pago está completado pero la fecha de pago no existe");
-		}
 
 		// Crea plugin pago
 		final IPasarelaPagoPlugin plgPago = crearPlugin(dp.getPasarelaId());
@@ -173,7 +170,7 @@ public final class PagoFrontServiceImpl implements PagoFrontService {
 		// Obtiene justificante
 		byte[] justif = null;
 		try {
-			justif = plgPago.obtenerJustificantePagoElectronico(dp.getDatosPago(), dp.getLocalizador(), dp.getFechaPago());
+			justif = plgPago.obtenerJustificantePagoElectronico(dp.getDatosPago(), dp.getLocalizador(), dp.getFechaCreacion());
 
 			// Si la pasarela no provee justificante, proveemos justificante
 			// genérico

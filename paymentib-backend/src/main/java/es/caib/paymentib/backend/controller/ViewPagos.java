@@ -14,6 +14,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
+import es.caib.paymentib.plugins.api.TypeModoValidacion;
 import org.primefaces.event.SelectEvent;
 
 import es.caib.paymentib.backend.model.DialogResult;
@@ -125,13 +126,15 @@ public class ViewPagos extends ViewControllerBase {
 	public boolean getPermiteVerificar() {
 		return ((TypeEstadoPago.DESCONOCIDO.equals(datoSeleccionado.getEstado())
 				|| TypeEstadoPago.NO_PAGADO.equals(datoSeleccionado.getEstado()))
-				&& UtilJSF.isAccesoSuperAdministrador());
+				&& UtilJSF.isAccesoSuperAdministrador()
+				&& pagoBackService.obtenerModoValidacionPasarela(datoSeleccionado.getPasarelaId()) == TypeModoValidacion.VERIFICACION);
 	}
 
 	public boolean getPermiteConfirmar() {
 		return ((TypeEstadoPago.DESCONOCIDO.equals(datoSeleccionado.getEstado())
 				|| TypeEstadoPago.NO_PAGADO.equals(datoSeleccionado.getEstado()))
-				&& UtilJSF.isAccesoSuperAdministrador());
+				&& UtilJSF.isAccesoSuperAdministrador()
+				&& pagoBackService.obtenerModoValidacionPasarela(datoSeleccionado.getPasarelaId()) == TypeModoValidacion.CONFIRMACION_MANUAL);
 	}
 
 	/**
@@ -206,7 +209,7 @@ public class ViewPagos extends ViewControllerBase {
 		// Muestra dialogo
 		final Map<String, String> params = new HashMap<>();
 		params.put(TypeParametroVentana.ID.toString(), String.valueOf(this.datoSeleccionado.getCodigo()));
-		UtilJSF.openDialog(DialogPagosConfirmar.class, TypeModoAcceso.EDICION, params, true, 400, 200);
+		UtilJSF.openDialog(DialogPagosConfirmar.class, TypeModoAcceso.EDICION, params, true, 400, 240);
 	}
 
 	/**

@@ -109,7 +109,7 @@ public class JPagoE implements IModelApi {
 	@Column(name = "PAE_VERTRA", nullable = true, precision = 2, scale = 0)
     private Integer versionTramite;
 
-    @Column(name = "PAE_SELPAG", nullable = true, length = 2)
+    @Column(name = "PAE_SELPAG", nullable = true, length = 3)
     private String metodoPagoSeleccionado;
 
     public JPagoE() {

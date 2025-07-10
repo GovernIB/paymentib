@@ -122,6 +122,16 @@ public interface PagoFrontService {
 	 */
 	boolean permitePagoPresencial(String pasarelaId);
 
+	/**
+	 * Obtiene lista de pagos.
+	 *
+	 * @param filtro       filtro
+	 * @param fechaDesde   fecha desde
+	 * @param fechaHasta   fecha hasta
+	 * @param numPag       número de página
+	 * @param maxNumElem   máximo número de elementos
+	 * @return lista de pagos
+	 */
 	List<DatosSesionPago> obtenerPagos(final FiltroPago filtro, final Date fechaDesde, final Date fechaHasta,
 			final Long numPag, final Long maxNumElem);
 

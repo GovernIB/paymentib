@@ -12,6 +12,24 @@
 
 <h:head>
 	<title><h:outputText value="#{msg['dialogPagosConfirmar.titulo']}"/></title>
+	<style>
+		.ui-datepicker-touch-ui {
+			min-width: 60vw !important;
+			transform: translate(-50%, -50%) scale(0.9) !important;
+		}
+
+		.ui-datepicker-touch-ui.ui-datepicker th {
+			padding: .7em .3em !important;
+		}
+
+		.ui-datepicker-touch-ui.ui-datepicker td span, .ui-datepicker-touch-ui.ui-datepicker td a {
+			padding: .2em !important;
+		}
+
+		.panel {
+			top: 33% !important;
+		}
+	</style>
 </h:head>
 <h:body>
   	<f:facet name="last">

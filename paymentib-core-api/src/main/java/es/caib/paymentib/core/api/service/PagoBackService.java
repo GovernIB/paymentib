@@ -5,6 +5,7 @@ import java.util.List;
 
 import es.caib.paymentib.core.api.model.pago.DatosSesionPago;
 import es.caib.paymentib.core.api.model.types.TypeFiltroFecha;
+import es.caib.paymentib.plugins.api.TypeModoValidacion;
 
 /**
  * Acceso a funciones invocadas desde el back de pagos.
@@ -89,5 +90,12 @@ public interface PagoBackService {
 	 */
 	void confirmarPago(final String identificador, final Date fechaPago, final String usuarioConfirmacion);
 
+
+	/**
+	 * Obtiene el modo de validación de una pasarela.
+	 * @param pasarelaId id de la pasarela
+	 * @return Modo de validación de la pasarela
+	 */
+	TypeModoValidacion obtenerModoValidacionPasarela(String pasarelaId);
 
 }

@@ -117,12 +117,12 @@ public class PagoDaoImpl implements PagoDao {
 	}
 
 	@Override
-	public void iniciar(final String identificador, final String localizador, final String token, final String metodoPago) {
+	public void iniciar(final String identificador, final String localizador, final String token, final String entidadPagoId) {
 		final JPagoE jp = getJPagoByIdentificador(identificador);
 		jp.setEstado(TypeEstadoPago.DESCONOCIDO.toString());
 		jp.setLocalizador(localizador);
 		jp.setToken(token);
-		jp.setMetodoPagoSeleccionado(metodoPago);
+		jp.setMetodoPagoSeleccionado(entidadPagoId);
 		entityManager.persist(jp);
 	}
 

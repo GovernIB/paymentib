@@ -163,6 +163,9 @@ public final class PagoFrontServiceImpl implements PagoFrontService {
 		if (dp.getEstado() != TypeEstadoPago.PAGADO) {
 			throw new EstadoSesionPagoException("El pago no está completado");
 		}
+		if (dp.getFechaPago() == null) {
+			throw new EstadoSesionPagoException("El pago está completado pero la fecha de pago no existe");
+		}
 
 		// Crea plugin pago
 		final IPasarelaPagoPlugin plgPago = crearPlugin(dp.getPasarelaId());
@@ -170,7 +173,7 @@ public final class PagoFrontServiceImpl implements PagoFrontService {
 		// Obtiene justificante
 		byte[] justif = null;
 		try {
-			justif = plgPago.obtenerJustificantePagoElectronico(dp.getDatosPago(), dp.getLocalizador(), dp.getFechaCreacion());
+			justif = plgPago.obtenerJustificantePagoElectronico(dp.getDatosPago(), dp.getLocalizador(), dp.getFechaPago());
 
 			// Si la pasarela no provee justificante, proveemos justificante
 			// genérico
@@ -268,10 +271,10 @@ public final class PagoFrontServiceImpl implements PagoFrontService {
 				// Verifica estado pago según si es retorno o una verificación normal
 				EstadoPago ep = null;
 				if (retornoPago) {
-					ep = plgPago.verificarRetornoPagoElectronico(dp.getDatosPago(), dp.getLocalizador(),
+					ep = plgPago.verificarRetornoPagoElectronico(dp.getDatosPago(), dp.getLocalizador(), dp.getMetodoPagoSeleccionado(),
 							parametrosRetorno);
 				} else {
-					ep = plgPago.verificarPagoElectronico(dp.getDatosPago(), dp.getLocalizador());
+					ep = plgPago.verificarPagoElectronico(dp.getDatosPago(), dp.getLocalizador(), dp.getMetodoPagoSeleccionado());
 				}
 				// Actualizamos estado
 				dao.actualizarEstado(identificador, ep);

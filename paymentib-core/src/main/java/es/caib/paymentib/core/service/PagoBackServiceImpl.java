@@ -3,6 +3,8 @@ package es.caib.paymentib.core.service;
 import java.util.Date;
 import java.util.List;
 
+import es.caib.paymentib.plugins.api.IPasarelaPagoPlugin;
+import es.caib.paymentib.plugins.api.TypeModoValidacion;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -83,6 +85,15 @@ public final class PagoBackServiceImpl implements PagoBackService {
 	@NegocioInterceptor
 	public void confirmarPago(final String identificador, final Date fechaPago, final String usuarioConfirmacion) {
 		pagoDao.confirmarPago(identificador, fechaPago, usuarioConfirmacion);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public TypeModoValidacion obtenerModoValidacionPasarela(final String pasarelaId) {
+		// Crea plugin pago
+		final IPasarelaPagoPlugin plgPago = config.obtenerPluginPasarelaPago(pasarelaId);
+		// Consulta modo validación
+		return plgPago.obtenerModoValidacion();
 	}
 
 }

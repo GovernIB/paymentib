@@ -77,9 +77,9 @@ public interface PagoDao {
 	 * @param identificador identificador pago
 	 * @param localizador   localizador pago
 	 * @param token         token acceso para retorno pasarela
-	 * @param metodoPago    metodo de pago seleccionado
+	 * @param entidadPagoId    entidad de pago seleccionada (método pago)
 	 */
-	void iniciar(String identificador, String localizador, String token, String metodoPago);
+	void iniciar(String identificador, String localizador, String token, String entidadPagoId);
 
 	/**
 	 * Recupera datos sesión pago por token.

@@ -9,19 +9,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import es.caib.paymentib.plugins.api.*;
 import org.apache.commons.lang3.StringUtils;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.caib.paymentib.plugins.api.DatosPago;
-import es.caib.paymentib.plugins.api.EntidadPago;
-import es.caib.paymentib.plugins.api.EstadoPago;
-import es.caib.paymentib.plugins.api.IPasarelaPagoPlugin;
-import es.caib.paymentib.plugins.api.PasarelaPagoException;
-import es.caib.paymentib.plugins.api.TypeEstadoPago;
-import es.caib.paymentib.plugins.api.TypeIdioma;
-import es.caib.paymentib.plugins.api.UrlRedireccionPasarelaPago;
 import es.caib.paymentib.plugins.atib.clientws.ClienteAtib;
 import es.caib.paymentib.plugins.atib.clientws.cxf.ArrayOfGuid;
 import es.caib.paymentib.plugins.atib.clientws.cxf.DatosRespuesta046;
@@ -135,13 +128,13 @@ public class AtibPlugin extends AbstractPluginProperties implements IPasarelaPag
 	}
 
 	@Override
-	public EstadoPago verificarRetornoPagoElectronico(final DatosPago datosPago, final String localizador,
+	public EstadoPago verificarRetornoPagoElectronico(final DatosPago datosPago, final String localizador, final String entidadPagoId,
 			final Map<String, String[]> parametrosRetorno) throws PasarelaPagoException {
 		return verificarPagoImpl(localizador);
 	}
 
 	@Override
-	public EstadoPago verificarPagoElectronico(final DatosPago datosPago, final String localizador)
+	public EstadoPago verificarPagoElectronico(final DatosPago datosPago, final String localizador, final String entidadPagoId)
 			throws PasarelaPagoException {
 		return verificarPagoImpl(localizador);
 	}
@@ -225,6 +218,11 @@ public class AtibPlugin extends AbstractPluginProperties implements IPasarelaPag
 		} catch (final Exception ex) {
 			throw new PasarelaPagoException("Excepcion invocando pasarela: " + ex.getMessage(), ex);
 		}
+	}
+
+	@Override
+	public TypeModoValidacion obtenerModoValidacion() {
+		return TypeModoValidacion.VERIFICACION;
 	}
 
 	/**

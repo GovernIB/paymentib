@@ -6,17 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import es.caib.paymentib.plugins.api.*;
 import org.apache.commons.lang3.StringUtils;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
-
-import es.caib.paymentib.plugins.api.DatosPago;
-import es.caib.paymentib.plugins.api.EntidadPago;
-import es.caib.paymentib.plugins.api.EstadoPago;
-import es.caib.paymentib.plugins.api.IPasarelaPagoPlugin;
-import es.caib.paymentib.plugins.api.PasarelaPagoException;
-import es.caib.paymentib.plugins.api.TypeEstadoPago;
-import es.caib.paymentib.plugins.api.TypeIdioma;
-import es.caib.paymentib.plugins.api.UrlRedireccionPasarelaPago;
 
 /**
  * TPV plugin.
@@ -68,7 +60,7 @@ public class TpvPlugin extends AbstractPluginProperties implements IPasarelaPago
 	}
 
 	@Override
-	public EstadoPago verificarRetornoPagoElectronico(final DatosPago datosPago, final String localizador,
+	public EstadoPago verificarRetornoPagoElectronico(final DatosPago datosPago, final String localizador, final String entidadPagoId,
 			final Map<String, String[]> parametrosRetorno) throws PasarelaPagoException {
 
 		// Obtiene datos organismo TPV
@@ -92,7 +84,7 @@ public class TpvPlugin extends AbstractPluginProperties implements IPasarelaPago
 	}
 
 	@Override
-	public EstadoPago verificarPagoElectronico(final DatosPago datosPago, final String localizador)
+	public EstadoPago verificarPagoElectronico(final DatosPago datosPago, final String localizador, final String entidadPagoId)
 			throws PasarelaPagoException {
 		// TPV no permite consultar estado pago por localizador
 		final EstadoPago res = new EstadoPago();
@@ -122,6 +114,11 @@ public class TpvPlugin extends AbstractPluginProperties implements IPasarelaPago
 	@Override
 	public byte[] obtenerCartaPagoPresencial(final DatosPago datosPago) throws PasarelaPagoException {
 		throw new PasarelaPagoException("Plugin no soporta funcionalidad de pago presencial");
+	}
+
+	@Override
+	public TypeModoValidacion obtenerModoValidacion() {
+		return TypeModoValidacion.CONFIRMACION_MANUAL;
 	}
 
 	/**

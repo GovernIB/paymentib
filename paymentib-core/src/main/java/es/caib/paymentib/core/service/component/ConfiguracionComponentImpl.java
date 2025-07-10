@@ -65,6 +65,11 @@ public class ConfiguracionComponentImpl implements ConfiguracionComponent {
 
     private IPasarelaPagoPlugin createPlugin(String idPasarelaPago) {
 
+        // No dejamos usar pasarela MOCK en PRODUCCION
+        if ("MOCK".equals(idPasarelaPago) && "PRO".equalsIgnoreCase(readPropiedad("entorno"))) {
+            throw new PluginErrorException("No se permite el uso de la pasarela MOCK en PRODUCCION.");
+        }
+
         String classname = null;
         try {
 

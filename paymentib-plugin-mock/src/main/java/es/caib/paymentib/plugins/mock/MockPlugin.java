@@ -1,18 +1,13 @@
 package es.caib.paymentib.plugins.mock;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.*;
 
-import es.caib.paymentib.plugins.api.DatosPago;
-import es.caib.paymentib.plugins.api.EntidadPago;
-import es.caib.paymentib.plugins.api.EstadoPago;
-import es.caib.paymentib.plugins.api.IPasarelaPagoPlugin;
-import es.caib.paymentib.plugins.api.PasarelaPagoException;
-import es.caib.paymentib.plugins.api.TypeEstadoPago;
-import es.caib.paymentib.plugins.api.TypeIdioma;
-import es.caib.paymentib.plugins.api.UrlRedireccionPasarelaPago;
+import es.caib.paymentib.plugins.api.*;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Mock plugin.
@@ -22,6 +17,9 @@ import es.caib.paymentib.plugins.api.UrlRedireccionPasarelaPago;
  */
 public class MockPlugin implements IPasarelaPagoPlugin {
 
+	/** Log. */
+	private final Logger log = LoggerFactory.getLogger(MockPlugin.class);
+
 	@Override
 	public String getPasarelaId() {
 		return "MOCK";
@@ -30,50 +28,55 @@ public class MockPlugin implements IPasarelaPagoPlugin {
 	@Override
 	public List<EntidadPago> obtenerEntidadesPagoElectronico(final TypeIdioma idioma, final String metodosPago) throws PasarelaPagoException {
 		final List<EntidadPago> res = new ArrayList<>();
-		EntidadPago ep = null;
-		for (int i = 1; i <= 3; i++) {
-			ep = new EntidadPago();
-			ep.setCodigo("EP" + i);
-			ep.setDescripcion("Entidad pago " + i);
-			ep.setLogo("/paymentibfront/imgs/entidad" + i + ".png");
-			res.add(ep);
-		}
+		EntidadPago ep;
+		// Pagado
+		ep = new EntidadPago();
+		ep.setCodigo("MKP");
+		ep.setDescripcion("MOCK - Pagado");
+		ep.setLogo("/paymentibfront/imgs/mock.png");
+		res.add(ep);
+		// No pagado
+		ep = new EntidadPago();
+		ep.setCodigo("MKN");
+		ep.setDescripcion("MOCK - No pagado");
+		ep.setLogo("/paymentibfront/imgs/mock.png");
+		res.add(ep);
+		// Desconocido
+		ep = new EntidadPago();
+		ep.setCodigo("MKX");
+		ep.setDescripcion("MOCK - Desconocido");
+		ep.setLogo("/paymentibfront/imgs/mock.png");
+		res.add(ep);
+
 		return res;
 	}
 
 	@Override
 	public UrlRedireccionPasarelaPago iniciarPagoElectronico(final DatosPago datosPago, final String entidadPagoId,
 			final String urlCallback) throws PasarelaPagoException {
+		// Retornamos directamente al retorno del pago
 		final UrlRedireccionPasarelaPago res = new UrlRedireccionPasarelaPago();
 		res.setLocalizador("LOC-" + System.currentTimeMillis());
-
-		// Retornamos directamente al retorno del pago
 		res.setUrl(urlCallback);
 		return res;
 	}
 
 	@Override
-	public EstadoPago verificarRetornoPagoElectronico(final DatosPago datosPago, final String localizador,
+	public EstadoPago verificarRetornoPagoElectronico(final DatosPago datosPago, final String localizador, final String entidadPagoId,
 			final Map<String, String[]> parametrosRetorno) throws PasarelaPagoException {
-		final EstadoPago res = new EstadoPago();
-		res.setEstado(TypeEstadoPago.PAGADO);
-		res.setFechaPago(new Date());
-		return res;
+		return getEstadoPagoMock(datosPago, entidadPagoId);
 	}
 
 	@Override
-	public EstadoPago verificarPagoElectronico(final DatosPago datosPago, final String localizador)
+	public EstadoPago verificarPagoElectronico(final DatosPago datosPago, final String localizador, final String entidadPagoId)
 			throws PasarelaPagoException {
-		final EstadoPago res = new EstadoPago();
-		res.setEstado(TypeEstadoPago.PAGADO);
-		res.setFechaPago(new Date());
-		return res;
+		return getEstadoPagoMock(datosPago, entidadPagoId);
 	}
 
 	@Override
 	public byte[] obtenerJustificantePagoElectronico(final DatosPago datosPago, final String localizador, final Date fechaCreacion)
 			throws PasarelaPagoException {
-		return null;
+		return getMockPdf();
 	}
 
 	@Override
@@ -88,7 +91,52 @@ public class MockPlugin implements IPasarelaPagoPlugin {
 
 	@Override
 	public byte[] obtenerCartaPagoPresencial(final DatosPago datosPago) throws PasarelaPagoException {
-		return "CARTAPAGO".getBytes();
+		return getMockPdf();
+	}
+
+	@Override
+	public TypeModoValidacion obtenerModoValidacion() {
+		return TypeModoValidacion.CONFIRMACION_MANUAL;
+	}
+
+	/**
+	 * Obtiene pago-mock.pdf
+	 * @return El contenido del PDF pago-mock.pdf
+	 * @throws PasarelaPagoException
+	 */
+	private byte[] getMockPdf() throws PasarelaPagoException {
+		// Obtiene pago-mock.pdf
+		try {
+			return IOUtils.toByteArray(getClass().getResourceAsStream("/pago-mock.pdf"));
+		} catch (Exception e) {
+			throw new PasarelaPagoException("Error al obtener pago-mock.pdf", e);
+		}
+	}
+
+	/**
+	 * Obtiene el estado del pago simulado segun entidad seleccionada.
+	 * @param datosPago
+	 * @return
+	 * @throws PasarelaPagoException
+	 */
+	private EstadoPago getEstadoPagoMock(DatosPago datosPago, String entidadPagoId) throws PasarelaPagoException {
+		final EstadoPago res = new EstadoPago();
+		switch (entidadPagoId) {
+			case "MKN":
+				res.setEstado(TypeEstadoPago.NO_PAGADO);
+				break;
+			case "MKP":
+				res.setEstado(TypeEstadoPago.PAGADO);
+				res.setFechaPago(new Date());
+				break;
+			case "MKX":
+				res.setEstado(TypeEstadoPago.DESCONOCIDO);
+				break;
+			default:
+				throw new PasarelaPagoException("Entidad de pago no reconocida: " + datosPago.getEntidadId());
+		}
+		log.info("ESTADO PAGO MOCK: " + datosPago.getEntidadId() + " -> " + res.getEstado() );
+		return res;
 	}
 
 }

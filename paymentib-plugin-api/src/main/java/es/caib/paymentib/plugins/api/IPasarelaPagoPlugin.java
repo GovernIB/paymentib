@@ -54,11 +54,13 @@ public interface IPasarelaPagoPlugin extends IPlugin {
 	 *            Datos pago
 	 * @param localizador
 	 *            Localizador pago en la pasarela
+	 * @param entidadPagoId
+	 * 				Entidad de pago seleccionada (método pago)
 	 * @param parametrosRetorno
 	 *            Parámetros retorno devueltos por la pasarela de pagos.
 	 * @return estado pago
 	 */
-	EstadoPago verificarRetornoPagoElectronico(DatosPago datosPago, String localizador,
+	EstadoPago verificarRetornoPagoElectronico(DatosPago datosPago, String localizador, String entidadPagoId,
 			Map<String, String[]> parametrosRetorno) throws PasarelaPagoException;
 
 	/**
@@ -68,9 +70,11 @@ public interface IPasarelaPagoPlugin extends IPlugin {
 	 *            Datos pago
 	 * @param localizador
 	 *            Localizador pago en la pasarela
+	 * @param entidadPagoId
+	 * 		  Entidad de pago seleccionada (método pago)
 	 * @return estado pago
 	 */
-	EstadoPago verificarPagoElectronico(DatosPago datosPago, String localizador) throws PasarelaPagoException;
+	EstadoPago verificarPagoElectronico(DatosPago datosPago, String localizador, String entidadPagoId) throws PasarelaPagoException;
 
 	/**
 	 * Obtiene justificante de pago
@@ -108,5 +112,12 @@ public interface IPasarelaPagoPlugin extends IPlugin {
 	 * @return carta de pago presencial
 	 */
 	byte[] obtenerCartaPagoPresencial(DatosPago datosPago) throws PasarelaPagoException;
+
+	/**
+	 * Obtiene el modo de validación de la pasarela.
+	 *
+	 * @return Modo validación
+	 */
+	TypeModoValidacion obtenerModoValidacion();
 
 }

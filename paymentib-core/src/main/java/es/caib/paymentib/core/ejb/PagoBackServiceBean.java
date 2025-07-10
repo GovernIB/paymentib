@@ -10,6 +10,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
 
+import es.caib.paymentib.plugins.api.TypeModoValidacion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
@@ -75,6 +76,12 @@ public class PagoBackServiceBean implements PagoBackService {
 	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN })
 	public void confirmarPago(final String identificador, final Date fechaPago, final String usuarioConfirmacion) {
 		service.confirmarPago(identificador, fechaPago, usuarioConfirmacion);
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.CONSULTA })
+	public TypeModoValidacion obtenerModoValidacionPasarela(String pasarelaId) {
+		return service.obtenerModoValidacionPasarela(pasarelaId);
 	}
 
 

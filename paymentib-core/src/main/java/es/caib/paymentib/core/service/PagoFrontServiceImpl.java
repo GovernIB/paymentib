@@ -114,6 +114,8 @@ public final class PagoFrontServiceImpl implements PagoFrontService {
 		// Almacena pago en persistencia cambiando estado
 		dao.iniciar(dp.getDatosPago().getIdentificador(), url.getLocalizador(), token, entidadPagoId);
 
+		log.debug("Redirigiendo a pasarela para pago con identificador: " + identificador + " y localizador: " + url.getLocalizador());
+
 		return url;
 
 	}

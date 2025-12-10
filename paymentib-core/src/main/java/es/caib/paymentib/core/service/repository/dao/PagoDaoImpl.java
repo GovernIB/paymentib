@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import es.caib.paymentib.core.api.exception.InicioPagoException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,12 +119,21 @@ public class PagoDaoImpl implements PagoDao {
 
 	@Override
 	public void iniciar(final String identificador, final String localizador, final String token, final String entidadPagoId) {
-		final JPagoE jp = getJPagoByIdentificador(identificador);
-		jp.setEstado(TypeEstadoPago.DESCONOCIDO.toString());
-		jp.setLocalizador(localizador);
-		jp.setToken(token);
-		jp.setMetodoPagoSeleccionado(entidadPagoId);
-		entityManager.persist(jp);
+		// Realizamos update protegiendo que nos haya establecido el localizador antes
+		String jql = "UPDATE JPagoE p SET p.estado = :estado, p.localizador = :localizador, " +
+				"p.token = :token, p.metodoPagoSeleccionado = :metodoPagoSeleccionado " +
+				"WHERE p.identificador = :identificador and p.localizador is null";
+		Query query = entityManager.createQuery(jql);
+		query.setParameter("estado", TypeEstadoPago.DESCONOCIDO.toString());
+		query.setParameter("localizador", localizador);
+		query.setParameter("token", token);
+		query.setParameter("metodoPagoSeleccionado", entidadPagoId);
+		query.setParameter("identificador", identificador);
+		int updateCount = query.executeUpdate();
+		if (updateCount == 0) {
+			// No se ha realizado el update, localizador ya estaba establecido
+			throw new InicioPagoException("No se ha podido actualizar pago " + identificador + " con localizador " + localizador + ": no existe pago o el pago ya tiene localizador asignado");
+		}
 	}
 
 	@Override

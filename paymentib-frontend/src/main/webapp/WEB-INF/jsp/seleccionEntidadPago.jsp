@@ -18,6 +18,18 @@
 	<link rel="icon" href="imgs/favicon/favicon.png" />
 
 	<link rel="stylesheet" media="screen" href="estilos/imc-loginib.css" />
+
+	<script type="application/javascript">
+		var redirigido = false;
+		function redirigirPagoPasarela(entidadPagoId){
+			if (!redirigido) {
+				redirigido = true;
+				window.location.href = "redirigirPagoPasarela.html?entidadPagoId=" + entidadPagoId;
+			}
+		}
+	</script>
+
+
 </head>
 
 <body>
@@ -31,7 +43,7 @@
 					<p style="margin-bottom: 20px;"><spring:message code="seleccionEntidadPago.titulo" /></p>
 					<ul>
 					<c:forEach items="${datos.entidadesPago}" var="e">
-				        <li><span><a href="redirigirPagoPasarela.html?entidadPagoId=${e.codigo}" style="background:transparent url('${e.logo}') no-repeat 50% 2em / 4em auto;">${e.descripcion}</a></span></li>
+				        <li><span><a href="javascript:redirigirPagoPasarela('${e.codigo}');" style="background:transparent url('${e.logo}') no-repeat 50% 2em / 4em auto;">${e.descripcion}</a></span></li>
 				    </c:forEach>
 					</ul>
 			</div>

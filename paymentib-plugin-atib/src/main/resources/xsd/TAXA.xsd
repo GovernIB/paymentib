@@ -4,6 +4,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="LOCALIZADOR"  type="xs:string"/>
+        <xs:element minOccurs="0" name="IDTRAMITACION"  type="xs:string"/>
         <xs:element name="MODELO" type="xs:string"/>
         <xs:element name="IDTAXA" type="CAMPO_CON_CODIGO"/>
         <xs:choice>

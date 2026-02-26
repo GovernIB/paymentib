@@ -112,6 +112,9 @@ public class JPagoE implements IModelApi {
     @Column(name = "PAE_SELPAG", nullable = true, length = 3)
     private String metodoPagoSeleccionado;
 
+    @Column(name = "PAE_REDPAS")
+    private boolean iniciadaRedireccionPasarelaPagos;
+
     public JPagoE() {
         super();
     }
@@ -306,6 +309,14 @@ public class JPagoE implements IModelApi {
 
     public void setMetodoPagoSeleccionado(String metodoPagoSeleccionado) {
         this.metodoPagoSeleccionado = metodoPagoSeleccionado;
+    }
+
+    public boolean isIniciadaRedireccionPasarelaPagos() {
+        return iniciadaRedireccionPasarelaPagos;
+    }
+
+    public void setIniciadaRedireccionPasarelaPagos(boolean iniciadaRedireccionPasarelaPagos) {
+        this.iniciadaRedireccionPasarelaPagos = iniciadaRedireccionPasarelaPagos;
     }
 
     /**

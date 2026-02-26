@@ -11,11 +11,9 @@ import es.caib.paymentib.core.api.model.pago.DatosSesionPago;
 import es.caib.paymentib.core.api.model.types.TypeModoAcceso;
 import es.caib.paymentib.core.api.model.types.TypeNivelGravedad;
 import es.caib.paymentib.core.api.service.PagoBackService;
-import es.caib.paymentib.core.api.exception.CargaConfiguracionException;
+import es.caib.paymentib.plugins.api.EntidadPago;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
+import java.util.List;
 
 @ManagedBean
 @ViewScoped
@@ -26,9 +24,6 @@ public class DialogPagos extends DialogControllerBase {
 	 */
 	@Inject
 	private PagoBackService pagoBackService;
-
-	/** Propiedades configuración especificadas en properties. */
-	private Properties propiedadesLocales = recuperarConfiguracionProperties();
 
 	/**
 	 * Id elemento a tratar.
@@ -114,31 +109,18 @@ public class DialogPagos extends DialogControllerBase {
 		UtilJSF.openHelp("pagosDialog");
 	}
 
-	private Properties recuperarConfiguracionProperties() {
-		final String pathProperties = System.getProperty("es.caib.paymentib.properties.path");
-		try (FileInputStream fis = new FileInputStream(pathProperties);) {
-			final Properties props = new Properties();
-			props.load(fis);
-			return props;
-		} catch (final IOException e) {
-			throw new CargaConfiguracionException(
-					"Error al cargar la configuracion del properties '" + pathProperties + "' : " + e.getMessage(), e);
-		}
-	}
 
 	/**
 	 * Método que se encarga de mostrar el metodo de pago
 	 * @param metodoPago Código del método de pago
 	 * @return Método de pago
 	 */
+	// TODO PAGOS --- NO SE PUEDE METER IDS DE PASARELAS FIJAS POR CODIGO, PQ NOS CARGAMOS LA GENERALIZACION (DEBEN IR A TRAVES DEL PLUGIN CORRESPONDIENTE)
+	// TODO PAGOS --- DEBERIA PARAMETRIZARSE POR PASARELAID + METODOPAGO
 	public String mostrarMetodoPago(String metodoPago) {
-		if (metodoPago == null || metodoPago.isEmpty()) {
-			return UtilJSF.getLiteral("typeMetodoPagoSeleccionado.noInformado");
-		}
-
-		String entidadesPago = propiedadesLocales.getProperty("pasarela.ATIB.entidadesPago");
-
-		return entidadesPago.contains(metodoPago) ? propiedadesLocales.getProperty("pasarela.ATIB.entidadPago." + metodoPago + "." + UtilJSF.getIdioma()) : metodoPago;
+		// TODO PAGOS -- PASAR A PARAMETRO
+		String pasarelaId = "ATIB";
+		return  UtilJSF.obtenerDescripcionMetodoPago(pagoBackService, pasarelaId, metodoPago);
 	}
 
 	private String getTokenFromRequest() {

@@ -16,18 +16,8 @@ public final class JustificantePagoException extends ServiceRollbackException {
      * @param cause
      *            Causa
      */
-    public JustificantePagoException(final Throwable cause) {
-        super("Error obtener justificante pago: " + cause.getMessage(), cause);
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param mensaje
-     *            mensaje
-     */
-    public JustificantePagoException(final String mensaje) {
-        super("Error obtener justificante pago: " + mensaje);
+    public JustificantePagoException(final String idSesionPago, final Throwable cause) {
+        super(idSesionPago + " - Error obtener justificante pago: " + cause.getMessage(), cause);
     }
 
 }

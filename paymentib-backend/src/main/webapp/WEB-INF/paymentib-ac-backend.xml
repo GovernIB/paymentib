@@ -16,8 +16,13 @@
 
 	<task:annotation-driven/>
 
-	<context:property-placeholder
-		location="file:#{systemProperties['es.caib.paymentib.properties.path']}" />
+	<!-- CAMBIAMOS A UTF8
+	<context:property-placeholder location="file:#{systemProperties['es.caib.paymentib.properties.path']}" />
+	-->
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="file:#{systemProperties['es.caib.paymentib.properties.path']}" />
+		<property name="fileEncoding" value="UTF-8" />
+	</bean>
 
 	<bean id="negocioModuleConfig" class="es.caib.paymentib.backend.model.comun.ModuleConfig">
 		<property name="entorno" value="${entorno}" />

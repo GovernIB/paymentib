@@ -29,10 +29,10 @@ public class GeneradorJustificantePago {
 	/**
 	 * Genera justificante estandard de pago (PDF).
 	 *
-	 * @param datosPago
-	 *            Datos pago
+	 * @param idSesionPago
+	 * @param datosPago    Datos pago
 	 */
-	public static byte[] generarJustificantePago(final String dirConf, final DatosSesionPago datosPago) {
+	public static byte[] generarJustificantePago(String idSesionPago, final String dirConf, final DatosSesionPago datosPago) {
 
 		// Verificamos si existe plantilla para entidad
 		final String pathFichero = datosPago.getEntidadId() + "_" + "JUSTIFICANTE_GENERICO_"
@@ -87,7 +87,7 @@ public class GeneradorJustificantePago {
 			final byte[] retorno = pdf.guardarEnMemoria(true);
 			return retorno;
 		} catch (final Exception exception) {
-			throw new JustificantePagoException(exception);
+			throw new JustificantePagoException(idSesionPago, exception);
 		}
 	}
 

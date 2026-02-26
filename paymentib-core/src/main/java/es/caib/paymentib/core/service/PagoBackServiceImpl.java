@@ -1,10 +1,18 @@
 package es.caib.paymentib.core.service;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
+import es.caib.paymentib.plugins.api.EntidadPago;
 import es.caib.paymentib.plugins.api.IPasarelaPagoPlugin;
+import es.caib.paymentib.plugins.api.TypeIdioma;
+import es.caib.paymentib.plugins.api.TypeEstadoPago;
 import es.caib.paymentib.plugins.api.TypeModoValidacion;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,10 +32,10 @@ import es.caib.paymentib.core.service.repository.dao.PagoDao;
  */
 @Service
 @Transactional
-public final class PagoBackServiceImpl implements PagoBackService {
+public class PagoBackServiceImpl implements PagoBackService {
 
 	/** Log. */
-	private final org.slf4j.Logger LOG = LoggerFactory.getLogger(PagoBackServiceImpl.class);
+	private final Logger LOG = LoggerFactory.getLogger(PagoBackServiceImpl.class);
 
 	/** Configuracion. */
 	@Autowired
@@ -39,10 +47,24 @@ public final class PagoBackServiceImpl implements PagoBackService {
 
 	@Override
 	@NegocioInterceptor
+	public String obtenerLogoBack() {
+		return config.obtenerPropiedadConfiguracion("back.logo");
+	}
+
+	@Override
+	@NegocioInterceptor
+	public List<EntidadPago> obtenerEntidadesPagoPasarela(String idPasarelaPago, TypeIdioma idioma) {
+		return config.obtenerEntidadesPagoPasarela(idPasarelaPago, idioma);
+	}
+
+	@Override
+	@NegocioInterceptor
 	public List<DatosSesionPago> listaPagos(final String filtro, final Date fechaDesde, final Date fechaHasta,
 			final TypeFiltroFecha tipoFecha, final String filtroClaveTramitacion, final String filtroTramite, final Integer filtroVersion,
-			final String filtroPasarela, final String filtroEntidad, final String filtroAplicacion, final String filtroLocATIB, final String filtroMetodosPago) {
-		return pagoDao.getAllByFiltro(filtro, fechaDesde, fechaHasta, tipoFecha, filtroClaveTramitacion, filtroTramite, filtroVersion, filtroPasarela, filtroEntidad, filtroAplicacion, filtroLocATIB, filtroMetodosPago);
+			final String filtroPasarela, final String filtroEntidad, final String filtroAplicacion, final String filtroLocATIB, final String filtroMetodosPago,
+			final String filtroIdentificador, final TypeEstadoPago filtroEstado, final Double filtroImporte,
+			final String filtroNIF, final String filtroNombre) {
+		return pagoDao.getAllByFiltro(filtro, fechaDesde, fechaHasta, tipoFecha, filtroClaveTramitacion, filtroTramite, filtroVersion, filtroPasarela, filtroEntidad, filtroAplicacion, filtroLocATIB, filtroMetodosPago, filtroIdentificador, filtroEstado, filtroImporte, filtroNIF, filtroNombre);
 	}
 
 	@Override
@@ -95,5 +117,18 @@ public final class PagoBackServiceImpl implements PagoBackService {
 		// Consulta modo validación
 		return plgPago.obtenerModoValidacion();
 	}
+
+	@Override
+	@NegocioInterceptor
+	public String obtenerDirectorioAyudaExterna() {
+		return StringUtils.defaultString(config.obtenerPropiedadConfiguracion("ayuda.paymentib.path"), null);
+	}
+
+	@Override
+	@NegocioInterceptor
+	public String obtenerFiltroInicial(){
+		return config.obtenerPropiedadConfiguracion("filtroInicial");
+	}
+
 
 }

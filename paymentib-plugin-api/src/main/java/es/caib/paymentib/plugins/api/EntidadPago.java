@@ -14,6 +14,11 @@ public class EntidadPago {
 	private String codigo;
 
 	/**
+	 * Título entidad.
+	 */
+	private String titulo;
+
+	/**
 	 * Descripción entidad.
 	 */
 	private String descripcion;
@@ -40,6 +45,25 @@ public class EntidadPago {
 	 */
 	public void setCodigo(final String codigo) {
 		this.codigo = codigo;
+	}
+
+	/**
+	 * Método de acceso a titulo.
+	 *
+	 * @return titulo
+	 */
+	public String getTitulo() {
+		return titulo;
+	}
+
+	/**
+	 * Método para establecer titulo.
+	 *
+	 * @param titulo
+	 *            titulo a establecer
+	 */
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
 	}
 
 	/**

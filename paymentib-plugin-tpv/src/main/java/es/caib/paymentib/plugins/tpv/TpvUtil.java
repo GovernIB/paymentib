@@ -133,7 +133,6 @@ public class TpvUtil {
 				res.setFecha(new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(fecha));
 
 				// TODO TPV NECESARIO AUDITAR MAS DATOS?
-				// api.getParameter("Ds_AuthorisationCode")
 
 			}
 

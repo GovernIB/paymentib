@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.ejb.EJBException;
 import javax.faces.bean.ManagedBean;
@@ -52,9 +51,6 @@ public class ViewPagos extends ViewControllerBase {
 	@Inject
 	private PagoFrontService pagoFrontService;
 
-	/** Propiedades configuración especificadas en properties. */
-	private Properties propiedadesLocales = recuperarConfiguracionProperties();
-
 	/**
 	 * Filtro (puede venir por parametro).
 	 */
@@ -70,6 +66,11 @@ public class ViewPagos extends ViewControllerBase {
 	private String filtroAplicacion;
 	private String filtroLocATIB;
 	private String filtroMetodosPago;
+	private String filtroIdentificador;
+    private TypeEstadoPago filtroEstado;
+    private Double filtroImporte;
+    private String filtroNIF;
+    private String filtroNombre;
 
 	/**
 	 * Lista de datos.
@@ -98,8 +99,8 @@ public class ViewPagos extends ViewControllerBase {
 		UtilJSF.verificarAcceso();
 		// Titulo pantalla
 		setLiteralTituloPantalla(UtilJSF.getTitleViewNameFromClass(this.getClass()));
-
-		String propiedad = propiedadesLocales.getProperty("filtroInicial");
+		// Filtro fecha desde por defecto
+		String propiedad = pagoBackService.obtenerFiltroInicial();
 
 		try {
 			int num = Integer.parseInt(propiedad);
@@ -116,6 +117,11 @@ public class ViewPagos extends ViewControllerBase {
 		listaPasarelas = pagoBackService.listaPasarelas();
 		listaEntidades = pagoBackService.listaEntidades();
 		listaAplicaciones = pagoBackService.listaAplicaciones();
+
+		if (listaAplicaciones != null && listaAplicaciones.contains("SISTRA2")) {
+			this.filtroAplicacion = "SISTRA2";
+		}
+
 		listaMetodosPago = pagoBackService.listaMetodosPago();
 	}
 
@@ -278,15 +284,15 @@ public class ViewPagos extends ViewControllerBase {
 	 * @param metodoPago Código del método de pago
 	 * @return Método de pago
 	 */
+
+	// TODO PAGOS -- NO SE PUEDE METER IDS DE PASARELAS FIJAS POR CODIGO, PQ NOS CARGAMOS LA GENERALIZACION (DEBEN IR A TRAVES DEL PLUGIN CORRESPONDIENTE)
+	// TODO PAGOS --- DEBERIA PARAMETRIZARSE POR PASARELAID + METODOPAGO
 	public String mostrarMetodoPago(String metodoPago) {
-		if (metodoPago == null || metodoPago.isEmpty()) {
-			return UtilJSF.getLiteral("typeMetodoPagoSeleccionado.noInformado");
-		}
-
-		String entidadesPago = propiedadesLocales.getProperty("pasarela.ATIB.entidadesPago");
-
-		return entidadesPago.contains(metodoPago) ? propiedadesLocales.getProperty("pasarela.ATIB.entidadPago." + metodoPago + "." + UtilJSF.getIdioma()) : metodoPago;
+		// TODO PAGOS -- PASAR A PARAMETRO
+		String pasarelaId = "ATIB";
+		return  UtilJSF.obtenerDescripcionMetodoPago(pagoBackService, pasarelaId, metodoPago);
 	}
+
 
 	/**
 	 * Método final que se encarga de realizar la búsqueda
@@ -296,7 +302,8 @@ public class ViewPagos extends ViewControllerBase {
 
 		try {
 			listaDatos = pagoBackService.listaPagos(filtro, filtroFechaDesde, filtroFechaHasta, filtroFecha, filtroClaveTramitacion, filtroTramite, filtroVersion,
-																filtroPasarela, filtroEntidad, filtroAplicacion, filtroLocATIB, filtroMetodosPago);
+																filtroPasarela, filtroEntidad, filtroAplicacion, filtroLocATIB, filtroMetodosPago,
+																filtroIdentificador, filtroEstado, filtroImporte, filtroNIF, filtroNombre);
 		} catch (final EJBException e) {
 			/*if (e.getCause() instanceof MaxNumFilasException) {
 				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.maxnumfilas"));
@@ -325,18 +332,6 @@ public class ViewPagos extends ViewControllerBase {
 	 */
 	public void ayuda() {
 		UtilJSF.openHelp("pagos");
-	}
-
-	private Properties recuperarConfiguracionProperties() {
-		final String pathProperties = System.getProperty("es.caib.paymentib.properties.path");
-		try (FileInputStream fis = new FileInputStream(pathProperties);) {
-			final Properties props = new Properties();
-			props.load(fis);
-			return props;
-		} catch (final IOException e) {
-			throw new CargaConfiguracionException(
-					"Error al cargar la configuracion del properties '" + pathProperties + "' : " + e.getMessage(), e);
-		}
 	}
 
 	private Date getToday() {
@@ -509,5 +504,49 @@ public class ViewPagos extends ViewControllerBase {
 	public void setFiltroLocATIB(String filtroLocATIB) {
 		this.filtroLocATIB = filtroLocATIB;
 	}
+
+	public String getFiltroIdentificador() {
+        return filtroIdentificador;
+    }
+
+    public void setFiltroIdentificador(String filtroIdentificador) {
+        this.filtroIdentificador = filtroIdentificador;
+    }
+
+    public TypeEstadoPago getFiltroEstado() {
+        return filtroEstado;
+    }
+
+    public void setFiltroEstado(TypeEstadoPago filtroEstado) {
+        this.filtroEstado = filtroEstado;
+    }
+
+    public TypeEstadoPago[] getListaEstados() {
+        return TypeEstadoPago.values();
+    }
+
+    public Double getFiltroImporte() {
+    	return filtroImporte;
+    }
+
+    public void setFiltroImporte(Double filtroImporte) {
+    	this.filtroImporte = filtroImporte;
+    }
+
+    public String getFiltroNIF() {
+    	return filtroNIF;
+    }
+
+    public void setFiltroNIF(String filtroNIF) {
+    	this.filtroNIF = filtroNIF;
+    }
+
+    public String getFiltroNombre() {
+    	return filtroNombre;
+    }
+
+    public void setFiltroNombre(String filtroNombre) {
+    	this.filtroNombre = filtroNombre;
+    }
 
 }

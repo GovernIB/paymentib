@@ -32,7 +32,7 @@ public class PruebaPDF {
 		datosSesionPago.setFechaCreacion(new Date());
 		datosSesionPago.setFechaPago(new Date());
 		datosSesionPago.setLocalizador("LOCALIZADOR");
-		final byte[] contenido = GeneradorJustificantePago.generarJustificantePago("D:/", datosSesionPago);
+		final byte[] contenido = GeneradorJustificantePago.generarJustificantePago("1234", "D:/", datosSesionPago);
 		IOUtils.copy(new ByteArrayInputStream(contenido), new FileOutputStream("/prueba.pdf"));
 	}
 }

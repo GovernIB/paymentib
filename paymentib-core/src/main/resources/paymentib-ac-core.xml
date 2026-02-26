@@ -21,8 +21,13 @@
 	    http://www.springframework.org/schema/cache
 		http://www.springframework.org/schema/cache/spring-cache.xsd">
 
-	<!-- Configuracion properties aplicacion -->
-	<context:property-placeholder location="file:#{systemProperties['es.caib.paymentib.properties.path']}"/>
+    <!-- CAMBIAMOS A UTF8
+    <context:property-placeholder location="file:#{systemProperties['es.caib.paymentib.properties.path']}" />
+    -->
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="file:#{systemProperties['es.caib.paymentib.properties.path']}" />
+        <property name="fileEncoding" value="UTF-8" />
+    </bean>
 
 	<!-- Scans the classpath of this application for @Components to deploy as beans -->
     <context:component-scan base-package="es.caib.paymentib.core" />

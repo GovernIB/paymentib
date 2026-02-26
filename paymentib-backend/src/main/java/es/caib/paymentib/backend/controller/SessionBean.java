@@ -1,12 +1,9 @@
 package es.caib.paymentib.backend.controller;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -15,14 +12,13 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 
-import org.apache.commons.lang3.StringUtils;
+import es.caib.paymentib.core.api.service.PagoBackService;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.DefaultSubMenu;
 import org.primefaces.model.menu.MenuModel;
 
 import es.caib.paymentib.backend.util.UtilJSF;
-import es.caib.paymentib.core.api.exception.ConfiguracionException;
 import es.caib.paymentib.core.api.exception.ErrorBackException;
 import es.caib.paymentib.core.api.model.types.TypeRoleAcceso;
 import es.caib.paymentib.core.api.service.SecurityService;
@@ -69,17 +65,21 @@ public class SessionBean {
 
 	private Map<String, Object> mochilaDatos;
 
-	private Properties propiedadesLocales;
-
 	private String logo;
 
 	private boolean hayLogo;
 
-	/**
-	 * Servicio seguridad.
-	 */
+	/** Directorio ayuda externa. */
+	private String directorioAyudaExterna;
+
+	/** Servicio seguridad. */
 	@Inject
 	private SecurityService securityService;
+
+	/** Servicio seguridad. */
+	@Inject
+	private PagoBackService pagoBackService;
+
 
 	/** Inicio sesión. */
 	@PostConstruct
@@ -110,21 +110,18 @@ public class SessionBean {
 			locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 		}
 		rolesList = securityService.getRoles();
-		final String pathProperties = System.getProperty("es.caib.paymentib.properties.path");
-		// Carga fichero de propiedades
-		try (FileInputStream fis = new FileInputStream(pathProperties);) {
-			propiedadesLocales = new Properties();
-			propiedadesLocales.load(fis);
-		} catch (final IOException e) {
-			throw new ConfiguracionException(e);
-		}
 
-		logo = propiedadesLocales.getProperty("back.logo");
+
+		// Logo
+		logo = pagoBackService.obtenerLogoBack();
 		if (logo == null) {
 			this.setHayLogo(false);
 		} else {
 			this.setHayLogo(true);
 		}
+
+		// Directorio ayuda externa
+		directorioAyudaExterna = pagoBackService.obtenerDirectorioAyudaExterna();
 
 		// Establece role activo por defecto
 		if (activeRole == null) {
@@ -340,4 +337,19 @@ public class SessionBean {
 		this.hayLogo = hayLogo;
 	}
 
+	/**
+	 * Obtiene directorio ayuda externa.
+	 * @return directorio ayuda externa
+	 */
+	public String getDirectorioAyudaExterna() {
+		return directorioAyudaExterna;
+	}
+
+	/**
+	 * Establece directorio ayuda externa.
+	 * @param directorioAyudaExterna directorio ayuda externa
+	 */
+	public void setDirectorioAyudaExterna(String directorioAyudaExterna) {
+		this.directorioAyudaExterna = directorioAyudaExterna;
+	}
 }

@@ -8,15 +8,19 @@
       xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 		http://www.springframework.org/schema/mvc
-		http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+		http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
 		http://www.springframework.org/schema/context
-		http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/context/spring-context-4.3.xsd
 		http://www.springframework.org/schema/aop
-	    http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
-	    http://www.springframework.org/schema/jee
-        http://www.springframework.org/schema/jee/spring-jee-3.2.xsd
-        http://www.springframework.org/schema/tx
-	    http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
+	    http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+
+	<!-- CAMBIAMOS A UTF8
+	<context:property-placeholder location="file:#{systemProperties['es.caib.paymentib.properties.path']}" />
+	-->
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="file:#{systemProperties['es.caib.paymentib.properties.path']}" />
+		<property name="fileEncoding" value="UTF-8" />
+	</bean>
 
 	<bean id="negocioModuleConfig" class="es.caib.paymentib.frontend.model.ModuleConfig">
 		<property name="entorno" value="${entorno}" />
@@ -32,11 +36,8 @@
 	<context:annotation-config  />
 	<aop:aspectj-autoproxy />
 
-	<!-- Configuracion aplicacion (properties) -->
-	<context:property-placeholder location="file:#{systemProperties['es.caib.paymentib.properties.path']}"/>
-
 	<!-- Configures the @Controller programming model -->
-	<mvc:annotation-driven />
+	<mvc:annotation-driven/>
 
 	<!--  Textos de mensajes -->
 	<bean id="messageSource"

@@ -1,6 +1,5 @@
 package es.caib.paymentib.core.ejb;
 
-import java.security.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -12,13 +11,13 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
 
+import es.caib.paymentib.plugins.api.TypeValidacionPagoExterno;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import es.caib.paymentib.core.api.model.comun.ConstantesRolesAcceso;
 import es.caib.paymentib.core.api.model.pago.DatosSesionPago;
 import es.caib.paymentib.core.api.model.pago.FiltroPago;
-import es.caib.paymentib.core.api.model.types.TypeFiltroFecha;
 import es.caib.paymentib.core.api.service.PagoFrontService;
 import es.caib.paymentib.plugins.api.DatosPago;
 import es.caib.paymentib.plugins.api.EntidadPago;
@@ -56,6 +55,12 @@ public class PagoFrontServiceBean implements PagoFrontService {
 	@PermitAll
 	public DatosSesionPago recuperarPagoElectronico(final String identificador) {
 		return service.recuperarPagoElectronico(identificador);
+	}
+
+	@Override
+	@PermitAll
+	public void iniciarRedireccionPasarelaPago(final String identificador) {
+		service.iniciarRedireccionPasarelaPago(identificador);
 	}
 
 	@Override
@@ -118,6 +123,12 @@ public class PagoFrontServiceBean implements PagoFrontService {
 	@PermitAll
 	public void establecerMensajeErrorNoControlado(String identificador, String mensajeError) {
 		service.establecerMensajeErrorNoControlado(identificador, mensajeError);
+	}
+
+	@Override
+	@PermitAll
+	public TypeValidacionPagoExterno verificarPagoExterno(String identificador, String localizador, Date fecha) {
+		return service.verificarPagoExterno(identificador, localizador, fecha);
 	}
 
 }

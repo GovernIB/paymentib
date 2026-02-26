@@ -4,6 +4,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:p="http://primefaces.org/ui">
 <f:view locale="#{sessionBean.locale}" encoding="UTF-8" contentType="text/html">
 
@@ -27,6 +28,129 @@
 	<p:growl id="growlDialogAyuda" widgetVar="growlDialogAyuda" showDetail="false" life="2000" sticky="false" />
 
 	<h:form id="dialogAyuda" >
+
+	<h:outputScript >
+
+				var arrayCm = [];
+
+				window.onload=function(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+					onVisible(contextMenu, () => eliminarResaltar());
+
+					document.addEventListener('contextmenu', function(ev) {
+						ev.preventDefault();
+						getPos();
+						return false;
+						}, false);
+				}
+
+				function onVisible(element, callback) {
+					new IntersectionObserver((entries, observer) => {
+						entries.forEach(entry => {
+							if(entry.intersectionRatio == 0) {
+								callback(element);
+							}
+						});
+					}).observe(element);
+				}
+
+				function eliminarResaltar(){
+					let contextMenu =  document.getElementsByClassName('ui-contextmenu')[0];
+					let elementos = document.getElementsByClassName('resaltar');
+					if(contextMenu!=null &amp;&amp; contextMenu.style.display=='none' &amp;&amp; elementos.length &gt; 1){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+					}
+				}
+
+				function getPos(){
+					var e = window.event;
+		            debugger;
+					var posX = e.clientX;
+					var posY = e.clientY;
+					var el = document.elementFromPoint(posX, posY);
+					let elementos = document.getElementsByClassName('resaltar');
+					if(elementos.length &gt; 0){
+						for(let i = 0; i &lt; elementos.length; i++){
+							elementos[i].classList.remove('resaltar');
+						}
+					}
+
+					el.classList.add("resaltar");
+					var aux = document.getElementById("dialogAyuda:auxCopiar");
+					if(el.textContent!=''  &amp;&amp; el.textContent!='ui-button'){
+						aux.value = el.textContent;
+					}else if(el.firstChild!=null &amp;&amp; el.firstChild.value!=undefined){
+						aux.value = el.firstChild.value;
+					}else if(el.value!=null &amp;&amp; el.value!=''){
+						aux.value = el.value;
+					}else{
+						aux.value = '';
+					}
+
+					if(aux.value!='' ){
+						var multiple = false;
+						var hijos = el.children;
+						if((el.tagName == 'UL' || el.tagName == 'TABLE' || el.tagName == 'TR')  &amp;&amp; hijos.length &gt; 1){
+							multiple = true;
+						}else if(hijos.length &gt;= 1 ){
+							if(hijos.length==1   &amp;&amp; hijos[0].tagName=='DIV'){
+								hijos = hijos[0].children;
+							}
+							for(i=0;i&lt;hijos.length;i++){
+								if(hijos[i].tagName!='SPAN' &amp;&amp; hijos[i].tagName!='LABEL'){
+									multiple=true;
+								}
+							}
+						}
+						var listaCm = document.getElementsByClassName('ui-contextmenu');
+						if(multiple){
+							for(i=0;i&lt;listaCm.length;i++){
+								if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+									arrayCm.push(listaCm[i]);
+								}
+								listaCm[i].classList.add("d-none");
+							}
+						}else{
+							for(i=0;i&lt;listaCm.length;i++){
+								if(listaCm[i].style.display=='block'  &amp;&amp; !arrayCm.includes(listaCm[i])){
+									arrayCm.push(listaCm[i]);
+								}
+								listaCm[i].classList.remove("d-none");
+							}
+							if(arrayCm.length&gt;1){
+								arrayCm.pop();
+								for(let i=0; i&lt;arrayCm.length; i++){
+									arrayCm[i].style.display='none';
+								}
+							}
+							arrayCm = [];
+						}
+					}
+		        }
+
+		        function ocultarContextMenu() {
+					  ['mainCm'].forEach(function(widget) {
+						  var menu = PF(widget);
+						  if (menu &amp;&amp; menu.isVisible()) {
+							  menu.hide();
+						  }
+					  });
+				  }
+
+
+			</h:outputScript>
+
+			<p:contextMenu id="mainCm" widgetVar="mainCm" styleClass="context-menu" onshow="console.log('escondo')">
+				<p:menuitem value="#{msg['botones.copiar']}" icon="pi pi-copy" styleClass="w100" id="mnuCopy" process="@this :dialogAyuda:auxCopiar" update="growlDialogAyuda"/>
+			</p:contextMenu>
+			<pe:clipboard id="clipContextCopy" trigger="dialogAyuda:mnuCopy" action="copy" target="dialogAyuda:auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
+				<p:ajax event="success" listener="#{dialogAyuda.copiadoCorr}" process="@this" update="@this growldialogAyuda"/>
+				<p:ajax event="error" listener="#{dialogAyuda.copiadoErr}" update="@this growldialogAyuda"/>
+			</pe:clipboard>
+
+			<p:inputText id="auxCopiar" value="#{dialogAyuda.portapapeles}" style="display:none;"/>
 
 
 			<!-- Workpanel: Iframe HTML -->

@@ -10,7 +10,10 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
 
+import es.caib.paymentib.plugins.api.EntidadPago;
+import es.caib.paymentib.plugins.api.TypeIdioma;
 import es.caib.paymentib.plugins.api.TypeModoValidacion;
+import es.caib.paymentib.plugins.api.TypeEstadoPago;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
@@ -28,12 +31,28 @@ public class PagoBackServiceBean implements PagoBackService {
 	private PagoBackService service;
 
 	@Override
+	@PermitAll
+	public String obtenerLogoBack() {
+		return service.obtenerLogoBack();
+	}
+
+	@Override
+	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.CONSULTA })
+	public List<EntidadPago> obtenerEntidadesPagoPasarela(String idPasarelaPago, TypeIdioma idioma) {
+		return service.obtenerEntidadesPagoPasarela(idPasarelaPago, idioma);
+	}
+
+
+	@Override
 	@RolesAllowed({ ConstantesRolesAcceso.SUPER_ADMIN, ConstantesRolesAcceso.CONSULTA })
 	public List<DatosSesionPago> listaPagos(final String filtro, final Date fechaDesde, final Date fechaHasta,
 			final TypeFiltroFecha tipoFecha, final String filtroClaveTramitacion, final String filtroTramite, final Integer filtroVersion,
-			final String filtroPasarela, final String filtroEntidad, final String filtroAplicacion, final String filtroLocATIB, final String filtroMetodosPago) {
+			final String filtroPasarela, final String filtroEntidad, final String filtroAplicacion, final String filtroLocATIB, final String filtroMetodosPago,
+			final String filtroIdentificador, final TypeEstadoPago filtroEstado, final Double filtroImporte,
+			final String filtroNIF, final String filtroNombre) {
 		return service.listaPagos(filtro, fechaDesde, fechaHasta, tipoFecha, filtroClaveTramitacion, filtroTramite,
-									filtroVersion, filtroPasarela, filtroEntidad, filtroAplicacion, filtroLocATIB, filtroMetodosPago);
+									filtroVersion, filtroPasarela, filtroEntidad, filtroAplicacion, filtroLocATIB, filtroMetodosPago,
+									filtroIdentificador, filtroEstado, filtroImporte, filtroNIF, filtroNombre);
 	}
 
 	@Override
@@ -84,5 +103,16 @@ public class PagoBackServiceBean implements PagoBackService {
 		return service.obtenerModoValidacionPasarela(pasarelaId);
 	}
 
+	@Override
+	@PermitAll
+	public String obtenerDirectorioAyudaExterna() {
+		return service.obtenerDirectorioAyudaExterna();
+	}
+
+	@Override
+	@PermitAll
+	public String obtenerFiltroInicial(){
+		return service.obtenerFiltroInicial();
+	}
 
 }

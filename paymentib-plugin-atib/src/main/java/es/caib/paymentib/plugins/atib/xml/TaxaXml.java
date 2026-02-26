@@ -45,19 +45,19 @@ public class TaxaXml {
 
         if ("SISTRA2".equals(datosPago.getAplicacionId())) {
 
-            // TODO PAGO -- VER COMO TRATAR ESTO, A VER SI PODEMOS REPLANTEAR ESTE CAMPO
-            // "[" + idSesionTramitacion + "]"
+           // TODO PAGO -- VER COMO TRATAR ESTO, A VER SI PODEMOS REPLANTEAR ESTE CAMPO
+           // "[" + idSesionTramitacion + "]"
 
-            // Borra corchetes
-            String idTramitacion = datosPago.getDetallePago();
-            idTramitacion = idTramitacion.replace("[", "");
-            idTramitacion = idTramitacion.replace("]", "");
+           // Borra corchetes
+           String idTramitacion = datosPago.getDetallePago();
+           idTramitacion = idTramitacion.replace("[", "");
+           idTramitacion = idTramitacion.replace("]", "");
 
-            taxa.setIDTRAMITACION(idTramitacion);
+           taxa.setIDTRAMITACION(idTramitacion);
         }
 
         taxa.setAccio(
-                es.caib.paymentib.plugins.atib.xml.TAXADocument.TAXA.Accio.Enum
+                TAXA.Accio.Enum
                         .forString(accion));
 
         taxa.setMODELO(datosPago.getModelo());

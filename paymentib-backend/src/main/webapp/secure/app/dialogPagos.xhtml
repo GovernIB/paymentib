@@ -127,6 +127,15 @@
 	                 }               
 				}
 			 }
+
+			 function ocultarContextMenu() {
+					  ['mainCm'].forEach(function(widget) {
+						  var menu = PF(widget);
+						  if (menu &amp;&amp; menu.isVisible()) {
+							  menu.hide();
+						  }
+					  });
+				  }
 			 </h:outputScript >
 
   			<p:outputPanel>
@@ -282,13 +291,7 @@
 						</div>
 
 					</div>
-			<p:contextMenu >
-       			<p:menuitem value="#{msg['botones.copiar']}" icon="pi pi-copy" styleClass="w90" id="mnuCopyMain"  process="@this :dialogPagos:auxCopiar" update="growlDialog" />
-		    </p:contextMenu>
-		    <pe:clipboard id="clipContextCopyMain" trigger="mnuCopyMain" action="copy" target="auxCopiar">
-				<p:ajax event="success" listener="#{dialogPagos.copiadoCorr}" process="@this" update="@this growlDialog"/>
-            	<p:ajax event="error" listener="#{dialogPagos.copiadoErr}" update="@this growlDialog"/>
-        	</pe:clipboard>
+
 			</p:outputPanel>
 		  	 <p:outputPanel styleClass="botonera" rendered="#{dialogPagos.mostrarBotoneraInferior}">
 		     	<p:toolbar>
@@ -298,6 +301,14 @@
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>
+			<p:contextMenu id="mainCm" widgetVar="mainCm" styleClass="context-menu">
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="pi pi-copy" styleClass="w90" id="mnuCopy"  process="@this :dialogPagos:auxCopiar" update="growlDialog" />
+		    </p:contextMenu>
+		    <pe:clipboard id="clipContextCopy" trigger="dialogPagos:mnuCopy" action="copy" target="dialogPagos:auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
+				<p:ajax event="success" listener="#{dialogPagos.copiadoCorr}" process="@this" update="@this growlDialog"/>
+            	<p:ajax event="error" listener="#{dialogPagos.copiadoErr}" update="@this growlDialog"/>
+        	</pe:clipboard>
+
 		    <p:inputText id="auxCopiar" value="#{dialogPagos.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 	</h:form>
 </h:body>

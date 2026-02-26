@@ -1,9 +1,15 @@
 package es.caib.paymentib.frontend.controller;
 
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import es.caib.paymentib.core.api.exception.ConfiguracionException;
+import es.caib.paymentib.plugins.api.*;
+import es.caib.paymentib.frontend.literales.LiteralesFront;
+import es.caib.paymentib.frontend.model.*;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,23 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import es.caib.paymentib.core.api.exception.ServiceException;
 import es.caib.paymentib.core.api.model.pago.DatosSesionPago;
 import es.caib.paymentib.core.api.service.PagoFrontService;
 import es.caib.paymentib.frontend.SesionHttp;
-import es.caib.paymentib.frontend.model.DatosSession;
-import es.caib.paymentib.frontend.model.ErrorCodes;
-import es.caib.paymentib.frontend.model.ModuleConfig;
-import es.caib.paymentib.plugins.api.EntidadPago;
-import es.caib.paymentib.plugins.api.EstadoPago;
-import es.caib.paymentib.plugins.api.TypeEstadoPago;
-import es.caib.paymentib.plugins.api.UrlRedireccionPasarelaPago;
 
 /**
  * Sesión de pagos.
@@ -52,6 +48,10 @@ public final class SesionPagoController {
 	/** Configuracion. */
 	@Autowired
 	private ModuleConfig config;
+
+	/** Literales front. */
+	@Autowired
+	private LiteralesFront literalesFront;
 
 	/** Mensaje error particularizado usuario. */
 	private static final String ERROR_MESSAGE_USER = "ERROR_MESSAGE_USER";
@@ -134,16 +134,29 @@ public final class SesionPagoController {
 	 */
 	@RequestMapping(value = "/" + URL_REDIRIGIR_PASARELA + ".html")
 	public ModelAndView redirigirPagoPasarela(@RequestParam("entidadPagoId") final String entidadPagoId) {
-		// Identificador sesión
-		final String identificador = sesionHttp.getIdentificador();
-		// Genera url callback (se adicionará token en service)
-		final String urlCallback = service.obtenerUrlFrontal() + "/" + URL_RETORNO_PASARELA;
-		// Obtiene url redirección pago
-		final UrlRedireccionPasarelaPago url = service.redirigirPasarelaPago(identificador, entidadPagoId, urlCallback);
-		// Eliminamos identificador de sesion
-		sesionHttp.setIdentificador(null);
-		// Muestra pantalla para redirigir pago
-		return new ModelAndView(URL_REDIRIGIR_PASARELA, "urlPasarela", url);
+
+		ModelAndView mv = null;
+
+		// Si es pago externo, redirigimos a solicitar el localizador
+		if (IPasarelaPagoPlugin.ENTIDAD_PAGO_EXTERNO.equals(entidadPagoId)) {
+			mv = new ModelAndView("redirect:pagoExterno.html");
+		} else {
+			// Si es otra entidad, redirigimos a pasarela
+			// Identificador sesión
+			final String identificador = sesionHttp.getIdentificador();
+			// Marcamos inicio redirección pasarela (evita doble redirección)
+			service.iniciarRedireccionPasarelaPago(identificador);
+			// Genera url callback (se adicionará token en service)
+			final String urlCallback = service.obtenerUrlFrontal() + "/" + URL_RETORNO_PASARELA;
+			// Obtiene url redirección pago
+			final UrlRedireccionPasarelaPago url = service.redirigirPasarelaPago(identificador, entidadPagoId, urlCallback);
+			// Eliminamos identificador de sesion
+			sesionHttp.setIdentificador(null);
+			// Muestra pantalla para redirigir pago
+			mv = new ModelAndView(URL_REDIRIGIR_PASARELA, "urlPasarela", url);
+		}
+
+		return mv;
 	}
 
 	/**
@@ -217,6 +230,78 @@ public final class SesionPagoController {
 		// Retorna resultado
 		return new ResponseEntity<>(status);
 
+	}
+
+
+	/**
+	 * Muestra pantalla de pago externo.
+	 *
+	 * @return Redirige a pago externo
+	 */
+	@RequestMapping(value = "/pagoExterno.html")
+	public ModelAndView pagoExterno() {
+		// Obtiene datos pago
+		final String identificador = sesionHttp.getIdentificador();
+		final DatosSesionPago dp = service.recuperarPagoElectronico(identificador);
+		// Muestra pantalla de pago externo
+		return new ModelAndView("pagoExternoVerificar", "datosPago", dp.getDatosPago());
+	}
+
+	/**
+	 * Verifica pago externo a través de localizador.
+	 *
+	 *
+	 * @param request Request de verificación pago externo
+	 *
+	 * @return Verifica  pago externo
+	 */
+	@RequestMapping(value = "/verificarPagoExterno.html", method = RequestMethod.POST)
+	public ModelAndView verificarPagoExterno(@RequestBody VerificacionPagoExternoRequest request) {
+
+		// Obtiene datos pago
+		final String identificador = sesionHttp.getIdentificador();
+		final DatosSesionPago dp = service.recuperarPagoElectronico(identificador);
+
+		// Convierte fecha string a date
+		Date fechaPago = null;
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            fechaPago = sdf.parse(request.getFecha());
+        } catch (ParseException e) {
+            throw new ConfiguracionException("No se puede convertir fecha: " + request.getFecha() + " - Error: " + e.getMessage());
+        }
+
+        // Verifica pago externo
+		TypeValidacionPagoExterno verificado = service.verificarPagoExterno(identificador, request.getLocalizador(), fechaPago);
+
+		// Muestra resultado validacion pago
+		VerificacionPagoExternoResponse result = new VerificacionPagoExternoResponse();
+		result.setEstado(verificado);
+		result.setMensaje(
+				new VerificacionPagoExternoMensaje(
+						literalesFront.getLiteral("pagoExterno.resultadoVerificacion.titulo", sesionHttp.getIdioma()),
+						literalesFront.getLiteral("pagoExterno.resultadoVerificacion." + verificado.toString(), sesionHttp.getIdioma())));
+		if (verificado == TypeValidacionPagoExterno.VERIFICADO) {
+			// Verificado: retorno a aplicacion origen
+			result.setUrl(dp.getUrlCallbackOrigen());
+		}
+
+		// Retorna resultado como JSON
+		final ModelAndView mav = new ModelAndView(JsonView.getInstanceJsonview());
+		mav.addObject(JsonView.JSON_OBJECT, result);
+		return mav;
+	}
+
+	@RequestMapping("/literales.html")
+	public ModelAndView literalesJS() {
+		final Properties props = literalesFront.getLiteralesSeccion("literalesJS", sesionHttp.getIdioma());
+		final Set<Map.Entry<Object, Object>> literales = props.entrySet();
+		for (final Map.Entry<Object, Object> entry : literales) {
+			final String key = (String) entry.getKey();
+			final String value = (String) entry.getValue();
+			props.setProperty(key, value);
+		}
+		return new ModelAndView("literales", "literales", props.entrySet());
 	}
 
 	/**

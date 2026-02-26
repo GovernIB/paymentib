@@ -16,8 +16,8 @@ public final class InicioPagoException extends ServiceRollbackException {
      * @param cause
      *            Causa
      */
-    public InicioPagoException(final Throwable cause) {
-        super("Error iniciando pago: " + cause.getMessage(), cause);
+    public InicioPagoException(final String idSesionPago, final Throwable cause) {
+        super(idSesionPago + " - Error iniciando pago: " + cause.getMessage(), cause);
     }
 
     /**
@@ -26,8 +26,8 @@ public final class InicioPagoException extends ServiceRollbackException {
      * @param mensaje
      *            mensaje
      */
-    public InicioPagoException(final String mensaje) {
-        super("Error iniciando pago: " + mensaje);
+    public InicioPagoException(final String idSesionPago, final String mensaje) {
+        super(idSesionPago + " - Error iniciando pago: " + mensaje);
     }
 
 }

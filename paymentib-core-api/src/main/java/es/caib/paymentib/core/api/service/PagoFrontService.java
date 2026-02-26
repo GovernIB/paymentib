@@ -6,6 +6,7 @@ import java.util.Map;
 
 import es.caib.paymentib.core.api.model.pago.DatosSesionPago;
 import es.caib.paymentib.core.api.model.pago.FiltroPago;
+import es.caib.paymentib.plugins.api.TypeValidacionPagoExterno;
 import es.caib.paymentib.plugins.api.DatosPago;
 import es.caib.paymentib.plugins.api.EntidadPago;
 import es.caib.paymentib.plugins.api.EstadoPago;
@@ -51,6 +52,13 @@ public interface PagoFrontService {
 	 * @return pago electrónico
 	 */
 	DatosSesionPago recuperarPagoElectronico(String identificador);
+
+
+	/**
+	 * Marca inicio redirección a pasarela de pago.
+	 * @param identificador identificador
+	 */
+	void iniciarRedireccionPasarelaPago(final String identificador);
 
 	/**
 	 * Inicia pago electrónico contra pasarela.
@@ -141,4 +149,15 @@ public interface PagoFrontService {
 	 * @param mensajeError mensaje error
 	 */
 	void establecerMensajeErrorNoControlado(String identificador, String mensajeError);
+
+
+	/**
+	 * Verifica pago externo.
+	 *
+	 * @param identificador identificador
+	 * @param localizador   localizador
+	 * @param fecha         fecha
+	 * @return true si el pago ha sido realizado
+	 */
+    TypeValidacionPagoExterno verificarPagoExterno(String identificador, String localizador, Date fecha);
 }

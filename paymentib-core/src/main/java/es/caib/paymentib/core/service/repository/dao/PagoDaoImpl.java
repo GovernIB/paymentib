@@ -10,6 +10,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import es.caib.paymentib.core.api.exception.InicioPagoException;
+import es.caib.paymentib.plugins.api.IPasarelaPagoPlugin;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,6 @@ import es.caib.paymentib.core.api.model.types.TypeFiltroFecha;
 import es.caib.paymentib.core.service.component.ConfiguracionComponent;
 import es.caib.paymentib.core.service.repository.model.JPagoE;
 import es.caib.paymentib.plugins.api.DatosPago;
-import es.caib.paymentib.plugins.api.EstadoPago;
 import es.caib.paymentib.plugins.api.TypeEstadoPago;
 
 @Repository("pagoDao")
@@ -51,9 +51,12 @@ public class PagoDaoImpl implements PagoDao {
 	@Override
 	public List<DatosSesionPago> getAllByFiltro(final String filtro, final Date fechaDesde, final Date fechaHasta,
 			final TypeFiltroFecha tipoFecha, final String filtroClaveTramitacion, final String filtroTramite, final Integer filtroVersion,
-				final String filtroPasarela, final String filtroEntidad, final String filtroAplicacion, final String filtroLocATIB, final String filtroMetodosPago) {
+				final String filtroPasarela, final String filtroEntidad, final String filtroAplicacion, final String filtroLocATIB,
+				final String filtroMetodosPago, final String filtroIdentificador, final TypeEstadoPago filtroEstado, final Double filtroImporte,
+				final String filtroNIF, final String filtroNombre) {
 		return listarPagos(filtro, fechaDesde, fechaHasta, tipoFecha, filtroClaveTramitacion, filtroTramite,
-							filtroVersion, filtroPasarela, filtroEntidad, filtroAplicacion, filtroLocATIB, filtroMetodosPago);
+							filtroVersion, filtroPasarela, filtroEntidad, filtroAplicacion, filtroLocATIB,
+							filtroMetodosPago, filtroIdentificador, filtroEstado, filtroImporte, filtroNIF, filtroNombre);
 	}
 
 	@Override
@@ -83,7 +86,7 @@ public class PagoDaoImpl implements PagoDao {
 	 */
 	@Override
 	public List<DatosSesionPago> getAll() {
-		return listarPagos(null, null, null, null, null, null, null, null, null, null, null, null);
+		return listarPagos(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 	}
 
 	@Override
@@ -132,17 +135,27 @@ public class PagoDaoImpl implements PagoDao {
 		int updateCount = query.executeUpdate();
 		if (updateCount == 0) {
 			// No se ha realizado el update, localizador ya estaba establecido
-			throw new InicioPagoException("No se ha podido actualizar pago " + identificador + " con localizador " + localizador + ": no existe pago o el pago ya tiene localizador asignado");
+			throw new InicioPagoException(identificador, "No se ha podido actualizar pago " + identificador + " con localizador " + localizador + ": no existe pago o el pago ya tiene localizador asignado");
 		}
 	}
 
 	@Override
-	public void actualizarEstado(final String identificador, final EstadoPago ep) {
+	public void actualizarEstado(String identificador, TypeEstadoPago estado, Date fechaPago, String codigoErrorPasarela, String mensajeErrorPasarela) {
 		final JPagoE jp = getJPagoByIdentificador(identificador);
-		jp.setEstado(ep.getEstado().toString());
-		jp.setCodigoErrorPasarela(ep.getCodigoErrorPasarela());
-		jp.setMensajeErrorPasarela(StringUtils.substring(ep.getMensajeErrorPasarela(), 0, 500));
-		jp.setFechaPago(ep.getFechaPago());
+		jp.setEstado(estado.toString());
+		jp.setCodigoErrorPasarela(codigoErrorPasarela);
+		jp.setMensajeErrorPasarela(StringUtils.substring(mensajeErrorPasarela, 0, 500));
+		jp.setFechaPago(fechaPago);
+		entityManager.persist(jp);
+	}
+
+	@Override
+	public void verificadoPagoExterno(String identificador, String localizador, Date fechaPago) {
+		final JPagoE jp = getJPagoByIdentificador(identificador);
+		jp.setEstado(TypeEstadoPago.PAGADO.toString());
+		jp.setMetodoPagoSeleccionado(IPasarelaPagoPlugin.ENTIDAD_PAGO_EXTERNO);
+		jp.setLocalizador(localizador);
+		jp.setFechaPago(fechaPago);
 		entityManager.persist(jp);
 	}
 
@@ -185,7 +198,10 @@ public class PagoDaoImpl implements PagoDao {
 	@SuppressWarnings("unchecked")
 	private List<DatosSesionPago> listarPagos(final String filtro, final Date fechaDesde, final Date fechaHasta,
 			final TypeFiltroFecha tipoFecha, final String filtroClaveTramitacion, final String filtroTramite,
-					final Integer filtroVersion, final String filtroPasarela, final String filtroEntidad, final String filtroAplicacion, final String filtroLocATIB, final String filtroMetodosPago) {
+					final Integer filtroVersion, final String filtroPasarela, final String filtroEntidad,
+					final String filtroAplicacion, final String filtroLocATIB, final String filtroMetodosPago,
+					final String filtroIdentificador, final TypeEstadoPago filtroEstado, final Double filtroImporte,
+					final String filtroNIF, final String filtroNombre) {
 		final List<DatosSesionPago> listaPagos = new ArrayList<>();
 
 		final String sqlSelect = "SELECT p FROM JPagoE p ";
@@ -307,6 +323,37 @@ public class PagoDaoImpl implements PagoDao {
 
 		}
 
+		if (StringUtils.isNotBlank(filtroIdentificador)) {
+	        if (sqlWhere.length() > 0) sqlWhere.append(" AND ");
+	        sqlWhere.append(" LOWER(p.identificador) LIKE :filtroIdentificador");
+	    }
+
+		if (StringUtils.isNotBlank(filtroNIF)) {
+			if (sqlWhere.length() > 0) {
+				sqlWhere.append(" AND ");
+			}
+
+			sqlWhere.append(" LOWER(p.sujetoPasivoNif) LIKE :filtroNIF");
+		}
+
+		if (StringUtils.isNotBlank(filtroNombre)) {
+			if (sqlWhere.length() > 0) {
+				sqlWhere.append(" AND ");
+			}
+
+			sqlWhere.append(" LOWER(p.sujetoPasivoNombre) LIKE :filtroNombre");
+		}
+
+		if (filtroEstado != null) {
+	        if (sqlWhere.length() > 0) sqlWhere.append(" AND ");
+	        sqlWhere.append(" p.estado = :filtroEstado");
+	    }
+
+		if (filtroImporte != null) {
+	        if (sqlWhere.length() > 0) sqlWhere.append(" AND ");
+	        sqlWhere.append(" p.importe = :filtroImporte");
+	    }
+
 		if (sqlWhere.length() > 0) {
 			sqlWhere.insert(0, " WHERE");
 		}
@@ -357,6 +404,28 @@ public class PagoDaoImpl implements PagoDao {
 				queryCount.setParameter("filtroMetodosPago", "%" + filtroMetodosPago.toLowerCase() + "%");
 			}
 		}
+
+		if (StringUtils.isNotBlank(filtroIdentificador)) {
+			queryCount.setParameter("filtroIdentificador", "%" + filtroIdentificador.toLowerCase() + "%");
+		}
+
+		if (StringUtils.isNotBlank(filtroNIF)) {
+			queryCount.setParameter("filtroNIF", "%" + filtroNIF.toLowerCase() + "%");
+		}
+
+		if (StringUtils.isNotBlank(filtroNombre)) {
+			queryCount.setParameter("filtroNombre", "%" + filtroNombre.toLowerCase() + "%");
+		}
+
+		if (filtroEstado != null) {
+			queryCount.setParameter("filtroEstado", filtroEstado.toString());
+		}
+
+		if (filtroImporte != null) {
+	        long importeCalculado = Math.round(filtroImporte * 100);
+	        int importeEnCentimos = (int) importeCalculado;
+	        queryCount.setParameter("filtroImporte", importeEnCentimos);
+	    }
 
 		//final Long nfilas = (Long) queryCount.getSingleResult();
 
@@ -409,6 +478,28 @@ public class PagoDaoImpl implements PagoDao {
 			}
 		}
 
+		if (StringUtils.isNotBlank(filtroIdentificador)) {
+	        query.setParameter("filtroIdentificador", "%" + filtroIdentificador.toLowerCase() + "%");
+	    }
+
+		if (StringUtils.isNotBlank(filtroNIF)) {
+			query.setParameter("filtroNIF", "%" + filtroNIF.toLowerCase() + "%");
+		}
+
+		if (StringUtils.isNotBlank(filtroNombre)) {
+			query.setParameter("filtroNombre", "%" + filtroNombre.toLowerCase() + "%");
+		}
+
+	    if (filtroEstado != null) {
+	        query.setParameter("filtroEstado", filtroEstado.toString());
+	    }
+
+	    if (filtroImporte != null) {
+	        long importeCalculado = Math.round(filtroImporte * 100);
+	        int importeEnCentimos = (int) importeCalculado;
+	        query.setParameter("filtroImporte", importeEnCentimos);
+	    }
+
 		final List<JPagoE> results = query.getResultList();
 
 		if (results != null && !results.isEmpty()) {
@@ -423,6 +514,7 @@ public class PagoDaoImpl implements PagoDao {
 
 	@SuppressWarnings("unchecked")
 	private List<String> listarPasarelas() {
+
 		final List<String> listaPasarelas = new ArrayList<>();
 
 		final String sqlSelect = "SELECT DISTINCT(p.pasarelaId) FROM JPagoE p ";
@@ -589,6 +681,30 @@ public class PagoDaoImpl implements PagoDao {
 	}
 
 	@Override
+	public DatosSesionPago getByLocalizador(final String localizador) {
+		DatosSesionPago pago = null;
+
+		if (localizador == null) {
+			throw new FaltanDatosException("Falta el localizador");
+		}
+
+		JPagoE jp = null;
+		// Recuperamos pago por localizador
+		final Query query = entityManager.createQuery("SELECT p FROM JPagoE p WHERE p.localizador = :localizador");
+		query.setParameter("localizador", localizador);
+		final List<JPagoE> results = query.getResultList();
+		if (!results.isEmpty()) {
+			jp = results.get(0);
+		}
+
+		if (jp != null) {
+			pago = jp.toModel();
+		}
+
+		return pago;
+	}
+
+	@Override
 	public void purgar(final int dias) {
 
 		final Calendar cal = Calendar.getInstance();
@@ -612,6 +728,15 @@ public class PagoDaoImpl implements PagoDao {
 			jp.setUsuarioConfirmacion(usuario);
 			entityManager.merge(jp);
 		}
+	}
+
+	@Override
+	public boolean iniciarRedireccionPasarelaPago(String identificador) {
+		final String sql = "UPDATE JPagoE t SET t.iniciadaRedireccionPasarelaPagos = true WHERE t.identificador = :identificador AND t.iniciadaRedireccionPasarelaPagos = false";
+		final Query query = entityManager.createQuery(sql);
+		query.setParameter("identificador", identificador);
+		int updateCount = query.executeUpdate();
+		return (updateCount > 0);
 	}
 
 	/**

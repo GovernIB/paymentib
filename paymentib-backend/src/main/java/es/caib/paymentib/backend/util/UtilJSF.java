@@ -19,6 +19,8 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 
+import es.caib.paymentib.core.api.service.PagoBackService;
+import es.caib.paymentib.plugins.api.EntidadPago;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.PrimeFaces;
 import org.slf4j.Logger;
@@ -71,7 +73,7 @@ public final class UtilJSF {
 	/**
 	 * Abre pantalla de dialogo
 	 *
-	 * @param dialog     Clase dialogo
+	 * @param clase     Clase dialogo
 	 * @param modoAcceso Modo de acceso
 	 * @param params     parametros
 	 * @param modal      si se abre en forma modal
@@ -437,28 +439,18 @@ public final class UtilJSF {
 	/**
 	 * Devuelve la AyudaExternaPaymentIB.
 	 *
-	 * @return
+	 * @return directorio ayuda externa
 	 */
 	public static String getAyudaExternaPaymentIB() {
-		String ruta = System.getProperty("es.caib.paymentib.properties.path", null);
-		if (ruta == null || ruta.isEmpty()) {
-			return null;
-		}
-
-		try (InputStream input = new FileInputStream(ruta)) {
-			Properties prop = new Properties();
-			prop.load(input);
-			String rutaAyudaExterna = prop.getProperty("ayuda.paymentib.path");
-			return rutaAyudaExterna;
-		} catch (Exception e) {
-			return null;
-		}
+        final SessionBean sb = (SessionBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+                .get("sessionBean");
+		return sb.getDirectorioAyudaExterna();
 	}
 
 	/**
 	 * Redirige pagina JSF por defecto para role.
 	 *
-	 * @param jsfPage path JSF page
+	 * @param role role
 	 */
 	public static void redirectJsfDefaultPageRole(final TypeRoleAcceso role) {
 		redirectJsfPage(getDefaultUrlRole(role));
@@ -493,7 +485,6 @@ public final class UtilJSF {
 	/**
 	 * Devuelve opcion por defecto administrador entidad/desarrollador.
 	 *
-	 * @param opcion opcion
 	 * @return opcion
 	 */
 	public static TypeOpcionMenuSuperAdministrador getDefaultOpcionSuperadministrador() {
@@ -608,5 +599,30 @@ public final class UtilJSF {
 		params.put(TypeParametroVentana.ID.toString(), id);
 
 		UtilJSF.openDialog(DialogAyuda.class, TypeModoAcceso.CONSULTA, params, true, 900, 550);
+	}
+
+	/**
+	 * Obtiene la descripción del método de pago.
+	 * @param pagoBackService Servicio de pago de back
+	 * @param pasarelaId Pasarela id
+	 * @param metodoPago Método de pago
+	 * @return Descripción del método de pago
+	 */
+	public static String obtenerDescripcionMetodoPago(PagoBackService pagoBackService, String pasarelaId, String metodoPago) {
+		// Obligatorio informar metodoPago
+		if (metodoPago == null || metodoPago.isEmpty()) {
+			return UtilJSF.getLiteral("typeMetodoPagoSeleccionado.noInformado");
+		}
+
+		// Recuperamos entidades de pago de la pasarela
+		List<EntidadPago> entidades = pagoBackService.obtenerEntidadesPagoPasarela(pasarelaId, UtilJSF.getIdioma());
+		// Buscamos la asociada al metodoPago
+		for (EntidadPago entidad : entidades) {
+			if (entidad.getCodigo().equals(metodoPago)) {
+				return entidad.getTitulo();
+			}
+		}
+		// Si no la encontramos, intentamos recuperar la descripción desde properties
+		return metodoPago;
 	}
 }

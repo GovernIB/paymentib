@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import es.caib.paymentib.plugins.api.TypeValidacionPagoExterno;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +41,6 @@ import es.caib.paymentib.plugins.api.UrlRedireccionPasarelaPago;
 @Service
 @Transactional
 public final class PagoFrontServiceImpl implements PagoFrontService {
-
-	// TODO Meter en las excepciones el identificador del pago
 
 	/** Log. */
 	private final org.slf4j.Logger log = LoggerFactory.getLogger(PagoFrontServiceImpl.class);
@@ -87,13 +86,20 @@ public final class PagoFrontServiceImpl implements PagoFrontService {
 	}
 
 	@Override
+	public void iniciarRedireccionPasarelaPago(final String identificador) {
+		if (!dao.iniciarRedireccionPasarelaPago(identificador)) {
+			throw new EstadoSesionPagoException(identificador, "La sesión de pago ya se ha iniciado para redirección a pasarela");
+		}
+	}
+
+	@Override
 	public UrlRedireccionPasarelaPago redirigirPasarelaPago(final String identificador, final String entidadPagoId,
 			final String urlCallbackCompPagos) {
 
 		// Recuperamos sesion pago
 		final DatosSesionPago dp = recuperarSesionPagoByIdentificador(identificador);
 		if (dp.getEstado() != TypeEstadoPago.NO_INICIADO) {
-			throw new EstadoSesionPagoException("El estado debe ser no iniciado");
+			throw new EstadoSesionPagoException(identificador, "El estado debe ser no iniciado");
 		}
 
 		// Genera token y anexa a url callback
@@ -108,14 +114,13 @@ public final class PagoFrontServiceImpl implements PagoFrontService {
 		try {
 			url = plgPago.iniciarPagoElectronico(dp.getDatosPago(), entidadPagoId, urlCallbackToken);
 		} catch (final PasarelaPagoException e) {
-			throw new InicioPagoException(e);
+			throw new InicioPagoException(identificador, e);
 		}
 
 		// Almacena pago en persistencia cambiando estado
 		dao.iniciar(dp.getDatosPago().getIdentificador(), url.getLocalizador(), token, entidadPagoId);
 
 		log.debug("Redirigiendo a pasarela para pago con identificador: " + identificador + " y localizador: " + url.getLocalizador());
-
 		return url;
 
 	}
@@ -163,7 +168,7 @@ public final class PagoFrontServiceImpl implements PagoFrontService {
 
 		// Verificamos estado pagado
 		if (dp.getEstado() != TypeEstadoPago.PAGADO) {
-			throw new EstadoSesionPagoException("El pago no está completado");
+			throw new EstadoSesionPagoException(identificador, "El pago no está completado");
 		}
 
 		// Crea plugin pago
@@ -172,16 +177,15 @@ public final class PagoFrontServiceImpl implements PagoFrontService {
 		// Obtiene justificante
 		byte[] justif = null;
 		try {
-			justif = plgPago.obtenerJustificantePagoElectronico(dp.getDatosPago(), dp.getLocalizador(), dp.getFechaCreacion());
+			justif = plgPago.obtenerJustificantePagoElectronico(dp.getDatosPago(), dp.getLocalizador(), dp.getFechaPago());
 
-			// Si la pasarela no provee justificante, proveemos justificante
-			// genérico
+			// Si la pasarela no provee justificante, proveemos justificante genérico
 			if (justif == null) {
-				justif = GeneradorJustificantePago.generarJustificantePago(config.obtenerDirectorioConfiguracion(), dp);
+				justif = GeneradorJustificantePago.generarJustificantePago(identificador, config.obtenerDirectorioConfiguracion(), dp);
 			}
 
 		} catch (final PasarelaPagoException e) {
-			throw new JustificantePagoException(e);
+			throw new JustificantePagoException(identificador, e);
 		}
 
 		return justif;
@@ -276,7 +280,8 @@ public final class PagoFrontServiceImpl implements PagoFrontService {
 					ep = plgPago.verificarPagoElectronico(dp.getDatosPago(), dp.getLocalizador(), dp.getMetodoPagoSeleccionado());
 				}
 				// Actualizamos estado
-				dao.actualizarEstado(identificador, ep);
+				dao.actualizarEstado(identificador, ep.getEstado(), ep.getFechaPago(), ep.getCodigoErrorPasarela(),
+						ep.getMensajeErrorPasarela());
 				res = ep;
 			} catch (final PasarelaPagoException e) {
 				// Si hay error, actualizamos mensaje error sin cambiar el estado
@@ -308,6 +313,38 @@ public final class PagoFrontServiceImpl implements PagoFrontService {
 	@Override
 	public void establecerMensajeErrorNoControlado(String identificador, String mensajeError) {
 		dao.actualizarMensajeError(identificador, mensajeError);
+	}
+
+	@Override
+	public TypeValidacionPagoExterno verificarPagoExterno(String identificador, String localizador, Date fecha) {
+		// Resultado
+		TypeValidacionPagoExterno resultado;
+		// Recuperamos sesion pago
+		final DatosSesionPago dp = recuperarSesionPagoByIdentificador(identificador);
+		// Debe estar en estado no iniciado ya que no se ha iniciado pago contra pasarela
+		if (dp.getEstado() != TypeEstadoPago.NO_INICIADO){
+			throw new EstadoSesionPagoException(identificador, "El estado debe ser no iniciado para verificar pago externo");
+		}
+		// Validamos que no hay un pago registrado con ese localizador
+		if (dao.getByLocalizador(localizador) != null) {
+			resultado = TypeValidacionPagoExterno.LOCALIZADOR_DUPLICADO;
+		} else {
+			try {
+				// Realizamos verificación con la pasarela
+				final IPasarelaPagoPlugin plgPago = crearPlugin(dp.getPasarelaId());
+				resultado = plgPago.verificarPagoExterno(dp.getDatosPago(), localizador, fecha);
+				// Actualizamos resultado
+				if (resultado == TypeValidacionPagoExterno.VERIFICADO) {
+					// Actualizamos estado a pagado
+					dao.verificadoPagoExterno(identificador, localizador, fecha);
+				}
+			} catch (PasarelaPagoException e) {
+				resultado = TypeValidacionPagoExterno.NO_VERIFICADO;
+				log.debug("Error al verificar pago externo para identificador " + identificador + ": " + e.getMessage());
+			}
+		}
+		// Retornamos resultado
+		return resultado;
 	}
 
 }

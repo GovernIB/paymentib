@@ -147,6 +147,15 @@
 				}
 
 			 }
+
+			 function ocultarContextMenu() {
+					  ['mainCm'].forEach(function(widget) {
+						  var menu = PF(widget);
+						  if (menu &amp;&amp; menu.isVisible()) {
+							  menu.hide();
+						  }
+					  });
+				  }
 			 </h:outputScript >
   			<p:outputPanel id="panel">
 
@@ -173,13 +182,15 @@
 					</f:facet>
 				</p:toolbar>
 		    </p:outputPanel>
-		    <p:contextMenu >
-       			<p:menuitem value="#{msg['botones.copiar']}" icon="pi pi-copy" styleClass="w90" id="mnuCopyMain"  process="@this :dialogPagosConfirmar:auxCopiar" update="growlDialog" />
+		    <p:contextMenu id="mainCm" widgetVar="mainCm" styleClass="context-menu">
+       			<p:menuitem value="#{msg['botones.copiar']}" icon="pi pi-copy" styleClass="w90" id="mnuCopy"  process="@this :dialogPagosConfirmar:auxCopiar" update="growlDialog" />
 		    </p:contextMenu>
-		    <pe:clipboard id="clipContextCopyMain" trigger="mnuCopyMain" action="copy" target="auxCopiar">
+		    <pe:clipboard id="clipContextCopy" trigger="dialogPagosConfirmar:mnuCopy" action="copy" target="dialogPagosConfirmar:auxCopiar" onsuccess="ocultarContextMenu();" onerror="ocultarContextMenu();">
 				<p:ajax event="success" listener="#{dialogPagosConfirmar.copiadoCorr}" process="@this" update="@this growlDialog"/>
             	<p:ajax event="error" listener="#{dialogPagosConfirmar.copiadoErr}" update="@this growlDialog"/>
         	</pe:clipboard>
+
+		   	<p:inputText id="auxCopiar" value="#{dialogPagosConfirmar.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 
 		    <!-- dialogo para confirmar -->
 		    <p:confirmDialog global="true" >
@@ -188,7 +199,6 @@
 		        	<p:commandButton value="#{msg['botones.no']}" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-close" process="@this"/>
 				</p:outputPanel>
 		    </p:confirmDialog>
-		   	<p:inputText id="auxCopiar" value="#{dialogPagosConfirmar.portapapeles}" style="padding:0px; opacity:0; width: 1px; height:1px; cursor:default;"/>
 	</h:form>
 </h:body>
 

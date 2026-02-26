@@ -6,54 +6,94 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<c:out value="${sesionHttp.idioma}"/>" lang="<c:out value="${sesionHttp.idioma}"/>">
+<!doctype html>
+<html lang="<c:out value="${sesionHttp.idioma}"/>">
 <head>
+
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<title>GOIB</title>
+
 	<!--[if IE]><link rel="shortcut icon" href="imgs/favicon/favicon.ico" type="image/x-icon" /><![endif]-->
 	<link rel="apple-touch-icon-precomposed" href="imgs/favicon/favicon-apple.png" />
 	<link rel="icon" href="imgs/favicon/favicon.png" />
 
-	<link rel="stylesheet" media="screen" href="estilos/imc-loginib.css" />
+	<!-- css -->
 
-	<script type="application/javascript">
-		var redirigido = false;
-		function redirigirPagoPasarela(entidadPagoId){
-			if (!redirigido) {
-				redirigido = true;
-				window.location.href = "redirigirPagoPasarela.html?entidadPagoId=" + entidadPagoId;
-			}
-		}
-	</script>
+	<link rel="stylesheet" media="screen" href="estils/imc-pib--app.css" />
+	<link rel="stylesheet" media="screen" href="estils/imc--ui-missatge.css" />
 
+	<!-- js -->
+	<script src="literales.html"></script>
+
+	<script src="js/imc-pib--config.js"></script>
+
+	<script src="js/imc--ui-events.js"></script>
+	<script src="js/imc--ui-missatge.js"></script>
+	<script src="js/imc--ui-popup-tabula.js"></script>
+
+	<script src="js/imc-pib--app.js"></script>
 
 </head>
 
 <body>
 
-	<!-- contenidor -->
-	<div id="imc-contenidor" class="imc-contenidor">
+<!-- contenidor -->
 
-		<div class="imc-contingut" id="imc-contingut">
-			<div class="imc--c">
+<div class="imc--contenidor">
 
-					<p style="margin-bottom: 20px;"><spring:message code="seleccionEntidadPago.titulo" /></p>
-					<ul>
-					<c:forEach items="${datos.entidadesPago}" var="e">
-				        <li><span><a href="javascript:redirigirPagoPasarela('${e.codigo}');" style="background:transparent url('${e.logo}') no-repeat 50% 2em / 4em auto;">${e.descripcion}</a></span></li>
-				    </c:forEach>
-					</ul>
-			</div>
+	<div class="imc--contingut">
+		<div class="imc--c">
+
+			<header>
+				<h1><span><spring:message code="seleccionEntidadPago.titulo" /></span></h1>
+			</header>
+
+
+			<!-- botons -->
+
+			<ul>
+				<c:forEach items="${datos.entidadesPago}" var="e">
+				<li>
+					<button type="button" data-href="redirigirPagoPasarela.html?entidadPagoId=${e.codigo}" style="background-image: url('${e.logo}');" data-accio="entitat-inicia">
+						<strong>${e.titulo}</strong>
+						<p>${e.descripcion}</p>
+					</button>
+				</li>
+				</c:forEach>
+			</ul>
+
 		</div>
+	</div>
 
-		<div style="display:none">
-			<p>E:${datos.entorno}</p>
-			<p>V:${datos.version}</p>
-			<p>C:${datos.commit}</p>
+</div>
+
+
+<!-- missatge -->
+
+<div id="imc--missatge" class="imc--missatge" data-estat="" data-tipus="" role="alertdialog" aria-modal="true" aria-labelledby="imc--mi-titol" aria-describedby="imc--mi-info" aria-hidden="true" tabindex="0">
+	<div class="imc--contingut imc-mi--con">
+
+		<header>
+			<h2 id="imc--mi-titol"><span></span></h2>
+		</header>
+
+		<div id="imc--mi-info" class="imc--info"></div>
+
+		<div class="imc--botonera">
+			<button type="button" class="imc--bt-terciari" data-accio="cancela" data-tabula="si"><span><spring:message code="boton.cancela"/></span></button>
+			<button type="button" data-accio="dacord" data-tabula="si"><span><spring:message code="boton.ok"/></span></button>
+			<button type="button" data-accio="accepta" data-tabula="si"><span><spring:message code="boton.acepta"/></span></button>
 		</div>
 
 	</div>
+</div>
+
+<div style="display:none">
+	<p>E:${datos.entorno}</p>
+	<p>V:${datos.version}</p>
+	<p>C:${datos.commit}</p>
+</div>
+
 </body>

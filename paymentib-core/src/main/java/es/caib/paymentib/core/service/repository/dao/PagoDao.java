@@ -9,6 +9,7 @@ import es.caib.paymentib.core.api.model.pago.FiltroPago;
 import es.caib.paymentib.core.api.model.types.TypeFiltroFecha;
 import es.caib.paymentib.plugins.api.DatosPago;
 import es.caib.paymentib.plugins.api.EstadoPago;
+import es.caib.paymentib.plugins.api.TypeEstadoPago;
 
 /**
  * La interface PagoDao.
@@ -23,7 +24,9 @@ public interface PagoDao {
 	 */
 	List<DatosSesionPago> getAllByFiltro(final String filtro, final Date fechaDesde, final Date fechaHasta,
 			final TypeFiltroFecha tipoFecha, final String filtroClaveTramitacion, final String filtroTramite, final Integer filtroVersion,
-			final String filtroPasarela, final String filtroEntidad, final String filtroAplicacion, final String filtroLocATIB, final String filtroMetodosPago);
+			final String filtroPasarela, final String filtroEntidad, final String filtroAplicacion, final String filtroLocATIB,
+			final String filtroMetodosPago, final String filtroIdentificador, final TypeEstadoPago filtroEstado, final Double filtroImporte,
+			final String filtroNIF, final String filtroNombre);
 
 	/**
 	 * Obtiene la lista de todas las pasarelas
@@ -66,7 +69,7 @@ public interface PagoDao {
 	 * @param pasarelaId           pasarela id
 	 * @param datosPago            Datos pago
 	 * @param urlCallbackAppOrigen Url callback aplicación origen
-	 * @param Token                token acceso
+	 * @param tokenAcceso                token acceso
 	 * @return identificador pago
 	 */
 	String create(String pasarelaId, DatosPago datosPago, String urlCallbackAppOrigen, String tokenAcceso);
@@ -97,21 +100,33 @@ public interface PagoDao {
 	 */
 	DatosSesionPago getByIdentificador(String identificador);
 
+
 	/**
 	 * Actualiza estado pago.
 	 *
-	 * @param identificador identificador
-	 *
-	 * @param ep            Estado pago
+	 * @param identificador        identificador
+	 * @param estado               estado
+	 * @param fechaPago            fecha pago
+	 * @param codigoErrorPasarela  codigo error pasarela
+	 * @param mensajeErrorPasarela mensaje error pasarela
 	 */
-	void actualizarEstado(String identificador, EstadoPago ep);
+	void actualizarEstado(String identificador, TypeEstadoPago estado, Date fechaPago, String codigoErrorPasarela, String mensajeErrorPasarela);
+
+
+	/**
+	 * Marca pago como verificado externamente.
+	 * @param identificador identificador
+	 * @param localizador localizador
+	 * @param fechaPago fecha pago
+	 */
+	void verificadoPagoExterno(String identificador, String localizador, Date fechaPago);
 
 	/**
 	 * Actualiza mensaje error (para cuando la pasarela no llega a devolver estado).
 	 *
 	 * @param identificador identificador
 	 *
-	 * @param String  Mensaje error
+	 * @param mensajeError  Mensaje error
 	 */
 	void actualizarMensajeError(String identificador, String mensajeError);
 
@@ -122,6 +137,14 @@ public interface PagoDao {
 	 * @return datos sesión
 	 */
 	DatosSesionPago getByCodigo(Long codigo);
+
+	/**
+	 * Recupera datos sesión pago por localizador.
+	 *
+	 * @param localizador localizador
+	 * @return datos sesión
+	 */
+	DatosSesionPago getByLocalizador(String localizador);
 
 	/**
 	 * Realiza purga de pagos que hayan sobrepasado los días.
@@ -142,4 +165,10 @@ public interface PagoDao {
 	List<DatosSesionPago> getAllByFiltro(FiltroPago filtro, Date fechaDesde, Date fechaHasta, Long numPag,
 			Long maxNumElem);
 
+	/**
+	 * Marca que se ha iniciado la redirección a la pasarela de pago. Sirve para controlar que solo se haga 1 vez.
+	 * @param identificador identificador pago
+	 * @return true si se ha podido marcar, false si ya estaba marcado
+	 */
+    boolean iniciarRedireccionPasarelaPago(String identificador);
 }

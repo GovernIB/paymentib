@@ -17,12 +17,23 @@ public interface IPasarelaPagoPlugin extends IPlugin {
 	/** Prefix. */
 	public static final String PAGO_BASE_PROPERTY = IPLUGIN_BASE_PROPERTIES + "paymentib.";
 
+	/** Entidad para pago EXTERNO. */
+	public static final String ENTIDAD_PAGO_EXTERNO = "EXT";
+
 	/**
 	 * Devuelve identificador pasarela pagos.
 	 *
 	 * @return identificador pasarela pagos
 	 */
 	String getPasarelaId();
+
+	/**
+	 * Obtiene entidades de pago gestionadas por la pasarela.
+	 *
+	 * @param idioma idioma
+	 * @return entidades
+	 */
+	List<EntidadPago> obtenerEntidadesPagoElectronico(TypeIdioma idioma);
 
 	/**
 	 * Obtiene entidades de pago gestionadas por la pasarela.
@@ -119,5 +130,14 @@ public interface IPasarelaPagoPlugin extends IPlugin {
 	 * @return Modo validación
 	 */
 	TypeModoValidacion obtenerModoValidacion();
+
+	/**
+	 * Verifica pago externo.
+	 *
+	 * @param datosPago   Datos pago
+	 * @param localizador Localizador pago en la pasarela
+	 * @return Justificante de pago externo en caso de que se haya podido validar.
+	 */
+	TypeValidacionPagoExterno verificarPagoExterno(DatosPago datosPago, String localizador, Date fechaPago) throws PasarelaPagoException;
 
 }

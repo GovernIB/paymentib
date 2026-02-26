@@ -37,14 +37,14 @@ public class TpvPlugin extends AbstractPluginProperties implements IPasarelaPago
 	}
 
 	@Override
+	public List<EntidadPago> obtenerEntidadesPagoElectronico(TypeIdioma idioma) {
+		return recuperarEntidadPagos();
+	}
+
+	@Override
 	public List<EntidadPago> obtenerEntidadesPagoElectronico(final TypeIdioma idioma, final String metodosPago) throws PasarelaPagoException {
-		final List<EntidadPago> res = new ArrayList<>();
-		final EntidadPago ep = new EntidadPago();
-		ep.setCodigo("TPV");
-		ep.setDescripcion("TPV");
-		ep.setLogo("/paymentibfront/imgs/tpv.png");
-		res.add(ep);
-		return res;
+		// No realizamos ningun filtro, solo hay 1
+		return recuperarEntidadPagos();
 	}
 
 	@Override
@@ -77,6 +77,8 @@ public class TpvPlugin extends AbstractPluginProperties implements IPasarelaPago
 
 		// Devuelve estado pago
 		final EstadoPago res = new EstadoPago();
+		res.setLocalizador(localizador);
+		res.setMetodoPago(entidadPagoId);
 		res.setEstado(confPago.getEstado());
 		res.setFechaPago(confPago.getFecha());
 		return res;
@@ -121,6 +123,12 @@ public class TpvPlugin extends AbstractPluginProperties implements IPasarelaPago
 		return TypeModoValidacion.CONFIRMACION_MANUAL;
 	}
 
+	@Override
+	public TypeValidacionPagoExterno verificarPagoExterno(DatosPago datosPago, String localizador, Date fechaPago) throws PasarelaPagoException {
+		// NO PERMITE VERIFICAR PAGO EXTERNO POR LOCALIZADOR
+		return TypeValidacionPagoExterno.NO_VERIFICADO;
+	}
+
 	/**
 	 * Recupera datos organismo.
 	 *
@@ -137,10 +145,10 @@ public class TpvPlugin extends AbstractPluginProperties implements IPasarelaPago
 		}
 
 		final MerchantData md = new MerchantData();
-		md.setMerchantName(this.getProperty(entidadId + ".merchantName"));
-		md.setMerchantCode(this.getProperty(entidadId + ".merchantCode"));
-		md.setMerchantTerminal(this.getProperty(entidadId + ".merchantTerminal"));
-		md.setMerchantPassword(this.getProperty(entidadId + ".merchantPassword"));
+		md.setMerchantName(this.getProperty("organismo." + entidadId + ".merchantName"));
+		md.setMerchantCode(this.getProperty("organismo." + entidadId + ".merchantCode"));
+		md.setMerchantTerminal(this.getProperty("organismo." + entidadId + ".merchantTerminal"));
+		md.setMerchantPassword(this.getProperty("organismo." + entidadId + ".merchantPassword"));
 
 		if (StringUtils.isBlank(md.getMerchantName()) || StringUtils.isBlank(md.getMerchantCode())
 				|| StringUtils.isBlank(md.getMerchantTerminal()) || StringUtils.isBlank(md.getMerchantPassword())) {
@@ -169,6 +177,22 @@ public class TpvPlugin extends AbstractPluginProperties implements IPasarelaPago
 		if (parametrosRetorno.containsKey(paramName)) {
 			res = parametrosRetorno.get(paramName)[0];
 		}
+		return res;
+	}
+
+
+	/**
+	 * Recupera entidades pago.
+	 * @return entidades pago
+	 */
+	private static List<EntidadPago> recuperarEntidadPagos() {
+		final List<EntidadPago> res = new ArrayList<>();
+		final EntidadPago ep = new EntidadPago();
+		ep.setCodigo("TPV");
+		ep.setTitulo("TPV");
+		ep.setDescripcion("TPV");
+		ep.setLogo("/paymentibfront/imgs/tpv.png");
+		res.add(ep);
 		return res;
 	}
 

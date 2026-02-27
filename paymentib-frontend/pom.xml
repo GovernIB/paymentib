@@ -110,7 +110,7 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<version>${maven.war.version}</version>
 				<configuration>
-					<warName>paymentib-backend</warName>
+					<warName>paymentib-frontend</warName>
 					<webResources>
 						<webResource>
 							<directory>${basedir}/src/main/webapp/WEB-INF</directory>
@@ -121,15 +121,6 @@
 							<filtering>true</filtering>
 						</webResource>
 					</webResources>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>${maven.war.version}</version>
-				<configuration>
-					<warName>paymentib-frontend</warName>
 				</configuration>
 			</plugin>
 

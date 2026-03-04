@@ -316,6 +316,11 @@ public final class PagoFrontServiceImpl implements PagoFrontService {
 	}
 
 	@Override
+	public void seleccionarPagoExterno(String identificador) {
+		dao.seleccionarPagoExterno(identificador);
+	}
+
+	@Override
 	public TypeValidacionPagoExterno verificarPagoExterno(String identificador, String localizador, Date fecha) {
 		// Resultado
 		TypeValidacionPagoExterno resultado;

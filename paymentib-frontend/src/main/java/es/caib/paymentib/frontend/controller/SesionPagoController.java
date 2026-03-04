@@ -243,6 +243,8 @@ public final class SesionPagoController {
 		// Obtiene datos pago
 		final String identificador = sesionHttp.getIdentificador();
 		final DatosSesionPago dp = service.recuperarPagoElectronico(identificador);
+		// Marca que se ha seleccionado metodo de pago externo
+		service.seleccionarPagoExterno(identificador);
 		// Muestra pantalla de pago externo
 		return new ModelAndView("pagoExternoVerificar", "datosPago", dp.getDatosPago());
 	}

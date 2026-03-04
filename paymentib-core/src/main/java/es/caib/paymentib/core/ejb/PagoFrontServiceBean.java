@@ -131,4 +131,10 @@ public class PagoFrontServiceBean implements PagoFrontService {
 		return service.verificarPagoExterno(identificador, localizador, fecha);
 	}
 
+	@Override
+	@PermitAll
+	public void seleccionarPagoExterno(String identificador) {
+		service.seleccionarPagoExterno(identificador);
+	}
+
 }

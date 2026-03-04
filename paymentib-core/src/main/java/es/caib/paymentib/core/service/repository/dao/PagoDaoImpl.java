@@ -731,6 +731,15 @@ public class PagoDaoImpl implements PagoDao {
 	}
 
 	@Override
+	public void seleccionarPagoExterno(String identificador){
+		final JPagoE jp = getJPagoByIdentificador(identificador);
+		if (jp != null) {
+			jp.setMetodoPagoSeleccionado(IPasarelaPagoPlugin.ENTIDAD_PAGO_EXTERNO);
+			entityManager.merge(jp);
+		}
+	}
+
+	@Override
 	public boolean iniciarRedireccionPasarelaPago(String identificador) {
 		final String sql = "UPDATE JPagoE t SET t.iniciadaRedireccionPasarelaPagos = true WHERE t.identificador = :identificador AND t.iniciadaRedireccionPasarelaPagos = false";
 		final Query query = entityManager.createQuery(sql);

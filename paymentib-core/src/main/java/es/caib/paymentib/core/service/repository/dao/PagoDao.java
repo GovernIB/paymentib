@@ -171,4 +171,11 @@ public interface PagoDao {
 	 * @return true si se ha podido marcar, false si ya estaba marcado
 	 */
     boolean iniciarRedireccionPasarelaPago(String identificador);
+
+	/**
+	 * Marca que se ha seleccionado un pago externo para su verificación.
+	 * @param identificador identificador pago
+	 */
+    void seleccionarPagoExterno(String identificador);
+
 }

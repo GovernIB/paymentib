@@ -160,4 +160,11 @@ public interface PagoFrontService {
 	 * @return true si el pago ha sido realizado
 	 */
     TypeValidacionPagoExterno verificarPagoExterno(String identificador, String localizador, Date fecha);
+
+	/**
+	 * Marca que se ha seleccionado un pago externo para su verificación.
+	 * @param identificador identificador
+	 */
+    void seleccionarPagoExterno(String identificador);
+
 }

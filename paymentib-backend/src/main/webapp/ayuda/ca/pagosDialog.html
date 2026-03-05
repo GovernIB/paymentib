@@ -14,14 +14,14 @@
 	<ul>
 		<li><span class="nombreCampo">Identificador</span>: codi un&iacute;voc que identifica el pagament dins de l&#39;aplicaci&oacute;.</li>
 		<li><span class="nombreCampo">Data creaci&oacute;</span>: data en qu&egrave; s&#39;ha creat el registre del pagament.</li>
-		<li><span class="nombreCampo">Estat</span>: es refereix a l&#39;estat actual del pagament, que pot ser &#39;No pagat&#39; (quan el pagament encara no s&#39;ha realitzat per part de l&#39;usuari), &#39;Pagado&#39; (quan el pagament ha estat realitzat per l&#39;usuari o confirmat pel superadministrador ) o &#39;Desconocido&#39; (quan, per algun problema de comunicaci&oacute; amb la passarel&middot;la de pagament, aquest ha quedat en un estat inconsistent).</li>
+		<li><span class="nombreCampo">Estat</span>: es refereix a l&#39;estat actual del pagament, que pot ser &#39;No iniciat&#39; (qquan el pagament encara no s'ha iniciat en no haver-se realitzat la connexió amb la passarel·la de pagament), &#39;No pagat&#39; (quan el pagament encara no s&#39;ha realitzat per part de l&#39;usuari), &#39;Pagado&#39; (quan el pagament ha estat realitzat per l&#39;usuari o confirmat pel superadministrador ) o &#39;Desconocido&#39; (quan, per algun problema de comunicaci&oacute; amb la passarel&middot;la de pagament, aquest ha quedat en un estat inconsistent).</li>
 		<li><span class="nombreCampo">Data pagament</span>: data en qu&egrave; s&#39;ha confirmat el pagament.</li>
-		<li><span class="nombreCampo">Aplicaci&oacute;</span>: mostra l&#39;aplicaci&oacute; amb qu&egrave; s&#39;ha fet el pagament.</li>
+		<li><span class="nombreCampo">Aplicaci&oacute;</span>: mostra l&#39;aplicaci&oacute; amb qu&egrave; s&#39;ha fet el pagament (per defecte SISTRA2).</li>
 		<li><span class="nombreCampo">Entitat</span>: mostra l&#39;entitat des de la qual es fa el pagament.</li>
 		<li><span class="nombreCampo">&Ograve;rgan</span>: mostra l&ograve;rgan des del qual es realitza el pagament.</li>
-		<li><span class="nombreCampo">Passarel&middot;la</span>: mostra la passarel&middot;la a trav&eacute;s de la qual es realitza el pagament: ATIB o TPV.</li>
+		<li><span class="nombreCampo">Passarel&middot;la</span>: mostra la passarel&middot;la a trav&eacute;s de la qual es realitza el pagament: ATIB o TPV. La passarel·la MOCK s'utilitza per fer proves.</li>
 		<li><span class="nombreCampo">Localitzador</span>: mostra el codi localitzador que torna la passarel&middot;la de pagament.</li>
-		<li><span class="nombreCampo">M&egrave;tode pagament seleccionat</span>: mostra el m&egrave;tode de pagament seleccionat en fer el pagament.</li>
+		<li><span class="nombreCampo">M&egrave;tode pagament seleccionat</span>: mostra el m&egrave;tode de pagament seleccionat en fer el pagament, segons els mètodes de pagament configurats per a cada passarel·la. Els valors MKN, MKP i MKX són realment estats de prova pertanyents a la passarel·la MOCK, que simulen els estats No pagat, Pagat i Desconegut, respectivament.</li>
 		<li><span class="nombreCampo">Model</span>: mostra el model utilitzat per al pagament.</li>
 		<li><span class="nombreCampo">Concepte</span>: mostra el concepte del pagament.</li>
 		<li><span class="nombreCampo">Taxa</span>: mostra el codi que defineix la taxa del pagament.</li>

@@ -77,7 +77,7 @@ public class AyudaServlet extends HttpServlet {
 			final HttpServletResponse response) throws IOException, ServletException {
 
 		// Obtiene directorio externo ayuda
-		final String dirAyudaExterna = UtilJSF.getAyudaExternaPaymentIB();
+		String dirAyudaExterna = UtilJSF.getAyudaExternaPaymentIB(request);
 
 		// Retornamos contenido
 		if (StringUtils.isEmpty(url))

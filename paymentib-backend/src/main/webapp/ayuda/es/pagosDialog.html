@@ -14,14 +14,14 @@
 	<ul>
 		<li><span class="nombreCampo">Identificador</span>: c&oacute;digo un&iacute;voco que identifica al pago dentro de la aplicaci&oacute;n.</li>
 		<li><span class="nombreCampo">Fecha creaci&oacute;n</span>: fecha en la que se ha creado el registro del pago.</li>
-		<li><span class="nombreCampo">Estado</span>: se refiere al estado actual del pago, que puede ser &lsquo;No pagado&rsquo; (cuando el pago a&uacute;n no se ha realizado por parte del usuario), &lsquo;Pagado&rsquo; (cuando el pago ha sido realizado por el usuario o confirmado por el superadministrador) o &lsquo;Desconocido&rsquo; (cuando, por alg&uacute;n problema de comunicaci&oacute;n con la pasarela de pago, &eacute;ste ha quedado en un estado inconsistente).</li>
+		<li><span class="nombreCampo">Estado</span>: se refiere al estado actual del pago, que puede ser &lsquo;No iniciado&rsquo; (cuando el pago a&uacute;n no se ha iniciado al no haberse realizado la conexión con la pasarela de pago), &lsquo;No pagado&rsquo; (cuando el pago a&uacute;n no se ha realizado por parte del usuario), &lsquo;Pagado&rsquo; (cuando el pago ha sido realizado por el usuario o confirmado por el superadministrador) o &lsquo;Desconocido&rsquo; (cuando, por alg&uacute;n problema de comunicaci&oacute;n con la pasarela de pago, &eacute;ste ha quedado en un estado inconsistente).</li>
 		<li><span class="nombreCampo">Fecha pago</span>: fecha en la que se ha confirmado el pago.</li>
-		<li><span class="nombreCampo">Aplicaci&oacute;n</span>: muestra la aplicaci&oacute;n con la que se ha realizado el pago.</li>
+		<li><span class="nombreCampo">Aplicaci&oacute;n</span>: muestra la aplicaci&oacute;n con la que se ha realizado el pago (por defecto SISTRA2).</li>
 		<li><span class="nombreCampo">Entidad</span>: muestra la entidad desde la que se realiza el pago.</li>
 		<li><span class="nombreCampo">&Oacute;rgano</span>: muestra el &oacute;rgano desde el que se realiza el pago.</li>
-		<li><span class="nombreCampo">Pasarela</span>: muestra la pasarela a trav&eacute;s de la que se realiza el pago: ATIB o TPV.</li>
+		<li><span class="nombreCampo">Pasarela</span>: muestra la pasarela a trav&eacute;s de la que se realiza el pago: ATIB o TPV. La pasarela MOCK se utiliza para realizar pruebas.</li>
 		<li><span class="nombreCampo">Localizador</span>: muestra el c&oacute;digo localizador que devuelve la pasarela de pago.</li>
-		<li><span class="nombreCampo">Método pago seleccionado</span>: muestra el método de pago seleccionado al realizar el pago.</li>
+		<li><span class="nombreCampo">Método pago seleccionado</span>: muestra el método de pago seleccionado al realizar el pago, según los métodos de pago configurados para cada pasarela. Los valores MKN, MKP y MKX son realmente estados de prueba pertenecientes a la pasarela MOCK, que simulan los estados No pagado, Pagado y Desconocido, respectivamente.</li>
 		<li><span class="nombreCampo">Modelo</span>: muestra el modelo utilizado para el pago.</li>
 		<li><span class="nombreCampo">Concepto</span>: muestra el concepto del pago.</li>
 		<li><span class="nombreCampo">Tasa</span>: muestra el c&oacute;digo que define la tasa del pago.</li>

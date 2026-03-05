@@ -442,9 +442,21 @@ public final class UtilJSF {
 	 * @return directorio ayuda externa
 	 */
 	public static String getAyudaExternaPaymentIB() {
-        final SessionBean sb = (SessionBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
-                .get("sessionBean");
-		return sb.getDirectorioAyudaExterna();
+		if (FacesContext.getCurrentInstance() == null) {
+			return null; // Si no hay contexto JSF, salimos sin romper nada
+		}
+
+		final SessionBean sb = (SessionBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("sessionBean");
+		return (sb != null) ? sb.getDirectorioAyudaExterna() : null;
+	}
+
+	public static String getAyudaExternaPaymentIB(javax.servlet.http.HttpServletRequest request) {
+		if (request == null || request.getSession() == null) {
+			return null;
+		}
+
+		final SessionBean sb = (SessionBean) request.getSession().getAttribute("sessionBean");
+		return (sb != null) ? sb.getDirectorioAyudaExterna() : null;
 	}
 
 	/**

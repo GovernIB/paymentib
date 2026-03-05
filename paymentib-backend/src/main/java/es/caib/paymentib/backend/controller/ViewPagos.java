@@ -123,6 +123,8 @@ public class ViewPagos extends ViewControllerBase {
 		}
 
 		listaMetodosPago = pagoBackService.listaMetodosPago();
+
+		filtrar();
 	}
 
 	public boolean getFilaSeleccionada() {

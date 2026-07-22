@@ -23,6 +23,7 @@ public class PruebaPDF {
 		datosPago.setIdentificador("1023981");
 		datosPago.setIdioma(TypeIdioma.CATALAN);
 		datosPago.setImporte(12);
+		datosPago.setMultiplicador(1);
 		datosPago.setModelo("MODELO");
 		datosPago.setOrganismoId("ORGANISMO ID");
 		datosPago.setSujetoPasivoNif("123456789F");

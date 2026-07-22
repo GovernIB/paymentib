@@ -70,6 +70,9 @@ public class JPagoE implements IModelApi {
     @Column(name = "PAE_IMPORT", nullable = false, precision = 10)
     private Integer importe;
 
+    @Column(name = "PAE_MULTI", nullable = false, precision = 10)
+    private Integer multiplicador;
+
     @Column(name = "PAE_LOCALI", length = 100)
     private String localizador;
 
@@ -376,6 +379,13 @@ public class JPagoE implements IModelApi {
         this.metodosPago = metodosPago;
     }
 
+    public Integer getMultiplicador() {
+        return multiplicador;
+    }
+
+    public void setMultiplicador(Integer multiplicador) {
+        this.multiplicador = multiplicador;
+    }
 
     public DatosSesionPago toModel() {
 
@@ -391,6 +401,7 @@ public class JPagoE implements IModelApi {
         datosPago.setConcepto(concepto);
         datosPago.setTasaId(tasaId);
         datosPago.setImporte(importe);
+        datosPago.setMultiplicador(multiplicador);
         datosPago.setModelo(modelo);
         datosPago.setMetodosPago(metodosPago);
         datosPago.setIdTramite(idTramite);

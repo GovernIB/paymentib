@@ -61,7 +61,7 @@ public class GeneradorJustificantePago {
 			datos.put("CONCEPTO", datosPago.getDatosPago().getConcepto());
 
 			// Importe (convertimos de cents)
-			final double impDec = Double.parseDouble(String.valueOf(datosPago.getDatosPago().getImporte())) / 100;
+			final double impDec = Double.parseDouble(String.valueOf(datosPago.getDatosPago().getImporte() * datosPago.getDatosPago().getMultiplicador())) / 100;
 			final DecimalFormat df = (DecimalFormat) DecimalFormat.getInstance(new Locale("es"));
 			df.setDecimalSeparatorAlwaysShown(true);
 			df.setMaximumFractionDigits(2);

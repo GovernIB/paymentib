@@ -172,7 +172,7 @@ public class AtibPlugin extends AbstractPluginProperties implements IPasarelaPag
 
 			// Obtenemos PDF
 			final byte[] resPDF = cliente.getPdf046(resInserta046.getLocalizador(),
-					centsToEur(datosPago.getImporte() + ""), datosPago.getSujetoPasivoNif(),
+					centsToEur( Integer.toString(datosPago.getImporte())), datosPago.getSujetoPasivoNif(),
 					new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
 
 			if (resPDF == null) {

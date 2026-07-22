@@ -71,6 +71,7 @@ public class TaxaXml {
                 CODI_NIF);
         setValorCampo(declarante.addNewNOM(), datosPago.getSujetoPasivoNombre(),
                 CODI_IDTAXA);
+        taxa.setMULTIPLICADOR(datosPago.getMultiplicador());
 
         final XmlOptions xmlOpt = new XmlOptions();
         xmlOpt.setCharacterEncoding("UTF-8");

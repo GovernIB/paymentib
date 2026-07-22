@@ -162,6 +162,7 @@ public class ApiRestController {
 		datosPago.setConcepto(rDatosPago.getConcepto());
 		datosPago.setTasaId(rDatosPago.getTasaId());
 		datosPago.setImporte(rDatosPago.getImporte());
+		datosPago.setMultiplicador(rDatosPago.getMultiplicador());
 		datosPago.setMetodosPago(rDatosPago.getMetodosPago());
 		datosPago.setIdTramite(rDatosPago.getIdTramite());
 		datosPago.setVersionTramite(rDatosPago.getVersionTramite());

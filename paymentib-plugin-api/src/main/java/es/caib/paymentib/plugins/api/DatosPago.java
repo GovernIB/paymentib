@@ -41,6 +41,9 @@ public class DatosPago {
     /** Importe (en cents). */
     private int importe;
 
+    /** Multiplicador. */
+    private int multiplicador = 1;
+
     /** Modelo. */
     private String modelo;
 
@@ -330,4 +333,11 @@ public class DatosPago {
         this.versionTramite = versionTramite;
 	}
 
+    public int getMultiplicador() {
+        return multiplicador;
+    }
+
+    public void setMultiplicador(int multiplicador) {
+        this.multiplicador = multiplicador;
+    }
 }

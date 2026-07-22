@@ -109,6 +109,7 @@ public class PagoDaoImpl implements PagoDao {
 		jo.setConcepto(datosPago.getConcepto());
 		jo.setTasaId(datosPago.getTasaId());
 		jo.setImporte(datosPago.getImporte());
+		jo.setMultiplicador(datosPago.getMultiplicador());
 		jo.setUrlCallbackOrigen(urlCallbackAppOrigen);
 		jo.setToken(tokenAcceso);
 		jo.setMetodosPago(datosPago.getMetodosPago());

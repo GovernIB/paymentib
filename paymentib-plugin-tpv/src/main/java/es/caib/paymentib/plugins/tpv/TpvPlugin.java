@@ -51,6 +51,11 @@ public class TpvPlugin extends AbstractPluginProperties implements IPasarelaPago
 	public UrlRedireccionPasarelaPago iniciarPagoElectronico(final DatosPago datosPago, final String entidadPagoId,
 			final String urlCallback) throws PasarelaPagoException {
 
+		// No esta permitido multiplicador > 1
+		if (datosPago.getMultiplicador() > 1) {
+			throw new PasarelaPagoException("TPV no permite multiplicador > 1");
+		}
+
 		// Obtiene datos organismo TPV
 		final MerchantData merchantData = obtenerMerchantData(datosPago);
 		// Genera url redireccion pago

@@ -11,6 +11,7 @@
           <xs:element minOccurs="0" name="SUBCONCEPTE" type="CAMPO_CON_CODIGO"/>
           <xs:sequence>
             <xs:element name="IMPORT" type="CAMPO_CON_CODIGO"/>
+            <xs:element minOccurs="0" name="MULTIPLICADOR" type="xs:int"/>
             <xs:element name="CONCEPTE" type="CAMPO_CON_CODIGO"/>
           </xs:sequence>
         </xs:choice>

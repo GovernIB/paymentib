@@ -60,6 +60,10 @@ public class RDatosPago {
     @ApiModelProperty(value = "importe")
     private int importe;
 
+    /** Multiplicador. */
+    @ApiModelProperty(value = "multiplicador")
+    private int multiplicador;
+
     /** Booleano para activar/desactivar el pagopor banca electrónica en la ATIB*/
     @ApiModelProperty(value = "metodosPago")
     private String metodosPago;
@@ -312,8 +316,8 @@ public class RDatosPago {
     /**
      * Método para establecer modelo.
      *
-     * @param modelo
-     *            modelo a establecer
+     * @param metodosPago
+     *            metodosPago a establecer
      */
     public void setMetodosPago(String metodosPago) {
         this.metodosPago = metodosPago;
@@ -347,5 +351,11 @@ public class RDatosPago {
 		this.versionTramite = versionTramite;
 	}
 
+    public int getMultiplicador() {
+        return multiplicador;
+    }
 
+    public void setMultiplicador(int multiplicador) {
+        this.multiplicador = multiplicador;
+    }
 }

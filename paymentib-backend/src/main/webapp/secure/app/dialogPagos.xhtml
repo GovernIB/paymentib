@@ -196,20 +196,26 @@
 						<div class="ui-g-12 ui-md-2 ui-lg-1">
 							<p:outputLabel for="pasarelaId" value="#{msg['dialogPagos.pasarelaId']}" styleClass="label-size-fixed"/>
 						</div>
-						<div class="ui-g-12 ui-md-4 ui-lg-3">
+						<div class="ui-g-12 ui-md-4 ui-lg-2">
 							<p:inputText id="pasarelaId" value="#{dialogPagos.data.pasarelaId}" styleClass="w100" readonly="true"/>
 						</div>
 						<div class="ui-g-12 ui-md-2 ui-lg-1">
 							<p:outputLabel for="localizador" value="#{msg['dialogPagos.localizador']}" styleClass="padding-right-8 paddingIzquierdoResponsive" />
 						</div>
-						<div class="ui-g-12 ui-md-4 ui-lg-3">
+						<div class="ui-g-12 ui-md-4 ui-lg-2">
 							<p:inputText id="localizador" value="#{dialogPagos.data.localizador}" styleClass="w100" readonly="true"/>
 						</div>
 						<div class="ui-g-12 ui-md-2 ui-lg-1">
 							<p:outputLabel for="metodoPagoSeleccionado" value="#{msg['dialogPagos.metodoPagoSeleccionado']}" styleClass="padding-right-8"/>
 						</div>
-						<div class="ui-g-12 ui-md-4 ui-lg-3">
+						<div class="ui-g-12 ui-md-4 ui-lg-2">
 							<p:inputText id="metodoPagoSeleccionado" value="#{dialogPagos.mostrarMetodoPago(dialogPagos.data.metodoPagoSeleccionado)}" styleClass="w100" readonly="true"/>
+						</div>
+						<div class="ui-g-12 ui-md-2 ui-lg-1">
+							<p:outputLabel for="unidades" value="#{msg['dialogPagos.unidades']}" styleClass="padding-right-8"/>
+						</div>
+						<div class="ui-g-12 ui-md-4 ui-lg-2">
+							<p:inputText id="unidades" value="#{dialogPagos.data.datosPago.multiplicador}" styleClass="w100" readonly="true"/>
 						</div>
 					</div>
 

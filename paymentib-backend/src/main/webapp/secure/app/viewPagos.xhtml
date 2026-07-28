@@ -100,7 +100,7 @@
 
 			<p:row style="border-color:#f0f0f0">
 
-			    <p:column styleClass="noPadding columna-filtros">
+			    <p:column styleClass="noPadding columna-filtros" colspan="2">
 				    <h:panelGrid columns="1" styleClass="w100 noPadding" style="margin-bottom: 5px;">
 				        <p:selectOneButton id="fechaBusqueda" value="#{viewPagos.filtroFecha}">
 				            <f:selectItem itemLabel="#{msg['viewPagos.headerFechaCreacion']}" itemValue="#{TypeFiltroFecha.CREACION}" />
@@ -173,88 +173,93 @@
 			</p:row>
 
 			<p:row style="border-color:#f0f0f0">
-				<p:column styleClass="noPadding columna-filtros">
-					<h:panelGrid columns="2" styleClass="w100 noPadding">
-						<p:outputLabel for="filtroNIF" value="#{msg['viewPagos.headerNif']}:"/>
-						<p:inputText id="filtroNIF" value="#{viewPagos.filtroNIF}" size="20" onkeyup="capitalize(this)" onblur="trim(this)"/>
-					</h:panelGrid>
-				</p:column>
-				<p:column styleClass="w23">
-					<h:panelGrid columns="2" styleClass="w100 noPadding">
-						<p:outputLabel for="filtroNombre" value="#{msg['viewPagos.headerNombre']}:"/>
-						<p:inputText id="filtroNombre" value="#{viewPagos.filtroNombre}" size="20" onblur="trim(this)"/>
-					</h:panelGrid>
-				</p:column>
+				<p:column colspan="8" styleClass="noPadding">
+					
+					<!-- Contenedor principal: Flexbox con hueco (gap) entre los elementos -->
+					<h:panelGroup layout="block" style="display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 10px; padding: 5px;">
 
-				<p:column styleClass="noPadding columna-filtros">
+						<!-- NIF -->
+						<h:panelGroup layout="block" style="flex: 1; display: flex; align-items: center;">
+							<p:outputLabel for="filtroNIF" value="#{msg['viewPagos.headerNif']}:" style="white-space: nowrap; margin-right: 5px;"/>
+							<p:inputText id="filtroNIF" value="#{viewPagos.filtroNIF}" onkeyup="capitalize(this)" onblur="trim(this)" style="width: 100%; min-width: 0;"/>
+						</h:panelGroup>
 
-					<h:panelGrid columns="2" styleClass="w100 noPadding">
-						<p:outputLabel for="filtroTramite" value="#{msg['viewPagos.filtroTramite']}:"/>
-						<h:panelGroup>
-							<p:inputText id="filtroTramite" value="#{viewPagos.filtroTramite}" size="12" onkeyup="capitalize(this)" onblur="trim(this)">
+						<!-- Nombre -->
+						<h:panelGroup layout="block" style="flex: 1; display: flex; align-items: center;">
+							<p:outputLabel for="filtroNombre" value="#{msg['viewPagos.headerNombre']}:" style="white-space: nowrap; margin-right: 5px;"/>
+							<p:inputText id="filtroNombre" value="#{viewPagos.filtroNombre}" onblur="trim(this)" style="width: 100%; min-width: 0;"/>
+						</h:panelGroup>
+
+						<!-- Trámite / Versión -->
+						<h:panelGroup layout="block" style="flex: 1.2; display: flex; align-items: center;">
+							<p:outputLabel for="filtroTramite" value="#{msg['viewPagos.filtroTramite']}:" style="white-space: nowrap; margin-right: 5px;"/>
+							<p:inputText id="filtroTramite" value="#{viewPagos.filtroTramite}" style="width: 60%; min-width: 0;" onkeyup="capitalize(this)" onblur="trim(this)">
 								<p:keyFilter preventPaste="false" regEx="/[a-z0-9_-]/i"/>
 							</p:inputText>
-							<p:outputLabel value=" / "/>
-							<p:inputText id="filtroVersion" value="#{viewPagos.filtroVersion}" size="2" placeholder="v." onkeyup="capitalize(this)" onblur="trim(this)">
+							<p:outputLabel value="/" style="margin: 0 4px;"/>
+							<p:inputText id="filtroVersion" value="#{viewPagos.filtroVersion}" style="width: 40%; min-width: 0;" placeholder="v." onkeyup="capitalize(this)" onblur="trim(this)">
 								<p:keyFilter preventPaste="false" regEx="/[0-9]/i"/>
 							</p:inputText>
 						</h:panelGroup>
-					</h:panelGrid>
-				</p:column>
 
-				<p:column styleClass="noPadding columna-filtros">
-					<h:panelGrid columns="2" styleClass="w100 noPadding">
-						<p:outputLabel for="filtroEstado" value="#{msg['viewPagos.headerEstado']}:"/>
-						<p:selectOneMenu id="filtroEstado" value="#{viewPagos.filtroEstado}" style="width:144px">
-							<f:selectItem itemLabel="" noSelectionOption="true"/>
-							<f:selectItems value="#{viewPagos.listaEstados}" var="estado" itemLabel="#{msg['typeEstadoPago.' += estado]}" itemValue="#{estado}"/>
-						</p:selectOneMenu>
-					</h:panelGrid>
-				</p:column>
+						<!-- Estado -->
+						<h:panelGroup layout="block" style="flex: 1; display: flex; align-items: center;">
+							<p:outputLabel for="filtroEstado" value="#{msg['viewPagos.headerEstado']}:" style="white-space: nowrap; margin-right: 5px;"/>
+							<p:selectOneMenu id="filtroEstado" value="#{viewPagos.filtroEstado}" style="width: 100%; min-width: 0;">
+								<f:selectItem itemLabel="" noSelectionOption="true"/>
+								<f:selectItems value="#{viewPagos.listaEstados}" var="estado" itemLabel="#{msg['typeEstadoPago.' += estado]}" itemValue="#{estado}"/>
+							</p:selectOneMenu>
+						</h:panelGroup>
 
-				<p:column styleClass="noPadding columna-filtros">
-					<h:panelGrid columns="2" styleClass="w100 noPadding">
-						<p:outputLabel for="filtroPasarela" value="#{msg['viewPagos.headerPasarela']}:"/>
-						<p:selectOneMenu id="filtroPasarela" value="#{viewPagos.filtroPasarela}" style="combo-xs">
-							<f:selectItem itemLabel="" noSelectionOption="true"/>
-							<f:selectItems value="#{viewPagos.listaPasarelas}" var="p" itemLabel="#{p}" itemValue="#{p}"/>
-						</p:selectOneMenu>
-					</h:panelGrid>
-				</p:column>
+						<!-- Pasarela -->
+						<h:panelGroup layout="block" style="flex: 1; display: flex; align-items: center;">
+							<p:outputLabel for="filtroPasarela" value="#{msg['viewPagos.headerPasarela']}:" style="white-space: nowrap; margin-right: 5px;"/>
+							<p:selectOneMenu id="filtroPasarela" value="#{viewPagos.filtroPasarela}" style="width: 100%; min-width: 0;">
+								<f:selectItem itemLabel="" noSelectionOption="true"/>
+								<f:selectItems value="#{viewPagos.listaPasarelas}" var="p" itemLabel="#{p}" itemValue="#{p}"/>
+							</p:selectOneMenu>
+						</h:panelGroup>
 
-				<p:column styleClass="noPadding columna-filtros">
-					<h:panelGrid columns="2" styleClass="w100 noPadding">
-						<p:outputLabel for="filtroEntidad" value="#{msg['viewPagos.headerEntidad']}:"/>
-						<p:selectOneMenu id="filtroEntidad" value="#{viewPagos.filtroEntidad}" style="combo-xs">
-							<f:selectItem itemLabel="" noSelectionOption="true"/>
-							<f:selectItems value="#{viewPagos.listaEntidades}" var="e" itemLabel="#{e}" itemValue="#{e}"/>
-						</p:selectOneMenu>
-					</h:panelGrid>
-				</p:column>
+						<!-- Entidad -->
+						<h:panelGroup layout="block" style="flex: 1; display: flex; align-items: center;">
+							<p:outputLabel for="filtroEntidad" value="#{msg['viewPagos.headerEntidad']}:" style="white-space: nowrap; margin-right: 5px;"/>
+							<p:selectOneMenu id="filtroEntidad" value="#{viewPagos.filtroEntidad}" style="width: 100%; min-width: 0;">
+								<f:selectItem itemLabel="" noSelectionOption="true"/>
+								<f:selectItems value="#{viewPagos.listaEntidades}" var="e" itemLabel="#{e}" itemValue="#{e}"/>
+							</p:selectOneMenu>
+						</h:panelGroup>
 
-				<p:column styleClass="noPadding columna-filtros">
-					<h:panelGrid columns="2" styleClass="w100 noPadding">
-						<p:outputLabel for="filtroApp" value="#{msg['viewPagos.headerAplicacion']}:"/>
-						<p:selectOneMenu id="filtroApp" value="#{viewPagos.filtroAplicacion}" style="combo-xs">
-							<f:selectItems value="#{viewPagos.listaAplicaciones}" var="a" itemLabel="#{a}" itemValue="#{a}"/>
-						</p:selectOneMenu>
-					</h:panelGrid>
-				</p:column>
+						<!-- Aplicación -->
+						<h:panelGroup layout="block" style="flex: 1; display: flex; align-items: center;">
+							<p:outputLabel for="filtroApp" value="#{msg['viewPagos.headerAplicacion']}:" style="white-space: nowrap; margin-right: 5px;"/>
+							<p:selectOneMenu id="filtroApp" value="#{viewPagos.filtroAplicacion}" style="width: 100%; min-width: 0;">
+								<f:selectItems value="#{viewPagos.listaAplicaciones}" var="a" itemLabel="#{a}" itemValue="#{a}"/>
+							</p:selectOneMenu>
+						</h:panelGroup>
 
-				<p:column styleClass="noPadding columna-filtros">
-					<h:panelGrid columns="2" styleClass="w100 noPadding">
-						<p:outputLabel for="filtroMetodo" value="#{msg['viewPagos.headerMetodoPagoSeleccionado']}:"/>
-						<p:selectOneMenu id="filtroMetodo" value="#{viewPagos.filtroMetodosPago}" style="width:144px">
-							<f:selectItem itemLabel="" noSelectionOption="true"/>
-							<f:selectItems value="#{viewPagos.listaMetodosPago}" var="mp" itemLabel="#{viewPagos.mostrarMetodoPago(mp)}" itemValue="#{mp}"/>
-							<f:selectItem itemLabel="#{msg['typeMetodoPagoSeleccionado.noInformado']}" itemValue="noInformado"/>
-						</p:selectOneMenu>
-					</h:panelGrid>
+						<!-- Método Pago -->
+						<h:panelGroup layout="block" style="flex: 1.2; display: flex; align-items: center;">
+							<p:outputLabel for="filtroMetodo" value="#{msg['viewPagos.headerMetodoPagoSeleccionado']}:" style="white-space: nowrap; margin-right: 5px;"/>
+							<p:selectOneMenu id="filtroMetodo" value="#{viewPagos.filtroMetodosPago}" style="width: 100%; min-width: 0;">
+								<f:selectItem itemLabel="" noSelectionOption="true"/>
+								<f:selectItems value="#{viewPagos.listaMetodosPago}" var="mp" itemLabel="#{viewPagos.mostrarMetodoPago(mp)}" itemValue="#{mp}"/>
+								<f:selectItem itemLabel="#{msg['typeMetodoPagoSeleccionado.noInformado']}" itemValue="noInformado"/>
+							</p:selectOneMenu>
+						</h:panelGroup>
+						
+						<!-- Unidades -->
+						<h:panelGroup layout="block" style="flex: 0.6; display: flex; align-items: center;">
+							<p:outputLabel for="filtroUnidades" value="#{msg['viewPagos.headerUnidades']}:" style="white-space: nowrap; margin-right: 5px;"/>
+							<!-- Se usa style para el contenedor y inputStyle para la caja de texto interna de PrimeFaces -->
+							<p:inputNumber id="filtroUnidades" value="#{viewPagos.filtroUnidades}" decimalPlaces="0" emptyValue="empty" style="width: 100%;" inputStyle="width: 100%; min-width: 0;"/>
+						</h:panelGroup>
+
+					</h:panelGroup>
 				</p:column>
 			</p:row>
 
 			<p:row>
-			    <p:column colspan="8" styleClass="align-right">
+			    <p:column colspan="9" styleClass="align-right">
 			        <h:panelGroup id="panelBotones">
 			           	<p:commandButton id="btnConsultar" value="#{msg['botones.consultar']}" icon="pi pi-eye"
 			                             actionListener="#{viewPagos.consultar}" process="@this"
@@ -340,6 +345,9 @@
 					</p:column>
 					<p:column headerText="#{msg['viewPagos.headerMetodoPagoSeleccionado']}" sortBy="#{td.metodoPagoSeleccionado}">
 						<h:outputText value="#{viewPagos.mostrarMetodoPago(td.metodoPagoSeleccionado)}" />
+					</p:column>
+					<p:column headerText="#{msg['viewPagos.headerUnidades']}" sortBy="#{td.datosPago.multiplicador}">
+						<h:outputText value="#{td.datosPago.multiplicador}" />
 					</p:column>
 				</p:dataTable>
 			</p:outputPanel>

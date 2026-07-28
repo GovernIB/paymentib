@@ -71,6 +71,7 @@ public class ViewPagos extends ViewControllerBase {
     private Double filtroImporte;
     private String filtroNIF;
     private String filtroNombre;
+    private Integer filtroUnidades;
 
 	/**
 	 * Lista de datos.
@@ -305,7 +306,7 @@ public class ViewPagos extends ViewControllerBase {
 		try {
 			listaDatos = pagoBackService.listaPagos(filtro, filtroFechaDesde, filtroFechaHasta, filtroFecha, filtroClaveTramitacion, filtroTramite, filtroVersion,
 																filtroPasarela, filtroEntidad, filtroAplicacion, filtroLocATIB, filtroMetodosPago,
-																filtroIdentificador, filtroEstado, filtroImporte, filtroNIF, filtroNombre);
+														filtroIdentificador, filtroEstado, filtroImporte, filtroNIF, filtroNombre, filtroUnidades);
 		} catch (final EJBException e) {
 			/*if (e.getCause() instanceof MaxNumFilasException) {
 				UtilJSF.addMessageContext(TypeNivelGravedad.WARNING, UtilJSF.getLiteral("warning.maxnumfilas"));
@@ -549,6 +550,14 @@ public class ViewPagos extends ViewControllerBase {
 
     public void setFiltroNombre(String filtroNombre) {
     	this.filtroNombre = filtroNombre;
+    }
+
+    public Integer getFiltroUnidades() {
+    	return filtroUnidades;
+    }
+
+    public void setFiltroUnidades(Integer filtroUnidades) {
+    	this.filtroUnidades = filtroUnidades;
     }
 
 }

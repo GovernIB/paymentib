@@ -53,10 +53,10 @@ public class PagoDaoImpl implements PagoDao {
 			final TypeFiltroFecha tipoFecha, final String filtroClaveTramitacion, final String filtroTramite, final Integer filtroVersion,
 				final String filtroPasarela, final String filtroEntidad, final String filtroAplicacion, final String filtroLocATIB,
 				final String filtroMetodosPago, final String filtroIdentificador, final TypeEstadoPago filtroEstado, final Double filtroImporte,
-				final String filtroNIF, final String filtroNombre) {
+				final String filtroNIF, final String filtroNombre, final Integer filtroUnidades) {
 		return listarPagos(filtro, fechaDesde, fechaHasta, tipoFecha, filtroClaveTramitacion, filtroTramite,
 							filtroVersion, filtroPasarela, filtroEntidad, filtroAplicacion, filtroLocATIB,
-							filtroMetodosPago, filtroIdentificador, filtroEstado, filtroImporte, filtroNIF, filtroNombre);
+							filtroMetodosPago, filtroIdentificador, filtroEstado, filtroImporte, filtroNIF, filtroNombre, filtroUnidades);
 	}
 
 	@Override
@@ -86,7 +86,7 @@ public class PagoDaoImpl implements PagoDao {
 	 */
 	@Override
 	public List<DatosSesionPago> getAll() {
-		return listarPagos(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+		return listarPagos(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 	}
 
 	@Override
@@ -202,7 +202,7 @@ public class PagoDaoImpl implements PagoDao {
 					final Integer filtroVersion, final String filtroPasarela, final String filtroEntidad,
 					final String filtroAplicacion, final String filtroLocATIB, final String filtroMetodosPago,
 					final String filtroIdentificador, final TypeEstadoPago filtroEstado, final Double filtroImporte,
-					final String filtroNIF, final String filtroNombre) {
+					final String filtroNIF, final String filtroNombre, final Integer filtroUnidades) {
 		final List<DatosSesionPago> listaPagos = new ArrayList<>();
 
 		final String sqlSelect = "SELECT p FROM JPagoE p ";
@@ -355,6 +355,11 @@ public class PagoDaoImpl implements PagoDao {
 	        sqlWhere.append(" p.importe = :filtroImporte");
 	    }
 
+		if (filtroUnidades != null) {
+			if (sqlWhere.length() > 0) sqlWhere.append(" AND ");
+			sqlWhere.append(" p.multiplicador = :filtroUnidades");
+		}
+
 		if (sqlWhere.length() > 0) {
 			sqlWhere.insert(0, " WHERE");
 		}
@@ -428,6 +433,10 @@ public class PagoDaoImpl implements PagoDao {
 	        queryCount.setParameter("filtroImporte", importeEnCentimos);
 	    }
 
+		if (filtroUnidades != null) {
+			queryCount.setParameter("filtroUnidades", filtroUnidades);
+		}
+
 		//final Long nfilas = (Long) queryCount.getSingleResult();
 
 		/*if (nfilas > Constantes.MAX_NUM_PAGOS) {
@@ -500,6 +509,10 @@ public class PagoDaoImpl implements PagoDao {
 	        int importeEnCentimos = (int) importeCalculado;
 	        query.setParameter("filtroImporte", importeEnCentimos);
 	    }
+
+		if (filtroUnidades != null) {
+			query.setParameter("filtroUnidades", filtroUnidades);
+		}
 
 		final List<JPagoE> results = query.getResultList();
 

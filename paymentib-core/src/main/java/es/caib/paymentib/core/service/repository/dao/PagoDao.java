@@ -26,7 +26,7 @@ public interface PagoDao {
 			final TypeFiltroFecha tipoFecha, final String filtroClaveTramitacion, final String filtroTramite, final Integer filtroVersion,
 			final String filtroPasarela, final String filtroEntidad, final String filtroAplicacion, final String filtroLocATIB,
 			final String filtroMetodosPago, final String filtroIdentificador, final TypeEstadoPago filtroEstado, final Double filtroImporte,
-			final String filtroNIF, final String filtroNombre);
+			final String filtroNIF, final String filtroNombre, final Integer filtroUnidades);
 
 	/**
 	 * Obtiene la lista de todas las pasarelas

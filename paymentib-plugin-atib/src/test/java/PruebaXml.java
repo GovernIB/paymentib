@@ -15,12 +15,12 @@ public class PruebaXml {
         datosPago.setModelo("046");
         datosPago.setTasaId("1.21.1.2.1.4");
         datosPago.setImporte(100);
-        datosPago.setMultiplicador(2);
+        datosPago.setMultiplicador(1);
         datosPago.setSujetoPasivoNif("33456299Q");
         datosPago.setSujetoPasivoNombre("Rafael Sanz Villanueva");
         datosPago.setDetallePago("Pago de trámite 1");
 
-        final String xml = TaxaXml.generarXml("pagar", datosPago);
+        final String xml = TaxaXml.generarXml("pagar", datosPago, false);
 
         System.out.println(xml);
     }

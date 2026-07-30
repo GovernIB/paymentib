@@ -65,7 +65,7 @@ public class AtibPlugin extends AbstractPluginProperties implements IPasarelaPag
 			final String urlCallback) throws PasarelaPagoException {
 		try {
 			// Genera XML de pago
-			final String xmlPago = TaxaXml.generarXml("pagar", datosPago);
+			final String xmlPago = TaxaXml.generarXml("pagar", datosPago, isEnviarMultiplicador1());
 			final String xmlPagoB64 = Base64.getEncoder().encodeToString(xmlPago.getBytes("UTF-8"));
 
 			log.debug("XML Pago: \n" + xmlPago);
@@ -157,7 +157,7 @@ public class AtibPlugin extends AbstractPluginProperties implements IPasarelaPag
 			log.debug("Obtener carta pago");
 
 			// Genera XML de pago
-			final String xmlPago = TaxaXml.generarXml("imprimir", datosPago);
+			final String xmlPago = TaxaXml.generarXml("imprimir", datosPago, isEnviarMultiplicador1());
 			final String xmlPagoB64 = Base64.getEncoder().encodeToString(xmlPago.getBytes("UTF-8"));
 
 			// Generamos cliente
@@ -361,8 +361,15 @@ private List<EntidadPago> recuperarEntidadesPago(TypeIdioma idioma, String metod
 	 * @return true si está en modo simulado, false en caso contrario
 	 */
 	private boolean isModoSimulado() {
-		boolean simulado =  "true".equals(this.getProperty("modoSimulado"));
-		return simulado;
+        return "true".equals(this.getProperty("modoSimulado"));
+	}
+
+	/**
+	 * Indica si se debe enviar multiplicador 1 (fuerza validación tasa en ATIB)
+	 * @return true si se debe enviar multiplicador 1, false en caso contrario
+	 */
+	private boolean isEnviarMultiplicador1() {
+        return "true".equals(this.getProperty("enviarMultiplicador1"));
 	}
 
 

@@ -36,7 +36,7 @@ public class TaxaXml {
      * @param datosPago
      * @throws Exception
      */
-    public static String generarXml(String accion, DatosPago datosPago)
+    public static String generarXml(String accion, DatosPago datosPago, boolean enviarMultiplicador1)
             throws Exception {
 
         final TAXADocument xmlDoc = TAXADocument.Factory.newInstance();
@@ -71,7 +71,11 @@ public class TaxaXml {
                 CODI_NIF);
         setValorCampo(declarante.addNewNOM(), datosPago.getSujetoPasivoNombre(),
                 CODI_IDTAXA);
-        taxa.setMULTIPLICADOR(datosPago.getMultiplicador());
+
+        // Envia multiplicador si es distinto de 1 o si se indica que se debe enviar aunque sea 1
+        if (enviarMultiplicador1 || datosPago.getMultiplicador() != 1) {
+            taxa.setMULTIPLICADOR(datosPago.getMultiplicador());
+        }
 
         final XmlOptions xmlOpt = new XmlOptions();
         xmlOpt.setCharacterEncoding("UTF-8");
